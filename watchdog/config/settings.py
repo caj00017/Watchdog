@@ -39,6 +39,16 @@ class Settings(BaseSettings):
     scanner_max_input_bytes: int = Field(default=5 * 1024 * 1024, gt=0)
     scanner_max_stdout_bytes: int = Field(default=25 * 1024 * 1024, gt=0)
     scanner_max_stderr_bytes: int = Field(default=1 * 1024 * 1024, gt=0)
+    evidence_deadline_seconds: float = Field(default=60.0, gt=0, le=600)
+    evidence_max_source_files: int = Field(default=200, gt=0)
+    evidence_max_bytes_per_source_file: int = Field(default=5 * 1024 * 1024, gt=0)
+    evidence_max_total_source_bytes: int = Field(default=25 * 1024 * 1024, gt=0)
+    evidence_max_items: int = Field(default=10_000, gt=0)
+    evidence_max_line_span: int = Field(default=200, gt=0)
+    evidence_max_display_bytes_per_item: int = Field(default=16 * 1024, gt=0)
+    evidence_max_bundle_display_bytes: int = Field(default=5 * 1024 * 1024, gt=0)
+    evidence_max_redactions_per_item: int = Field(default=100, gt=0)
+    evidence_max_warnings: int = Field(default=1_000, gt=0)
 
     @field_validator("osv_scanner_path")
     @classmethod

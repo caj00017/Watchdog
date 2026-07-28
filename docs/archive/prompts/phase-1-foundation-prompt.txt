@@ -1,0 +1,82 @@
+ARCHIVED PHASE 1 WORK ORDER — retained for historical context, not current instruction.
+
+Read `../planning/nexura_watchdog_formal_plan.md` in full before making changes.
+
+You are beginning implementation of Nexura Watchdog, an evidence-driven vulnerability investigation tool. Watchdog accepts a known vulnerability and a source repository, then determines whether the vulnerability appears to affect that project. Deterministic security tools collect the evidence; an LLM may later interpret that evidence but must not act as the primary scanner.
+
+For this first work order, implement only the project foundation and advisory-intelligence layer.
+
+## Objectives
+
+1. Create the repository structure specified in the formal plan.
+2. Create `AGENTS.md` using the security and development rules specified in the plan.
+3. Configure:
+
+   * Python 3.12 or newer
+   * FastAPI
+   * Pydantic
+   * pytest
+   * Static type checking
+   * Linting and formatting
+   * Docker-based local development
+4. Implement the core advisory domain models.
+5. Implement an OSV vulnerability-source adapter.
+6. Accept CVE, GHSA, and OSV identifiers.
+7. Resolve aliases when the source data provides them.
+8. Preserve source provenance for normalized fields.
+9. Represent conflicting source values explicitly rather than silently selecting one.
+10. Implement:
+
+    * `GET /health`
+    * `GET /api/v1/advisories/{identifier}`
+11. Support JSON and Markdown advisory exports.
+12. Add unit and integration tests.
+13. Write:
+
+    * `docs/architecture.md`
+    * `docs/threat-model.md`
+    * `docs/evidence-policy.md`
+14. Update the README with installation, development, test, and API usage instructions.
+
+## Boundaries
+
+Do not yet implement:
+
+* Repository cloning
+* GitHub authentication
+* Dependency scanning
+* SBOM generation
+* Static code analysis
+* LLM calls
+* Patch generation
+* Private-repository support
+* A production web interface
+
+Do not execute code from external repositories or introduce infrastructure that would allow it.
+
+## Engineering requirements
+
+* Keep domain models separate from external-source adapters.
+* Avoid coupling the normalized advisory model to OSV-specific response structures.
+* Use strict validation at system boundaries.
+* Use asynchronous I/O where appropriate.
+* Add clear error types for invalid identifiers, missing records, unavailable sources, malformed upstream responses, and partial results.
+* Preserve raw source records when practical for debugging and provenance.
+* Prefer small, reviewable commits.
+* Do not broaden the work order without documenting the proposed change first.
+
+## Definition of done
+
+The work order is complete when:
+
+* The service starts locally.
+* The health endpoint responds successfully.
+* A supported identifier returns a validated normalized advisory record.
+* Normalized fields retain their source provenance.
+* Source conflicts can be represented.
+* JSON and Markdown exports work.
+* Tests, linting, formatting checks, and type checking pass.
+* Documentation explains the current architecture and its security boundaries.
+* No repository-analysis or LLM functionality has been prematurely introduced.
+
+Before implementing, produce a concise execution plan identifying the files and modules you expect to create. Then proceed through the work in small, testable increments. At completion, summarize the implementation, tests performed, known limitations, and recommended next work order.

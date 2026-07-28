@@ -21,7 +21,7 @@ boundaries.
 14. Update architecture and threat-model documentation when behavior changes.
 15. Do not broaden MVP scope without recording the decision.
 
-## Current implementation boundary
+## Current implementation through Phase 4
 
 The completed Phase 3 boundary includes project foundations, advisory
 intelligence, safe archive-only intake of public GitHub repositories, bounded
@@ -49,3 +49,36 @@ never become a repository-level negative finding.
 OSV is the only active external vulnerability source. Keep normalized domain
 models independent from OSV response structures, retain source records and
 field provenance, and surface conflicts and partial failures explicitly.
+
+The completed Phase 4 boundary adds only an internal, lease-scoped evidence
+engine that converts Watchdog-generated Phase 3 source references into canonical
+repository evidence items and deterministic evidence bundles. Evidence reads
+must use normalized repository-relative paths,
+must not accept caller-selected arbitrary paths, must open every path component
+without following symlinks, and must verify regular-file identity and the Phase 3
+file digest before extracting content. All reads, extraction, redaction, and
+bundle construction must finish inside the existing repository lease.
+
+Evidence collection must have explicit limits for duration, source files, bytes,
+items, snippet size, line span, warnings, and redactions. Unredacted repository
+content may exist only transiently in bounded process memory. It must never be
+logged, persisted, exported, placed in exception text, or returned from the
+evidence service. Redaction failure or limit exhaustion must omit the affected
+content and produce explicit partial coverage; it must never fall back to raw
+content. Evidence IDs and bundle ordering must be deterministic for the same
+commit, source bytes, producer versions, and configuration.
+
+Do not broaden the completed Phase 4 boundary with general repository discovery,
+static/source/reachability analysis, dependency or repository execution, a
+subprocess, new outbound network access, persistence, model calls, exposure
+classifications, public
+repository or evidence routes, or patch behavior. The Phase 3 scanner boundary
+and OSV-Scanner 2.4.0 pin remain unchanged. Any broader capability belongs to a
+later separately reviewed phase. No Phase 5 capability is authorized by these
+rules.
+
+`docs/work-orders/phase-5-contextual-analysis.md` is a proposal for security and
+scope review only. Its presence does not authorize Phase 5 code, dependencies,
+discovery, source parsing, configuration analysis, or reachability heuristics.
+Authorization requires an explicit later update to these rules and the canonical
+implementation record.

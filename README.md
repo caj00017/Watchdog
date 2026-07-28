@@ -4,7 +4,8 @@ Nexura Watchdog is an evidence-driven vulnerability investigation project. The
 current implementation provides advisory intelligence plus bounded internal
 services for safely acquiring public GitHub repository snapshots,
 deterministically inventorying allowlisted dependency files, and matching exact
-coordinates. The API accepts a CVE, GHSA, or OSV database identifier, retrieves
+coordinates, and collecting redacted dependency-source evidence. The API accepts
+a CVE, GHSA, or OSV database identifier, retrieves
 the corresponding OSV record, and returns a source-neutral advisory with
 field-level provenance.
 
@@ -16,6 +17,13 @@ Phase 3 reads bounded dependency data without invoking package managers or
 repository code. Exact PyPI, npm, and Go coordinates can be sent to pinned
 OSV-Scanner 2.4.0 through a generated custom input. SBOMs, source/reachability
 analysis, LLM calls, and patch generation remain out of scope.
+
+Phase 4 implements the reviewed internal evidence-engine work order. It turns
+only Watchdog-generated Phase 3 source references into bounded, redacted,
+deterministic evidence while the repository lease remains active. It adds no
+arbitrary repository browsing, general source/reachability analysis, subprocess,
+new network access, persistence, model call, exposure classification, or public
+route.
 
 ## Requirements
 
@@ -69,6 +77,16 @@ Useful settings include:
 | `WATCHDOG_SCANNER_MAX_INPUT_BYTES` | `5242880` | Maximum generated intermediate input |
 | `WATCHDOG_SCANNER_MAX_STDOUT_BYTES` | `26214400` | Maximum scanner JSON output |
 | `WATCHDOG_SCANNER_MAX_STDERR_BYTES` | `1048576` | Maximum sanitized scanner diagnostics |
+| `WATCHDOG_EVIDENCE_DEADLINE_SECONDS` | `60` | End-to-end evidence deadline |
+| `WATCHDOG_EVIDENCE_MAX_SOURCE_FILES` | `200` | Maximum unique referenced files opened |
+| `WATCHDOG_EVIDENCE_MAX_BYTES_PER_SOURCE_FILE` | `5242880` | Maximum bytes read from one evidence source file |
+| `WATCHDOG_EVIDENCE_MAX_TOTAL_SOURCE_BYTES` | `26214400` | Maximum total unique evidence-source bytes read |
+| `WATCHDOG_EVIDENCE_MAX_ITEMS` | `10000` | Maximum canonical evidence items |
+| `WATCHDOG_EVIDENCE_MAX_LINE_SPAN` | `200` | Maximum selected source lines per item |
+| `WATCHDOG_EVIDENCE_MAX_DISPLAY_BYTES_PER_ITEM` | `16384` | Maximum redacted display bytes per item |
+| `WATCHDOG_EVIDENCE_MAX_BUNDLE_DISPLAY_BYTES` | `5242880` | Maximum redacted display bytes per bundle |
+| `WATCHDOG_EVIDENCE_MAX_REDACTIONS_PER_ITEM` | `100` | Maximum replacements recorded per item |
+| `WATCHDOG_EVIDENCE_MAX_WARNINGS` | `1000` | Maximum retained evidence warnings, including overflow summary |
 
 ## Run locally
 
@@ -285,6 +303,34 @@ successful pinned scan did not report the target advisory for that exact
 coordinate. It is never a repository-level not-affected result, and Phase 3 does
 not establish source reachability or runtime exposure.
 
+## Internal lease-scoped evidence
+
+`EvidenceService.collect(acquired, inventory, report)` must run before the same
+repository lease exits. It validates snapshot agreement, derives all eligible
+paths and selectors from the Phase 3 match report, opens every path component
+relative to directory descriptors without following links, rehashes complete
+bounded files, and requires the Phase 3 digest before selecting content.
+
+The resolver supports only Phase 3 line, npm JSON Pointer, PEP 621/dependency
+group TOML, and uv package/dependency selectors. Selected content is redacted
+before UTF-8-safe display truncation. The outward bundle contains only immutable
+redacted display content or `content_omitted` items with stable limitation codes;
+raw selected bytes, individual-secret hashes, temporary paths, timestamps, and
+operational timing are excluded. Canonical JSON and SHA-256 bind configuration,
+items, and bundles deterministically.
+
+Every canonical match ordinal receives a link that preserves its Phase 3 state
+and limitations. The 10,000-item cap is absolute: overflow references remain
+visible as bounded source outcomes with `item_limit_exceeded` and no evidence ID.
+Missing, stale, ambiguous, unsafe, over-limit, deadline-stopped, or redaction-
+failed content makes coverage partial and never supports a negative repository
+conclusion. The service has no route, persistence, subprocess, network client,
+model call, exposure classification, or patch behavior.
+
+A [proposed Phase 5 work order](docs/work-orders/phase-5-contextual-analysis.md)
+defines a possible bounded deterministic contextual-analysis boundary. It is for
+review only and does not authorize new source discovery or analysis code.
+
 ## Evidence model
 
 Normalized fields stay convenient to consume while `field_provenance` maps each
@@ -299,4 +345,7 @@ is the canonical status and roadmap. Supporting detail is organized under
 [architecture](docs/architecture/architecture.md),
 [threat model](docs/security/threat-model.md), and
 [evidence policy](docs/security/evidence-policy.md). The complete `docs/` tree is
-intentionally ignored by Git and requires a separate backup.
+tracked with the implementation. The completed implementation contract is the
+[Phase 4 evidence engine work order](docs/work-orders/phase-4-evidence-engine.md).
+The [Phase 5 contextual-analysis proposal](docs/work-orders/phase-5-contextual-analysis.md)
+is the next review artifact, not an active implementation authority.

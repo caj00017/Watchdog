@@ -68,7 +68,7 @@ def test_advisory_endpoint_rejects_invalid_identifier() -> None:
     assert response.json()["error"]["code"] == "invalid_identifier"
 
 
-def test_phase3_does_not_expand_openapi_routes() -> None:
+def test_phase4_does_not_expand_openapi_routes() -> None:
     assert set(create_app().openapi()["paths"]) == {
         "/health",
         "/api/v1/advisories/{identifier}",
