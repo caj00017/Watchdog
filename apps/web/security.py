@@ -58,12 +58,30 @@ def local_request_is_allowed(request: Request, settings: Settings) -> bool:
     return fetch_site is None or fetch_site == "same-origin"
 
 
+def guided_entry_navigation_is_allowed(request: Request, settings: Settings) -> bool:
+    """Allow only an operator-opened top-level navigation to the guided document."""
+    return (
+        request.app.state.guided
+        and request.method == "GET"
+        and request.url.path == "/"
+        and request.scope.get("query_string", b"") == b""
+        and request.headers.get("host") == expected_host(settings)
+        and request.headers.get("origin") is None
+        and request.headers.get("sec-fetch-site") == "none"
+        and request.headers.get("sec-fetch-mode") == "navigate"
+        and request.headers.get("sec-fetch-dest") == "document"
+    )
+
+
 async def security_middleware(
     request: Request,
     call_next: Callable[[Request], Awaitable[Response]],
 ) -> Response:
     settings: Settings = request.app.state.settings
-    if not local_request_is_allowed(request, settings):
+    if not (
+        local_request_is_allowed(request, settings)
+        or guided_entry_navigation_is_allowed(request, settings)
+    ):
         response: Response = generic_error(
             403, "local_request_rejected", "The local request was rejected."
         )

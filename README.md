@@ -332,7 +332,10 @@ bounded response contains controlled scanner, AI, remediation, and preview
 states. When the scanner is unavailable, the page remains available with fixed
 guidance, but both workflows are rejected before request parsing, advisory
 lookup, network access, or repository lease acquisition. The route and guided
-assets do not exist in legacy mode.
+assets do not exist in legacy mode. A browser-opened guided root accepts only
+the exact top-level document-navigation Fetch Metadata tuple for the fixed root
+URL; assets and API calls retain same-origin admission, and API calls still
+require the fixed local-request header.
 
 ## Phase 3 operator verification
 

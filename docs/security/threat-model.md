@@ -418,6 +418,7 @@ credential.
 | Guided view hides uncertainty | Fixed sections preserve coverage, limitations, validation actions, scanner state, and visually separate model inference; raw canonical artifact remains available | Markdown selection uses raw canonical display because structured projection is JSON-only |
 | Preview or plan mistaken for apply | Candidate review is a second explicit action, preview startup is separate opt-in, and fixed text states nothing is applied or written | Operator actions outside Watchdog remain outside the artifact |
 | Legacy behavior broadens silently | Guided routes/assets require an explicit app capability; Phase 7/8 module and asset hashes, routes, defaults, renderer bytes, and canonical HTTP bytes have regression fixtures | A future shared-boundary change still requires separate review |
+| Browser-opened guided root rejected or cross-site exception broadened | Permit `Sec-Fetch-Site: none` only for guided `GET /` with exact Host, empty query, absent Origin, `navigate` mode, and `document` destination; keep same-origin/custom-header admission on every API route and preserve legacy rejection | Fetch Metadata complements rather than authenticates the loopback listener; another same-user process remains in the local trust boundary |
 
 The guided page has no browser storage, download, clipboard, upload, arbitrary
 path, external asset, automatic request history, job, apply, or command control.

@@ -103,6 +103,50 @@ def test_guided_readiness_route_is_separate_controlled_and_hardened() -> None:
         assert "set-cookie" not in response.headers
 
 
+def test_guided_entry_allows_only_fixed_operator_navigation() -> None:
+    workflow = ForbiddenWorkflow()
+    legacy = create_app(_settings(), runtime=_runtime(workflow))
+    guided = create_app(
+        _settings(),
+        runtime=_runtime(workflow),
+        guided=True,
+        readiness=_readiness(),
+    )
+    navigation_headers = {
+        "Host": "127.0.0.1:8765",
+        "Sec-Fetch-Site": "none",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Dest": "document",
+    }
+
+    with TestClient(legacy, base_url="http://127.0.0.1:8765") as client:
+        assert client.get("/", headers=navigation_headers).status_code == 403
+
+    with TestClient(guided, base_url="http://127.0.0.1:8765") as client:
+        response = client.get("/", headers=navigation_headers)
+        assert response.status_code == 200
+        assert response.headers["content-type"].startswith("text/html")
+        assert b"Nexura Watchdog" in response.content
+
+        rejected_headers = (
+            {**navigation_headers, "Host": "attacker.invalid"},
+            {**navigation_headers, "Origin": "http://attacker.invalid"},
+            {**navigation_headers, "Sec-Fetch-Site": "cross-site"},
+            {**navigation_headers, "Sec-Fetch-Mode": "no-cors"},
+            {**navigation_headers, "Sec-Fetch-Dest": "script"},
+        )
+        for headers in rejected_headers:
+            assert client.get("/", headers=headers).status_code == 403
+        assert client.get("/?unexpected=1", headers=navigation_headers).status_code == 403
+        assert (
+            client.get(
+                "/api/v1/readiness",
+                headers={**navigation_headers, "X-Watchdog-Local-Request": "1"},
+            ).status_code
+            == 403
+        )
+
+
 def test_unavailable_scanner_rejects_both_guided_workflows_before_body_or_service() -> None:
     workflow = ForbiddenWorkflow()
     app = create_app(

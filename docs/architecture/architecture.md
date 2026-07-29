@@ -196,9 +196,13 @@ It selects three separate checked-in assets and conditionally registers
 `/api/v1/readiness`; legacy asset choices and route tables are unchanged. The
 readiness response contains only controlled scanner, AI, remediation, and
 preview states. A non-ready scanner gates both workflow POSTs before content-
-type/body parsing or any service call. The page uses the same Host, origin,
-Fetch Metadata, non-simple local header, no-store, no-CORS, no-cookie, CSP, and
-disconnect cleanup controls as Phase 7/8.
+type/body parsing or any service call. The initial guided `GET /` additionally
+accepts the browser-standard operator-navigation tuple `Sec-Fetch-Site: none`,
+`Sec-Fetch-Mode: navigate`, and `Sec-Fetch-Dest: document`, but only for the
+exact Host, empty query, absent Origin, and guided root document. Legacy mode,
+assets, readiness, and workflow routes retain the same-origin Fetch Metadata
+policy; API routes also retain their non-simple local header. No-store,
+no-CORS, no-cookie, CSP, and disconnect cleanup controls remain unchanged.
 
 The browser renders canonical JSON into status, exact snapshot, dependency
 findings, evidence links, model synthesis, coverage, limitations, and validation
