@@ -53,17 +53,9 @@ function definitionSection(title, values, style) {
   structured.append(section);
 }
 
-function listSection(title, values, style) {
-  const section = addClass(document.createElement("section"), "result-section");
-  if (style) {
-    for (const name of style.split(" ")) section.classList.add(name);
-  }
-  const heading = document.createElement("h3");
-  heading.textContent = title;
-  const list = document.createElement("ul");
-  const items = values.length ? values : ["None reported in this artifact view."];
+function appendGroupedItems(list, values) {
   const grouped = new Map();
-  for (const value of items) {
+  for (const value of values) {
     const text = valueText(value);
     grouped.set(text, (grouped.get(text) || 0) + 1);
   }
@@ -79,7 +71,61 @@ function listSection(title, values, style) {
     }
     list.append(item);
   }
+}
+
+function listSection(title, values, style) {
+  const section = addClass(document.createElement("section"), "result-section");
+  if (style) {
+    for (const name of style.split(" ")) section.classList.add(name);
+  }
+  const heading = document.createElement("h3");
+  heading.textContent = title;
+  const list = document.createElement("ul");
+  appendGroupedItems(list, values.length ? values : ["None reported in this artifact view."]);
   section.append(heading, list);
+  structured.append(section);
+}
+
+function evidenceGroup(identifier) {
+  if (identifier.startsWith("advisory-provenance:sha256:")) return "Advisory provenance";
+  if (identifier.startsWith("context-evidence:sha256:")) return "Context evidence";
+  if (identifier.startsWith("context-signal:sha256:")) return "Context signals";
+  if (identifier.startsWith("evidence:sha256:")) return "Dependency evidence";
+  if (
+    identifier.startsWith("bundle:sha256:") ||
+    identifier.startsWith("context-bundle:sha256:") ||
+    identifier.startsWith("investigation-result:sha256:")
+  ) return "Bundle and result identities";
+  return "Other canonical identities";
+}
+
+function evidenceSection(values) {
+  const identifiers = [...new Set(values.filter((value) => typeof value === "string"))].sort();
+  const section = addClass(document.createElement("section"), "result-section");
+  section.classList.add("wide", "evidence");
+  const heading = document.createElement("h3");
+  heading.textContent = "Evidence";
+  const explanation = addClass(document.createElement("p"), "evidence-explanation");
+  explanation.textContent = identifiers.length
+    ? `This report references ${identifiers.length} stable integrity identifiers. They link findings to exact validated artifacts; they are not URLs or filesystem paths.`
+    : "No evidence identifiers were reported in this artifact view.";
+  section.append(heading, explanation);
+  if (identifiers.length) {
+    const groups = new Map();
+    for (const identifier of identifiers) {
+      const label = evidenceGroup(identifier);
+      groups.set(label, (groups.get(label) || 0) + 1);
+    }
+    const summary = addClass(document.createElement("dl"), "evidence-summary");
+    for (const [label, count] of groups) addDefinition(summary, label, count);
+    const details = addClass(document.createElement("details"), "evidence-identifiers");
+    const toggle = document.createElement("summary");
+    toggle.textContent = `Show all ${identifiers.length} canonical identifiers`;
+    const list = document.createElement("ul");
+    appendGroupedItems(list, identifiers);
+    details.append(toggle, list);
+    section.append(summary, details);
+  }
   structured.append(section);
 }
 
@@ -153,7 +199,7 @@ function renderReport(report) {
     ...entryTexts(entries, "target_metadata"),
     ...entryTexts(entries, "deterministic_fact")
   ], "wide");
-  listSection("Evidence", uniqueSupportIds(entries), "wide evidence");
+  evidenceSection(uniqueSupportIds(entries));
   listSection("Model synthesis", [
     ...entryTexts(entries, "model_inference"),
     ...claims
@@ -186,7 +232,7 @@ function renderRemediation(plan) {
     ["Archive digest", snapshot.archive_sha256]
   ]);
   listSection("Remediation candidates", candidateLines, "wide");
-  listSection("Evidence", candidates.flatMap((candidate) => Array.isArray(candidate.dependency_evidence_ids) ? candidate.dependency_evidence_ids : []), "wide evidence");
+  evidenceSection(candidates.flatMap((candidate) => Array.isArray(candidate.dependency_evidence_ids) ? candidate.dependency_evidence_ids : []));
   listSection("Coverage gaps", [
     ...coverageLines(plan.coverage),
     ...(Array.isArray(plan.warnings) ? plan.warnings : []),

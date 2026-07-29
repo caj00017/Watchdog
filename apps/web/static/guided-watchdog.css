@@ -45,6 +45,11 @@ button:disabled { cursor: not-allowed; opacity: 0.52; }
 .repeat-count { display: inline-block; margin-left: 0.55rem; padding: 0.12rem 0.42rem; border-radius: 999px; background: #e1ebe8; color: #36564e; font-size: 0.76rem; font-weight: 750; white-space: nowrap; }
 .result-section dl { display: grid; grid-template-columns: minmax(8rem, max-content) 1fr; gap: 0.45rem 1rem; margin: 0; }
 .result-section dd { margin: 0; overflow-wrap: anywhere; }
+.evidence-explanation { max-width: 58rem; margin: 0 0 1rem; color: #40524d; line-height: 1.55; }
+.evidence-summary { padding: 0.9rem 1rem; border-radius: 0.55rem; background: #edf5f2; }
+.evidence-identifiers { margin-top: 1rem; border-top: 1px solid #dbe4e1; }
+.evidence-identifiers summary { padding: 0.85rem 0; color: #285a4f; font-weight: 730; cursor: pointer; }
+.evidence-identifiers ul { margin-bottom: 0.5rem; }
 .user-data { unicode-bidi: plaintext; overflow-wrap: anywhere; white-space: pre-wrap; }
 .remediation-action { margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid #dbe4e1; }
 .remediation-action p { margin: 0.7rem 0 0; color: #4d5d58; }
@@ -60,13 +65,13 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 }
 
 @media (min-width: 72rem) {
-  .result-section.evidence ul { columns: 2; column-gap: 2.5rem; }
-  .result-section.evidence li { break-inside: avoid; }
+  .evidence-identifiers ul { columns: 2; column-gap: 2.5rem; }
+  .evidence-identifiers li { break-inside: avoid; }
 }
 
 @media (prefers-color-scheme: dark) {
   :root { color-scheme: dark; background: #101916; color: #e7efec; }
-  .lede, .status, .remediation-action p { color: #b9c8c3; }
+  .lede, .status, .remediation-action p, .evidence-explanation { color: #b9c8c3; }
   .panel { border-color: #334a43; background: #17231f; box-shadow: none; }
   .readiness div { border-color: #416158; background: #20352f; }
   .readiness dt { color: #a7bbb5; }
@@ -77,6 +82,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
   .result-section.inference { border-color: #5b4f70; background: #211c2a; }
   .result-section.warning { border-color: #705536; background: #271f15; }
   .repeat-count { background: #294039; color: #c3d8d2; }
+  .evidence-summary { background: #1d352f; }
+  .evidence-identifiers { border-color: #334a43; }
   .boundary { background: #1d352f; }
   .guidance { background: #352718; color: #f0d4ae; }
 }

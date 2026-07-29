@@ -205,9 +205,12 @@ def test_guided_assets_are_separate_text_only_and_have_no_expanded_browser_bound
     assert "AbortController" in script
     assert "Repeated ${count} times" in script
     assert '"wide inference"' in script
-    assert '"wide evidence"' in script
+    assert "stable integrity identifiers" in script
+    assert "they are not URLs or filesystem paths" in script
+    assert "Show all ${identifiers.length} canonical identifiers" in script
+    assert 'section.classList.add("wide", "evidence")' in script
     assert "92rem" in css
-    assert ".result-section.evidence ul" in css
+    assert ".evidence-identifiers ul" in css
     assert 'fetch("/api/v1/readiness"' in script
     assert 'runWorkflow("/api/v1/investigations"' in script
     assert 'runWorkflow("/api/v1/remediations"' in script

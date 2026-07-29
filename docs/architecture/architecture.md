@@ -209,13 +209,16 @@ findings, evidence links, model synthesis, coverage, limitations, and validation
 actions through DOM construction and `textContent`. Identical display text is
 grouped in its original position with an explicit repeat count; coverage gaps
 remain in their own section instead of being copied again into limitations.
-The wider desktop result layout gives substantive sections independent rows and
-uses two columns only for evidence identifiers, while the first-run form retains
-its narrower measure. Model inference is styled separately from deterministic
-facts. Raw JSON or Markdown bytes remain unchanged in a collapsed advanced
-region. Remediation is a later, independent synchronous POST with fixed no-apply
-wording. The page has no download, clipboard, upload, filesystem, storage,
-history, external asset, or apply capability.
+Evidence is summarized by controlled identity type and count, with fixed text
+explaining that the values are integrity links rather than URLs or paths; every
+canonical identifier remains available in a collapsed text-only list. The wider
+desktop result layout gives substantive sections independent rows and uses two
+columns only for the expanded evidence-identifier list, while the first-run form
+retains its narrower measure. Model inference is styled separately from
+deterministic facts. Raw JSON or Markdown bytes remain unchanged in a collapsed
+advanced region. Remediation is a later, independent synchronous POST with fixed
+no-apply wording. The page has no download, clipboard, upload, filesystem,
+storage, history, external asset, or apply capability.
 
 ## Advisory architecture
 
