@@ -171,7 +171,7 @@ checks are recorded in the Phase 9 recap.
 | Persistence and jobs | Not implemented | No database, queue, or retained investigation state |
 | Container workflow | Verified | Multi-stage image builds; embedded scanner version and no-mount health pass |
 | Automated quality | Green | 362 deterministic tests pass after operator-review fixes; bounded live scanner contract remains opt-in |
-| Version-control state | Phase 9 reviewed code committed through `a6f0f12` | Initial implementation `5c8be6c`, Phase 8 baseline `87ea89a`, and planning `81763ff` remain separate; Phase 1–8 identities are preserved |
+| Version-control state | Phase 9 reviewed code committed through `a6f0f12`; documentation closed at `d665a5b` | Initial implementation `5c8be6c`, Phase 8 baseline `87ea89a`, and planning `81763ff` remain separate; Phase 1–8 identities are preserved |
 
 ## 2.3 Immediate milestone
 
@@ -1491,6 +1491,7 @@ and boundary changes.
   total to 26,159 bytes without changing canonical report/plan output.
 - Recorded release-one local model synthesis and the AWS/DeepSeek V3
   version-two direction as a deferred boundary requiring separate authority.
+- Closed the reconciled Phase 9 operator-review documentation at `d665a5b`.
 
 ## Version 9.0 — July 29, 2026
 

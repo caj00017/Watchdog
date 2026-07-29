@@ -22,6 +22,9 @@
 - `a6f0f12cacafe96bd248aa277515727ba36ffffc` — summarize opaque evidence
   identities while retaining the complete canonical list.
 
+**Documentation closeout commit:**
+`d665a5b90153476531ff464aaf9a3fd802a984a1`
+
 ## Completed boundary
 
 Implemented the separately authorized local-first guided experience without

@@ -24,6 +24,9 @@ baseline above.
 `dc6e4785648482af34d75a7fa9093fdcf50595a9`, and
 `a6f0f12cacafe96bd248aa277515727ba36ffffc`
 
+**Documentation closeout commit:**
+`d665a5b90153476531ff464aaf9a3fd802a984a1`
+
 **Completion finding:** All staged implementation packages and automated or
 environment-capable acceptance gates passed. Exact deterministic,
 installed-wheel, container, scanner, route, asset, no-network/no-mount,
