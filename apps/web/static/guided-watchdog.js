@@ -271,7 +271,7 @@ async function runWorkflow(endpoint, kind) {
     resultsTitle.focus();
   } catch (error) {
     statusRegion.textContent = error && error.name === "AbortError"
-      ? "Request cancelled. Repository cleanup is being verified."
+      ? "Request cancelled. No result was produced. The server finishes repository cleanup before admitting another workflow."
       : "The local request failed. No result was inferred.";
   } finally {
     activeRequest = null;

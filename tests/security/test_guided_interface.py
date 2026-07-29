@@ -207,6 +207,11 @@ def test_guided_assets_are_separate_text_only_and_have_no_expanded_browser_bound
     assert 'runWorkflow("/api/v1/investigations"' in script
     assert 'runWorkflow("/api/v1/remediations"' in script
     assert "Nothing is applied or written" in html
+    assert (
+        "Request cancelled. No result was produced. The server finishes repository cleanup "
+        "before admitting another workflow."
+    ) in script
+    assert "cleanup is being verified" not in script
     assert "unicode-bidi: plaintext" in css
 
 
