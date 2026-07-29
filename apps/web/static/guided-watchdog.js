@@ -55,14 +55,28 @@ function definitionSection(title, values, style) {
 
 function listSection(title, values, style) {
   const section = addClass(document.createElement("section"), "result-section");
-  if (style) section.classList.add(style);
+  if (style) {
+    for (const name of style.split(" ")) section.classList.add(name);
+  }
   const heading = document.createElement("h3");
   heading.textContent = title;
   const list = document.createElement("ul");
   const items = values.length ? values : ["None reported in this artifact view."];
+  const grouped = new Map();
   for (const value of items) {
-    const item = addClass(document.createElement("li"), "user-data");
-    item.textContent = valueText(value);
+    const text = valueText(value);
+    grouped.set(text, (grouped.get(text) || 0) + 1);
+  }
+  for (const [text, count] of grouped) {
+    const item = document.createElement("li");
+    const value = addClass(document.createElement("span"), "user-data");
+    value.textContent = text;
+    item.append(value);
+    if (count > 1) {
+      const repeated = addClass(document.createElement("span"), "repeat-count");
+      repeated.textContent = `Repeated ${count} times`;
+      item.append(repeated);
+    }
     list.append(item);
   }
   section.append(heading, list);
@@ -120,7 +134,6 @@ function renderReport(report) {
   ];
   const limitations = [
     ...entryTexts(entries, "assumption"),
-    ...entryTexts(entries, "coverage_gap"),
     "Lexical and package evidence does not establish runtime reachability, exploitability, deployment exposure, or affected/not-affected status."
   ];
 
@@ -139,18 +152,18 @@ function renderReport(report) {
   listSection("Dependency findings", [
     ...entryTexts(entries, "target_metadata"),
     ...entryTexts(entries, "deterministic_fact")
-  ]);
-  listSection("Evidence", uniqueSupportIds(entries), "wide");
+  ], "wide");
+  listSection("Evidence", uniqueSupportIds(entries), "wide evidence");
   listSection("Model synthesis", [
     ...entryTexts(entries, "model_inference"),
     ...claims
-  ], "inference");
+  ], "wide inference");
   listSection("Coverage gaps", [
     ...entryTexts(entries, "coverage_gap"),
     ...coverageLines(report.coverage)
-  ], "warning");
-  listSection("Limitations", limitations, "warning");
-  listSection("Validation actions", validationActions);
+  ], "wide warning");
+  listSection("Limitations", limitations, "wide warning");
+  listSection("Validation actions", validationActions, "wide");
   updateAiFromReport(investigation);
 }
 
@@ -172,18 +185,18 @@ function renderRemediation(plan) {
     ["Commit", snapshot.commit_sha],
     ["Archive digest", snapshot.archive_sha256]
   ]);
-  listSection("Remediation candidates", candidateLines);
-  listSection("Evidence", candidates.flatMap((candidate) => Array.isArray(candidate.dependency_evidence_ids) ? candidate.dependency_evidence_ids : []), "wide");
+  listSection("Remediation candidates", candidateLines, "wide");
+  listSection("Evidence", candidates.flatMap((candidate) => Array.isArray(candidate.dependency_evidence_ids) ? candidate.dependency_evidence_ids : []), "wide evidence");
   listSection("Coverage gaps", [
     ...coverageLines(plan.coverage),
     ...(Array.isArray(plan.warnings) ? plan.warnings : []),
     ...(Array.isArray(plan.conflicts) ? plan.conflicts : [])
-  ], "warning");
+  ], "wide warning");
   listSection("Limitations", [
     plan.no_change_statement,
     "Candidate availability, compatibility, deployment applicability, generated artifacts, testing, and remediation completeness remain unverified."
-  ], "warning");
-  listSection("Validation actions", Array.isArray(plan.validation_actions) ? plan.validation_actions : []);
+  ], "wide warning");
+  listSection("Validation actions", Array.isArray(plan.validation_actions) ? plan.validation_actions : [], "wide");
 }
 
 function renderNonJson(kind) {

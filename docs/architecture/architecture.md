@@ -206,11 +206,16 @@ no-CORS, no-cookie, CSP, and disconnect cleanup controls remain unchanged.
 
 The browser renders canonical JSON into status, exact snapshot, dependency
 findings, evidence links, model synthesis, coverage, limitations, and validation
-actions through DOM construction and `textContent`. Model inference is styled
-separately from deterministic facts. Raw JSON or Markdown bytes remain in a
-collapsed advanced region. Remediation is a later, independent synchronous POST
-with fixed no-apply wording. The page has no download, clipboard, upload,
-filesystem, storage, history, external asset, or apply capability.
+actions through DOM construction and `textContent`. Identical display text is
+grouped in its original position with an explicit repeat count; coverage gaps
+remain in their own section instead of being copied again into limitations.
+The wider desktop result layout gives substantive sections independent rows and
+uses two columns only for evidence identifiers, while the first-run form retains
+its narrower measure. Model inference is styled separately from deterministic
+facts. Raw JSON or Markdown bytes remain unchanged in a collapsed advanced
+region. Remediation is a later, independent synchronous POST with fixed no-apply
+wording. The page has no download, clipboard, upload, filesystem, storage,
+history, external asset, or apply capability.
 
 ## Advisory architecture
 

@@ -203,6 +203,11 @@ def test_guided_assets_are_separate_text_only_and_have_no_expanded_browser_bound
     assert 'href="http' not in html
     assert "textContent" in script
     assert "AbortController" in script
+    assert "Repeated ${count} times" in script
+    assert '"wide inference"' in script
+    assert '"wide evidence"' in script
+    assert "92rem" in css
+    assert ".result-section.evidence ul" in css
     assert 'fetch("/api/v1/readiness"' in script
     assert 'runWorkflow("/api/v1/investigations"' in script
     assert 'runWorkflow("/api/v1/remediations"' in script
@@ -212,6 +217,7 @@ def test_guided_assets_are_separate_text_only_and_have_no_expanded_browser_bound
         "before admitting another workflow."
     ) in script
     assert "cleanup is being verified" not in script
+    assert script.count('...entryTexts(entries, "coverage_gap")') == 1
     assert "unicode-bidi: plaintext" in css
 
 
