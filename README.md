@@ -42,12 +42,13 @@ disabled-by-default credential-free literal-loopback OpenAI-compatible adapter.
 It adds no route, interface, persistence, remote provider, affected/not-affected
 classification, reachability/exposure claim, remediation, command, or patch.
 
-Phases 0–6 are complete as of July 29, 2026.
+Phases 0–7 are complete as of July 29, 2026.
 
-Phase 7 is planning-only. Its proposed work order defines deterministic
-evidence-safe reports, a bounded end-to-end workflow, a direct local CLI, and a
-separate disabled literal-loopback UI/API. No Phase 7 report, workflow, route,
-listener, CLI, UI, or persistence behavior is implemented or authorized yet.
+Phase 7 adds deterministic evidence-safe reports, a bounded end-to-end workflow,
+a direct stdout-only CLI, and a separate disabled-by-default literal-loopback
+UI/API. It preserves all Phase 1–6 identities, keeps repository work inside the
+verified lease, invokes Phase 6 only after cleanup, and adds no persistence,
+remote destination, classification, remediation, command, or patch behavior.
 
 ## Requirements
 
@@ -147,10 +148,27 @@ Useful settings include:
 | `WATCHDOG_INVESTIGATION_MAX_VALIDATION_ACTIONS` | `32` | Maximum controlled human-validation actions |
 | `WATCHDOG_INVESTIGATION_MAX_RATIONALE_BYTES_PER_CLAIM` | `2048` | Maximum UTF-8 rationale bytes per claim |
 | `WATCHDOG_INVESTIGATION_MAX_OUTPUT_TOKENS` | `4096` | Requested provider output ceiling |
+| `WATCHDOG_WORKFLOW_MAX_CONCURRENT_REQUESTS` | `1` | Whole workflows per process; fixed maximum of one |
+| `WATCHDOG_WORKFLOW_DEADLINE_SECONDS` | `180` | Admission through report assembly and cleanup |
+| `WATCHDOG_WORKFLOW_MAX_ADVISORY_IDENTIFIER_BYTES` | `128` | Maximum advisory identifier bytes |
+| `WATCHDOG_WORKFLOW_MAX_REPOSITORY_URL_BYTES` | `2048` | Maximum repository URL bytes before strict validation |
+| `WATCHDOG_WORKFLOW_MAX_REPOSITORY_REF_BYTES` | `255` | Maximum optional repository-ref bytes |
+| `WATCHDOG_WORKFLOW_MAX_REPORT_JSON_BYTES` | `1048576` | Maximum canonical JSON/report bytes |
+| `WATCHDOG_WORKFLOW_MAX_MARKDOWN_BYTES` | `1048576` | Maximum fully rendered Markdown bytes |
+| `WATCHDOG_WORKFLOW_MAX_REPORT_ENTRIES` | `1024` | Maximum entries in either report projection |
+| `WATCHDOG_WORKFLOW_MAX_EVIDENCE_REFERENCES` | `2048` | Maximum report evidence/provenance references |
+| `WATCHDOG_WORKFLOW_MAX_REPORT_DIAGNOSTICS` | `512` | Maximum retained report diagnostics |
+| `WATCHDOG_LOCAL_INTERFACES_ENABLED` | `false` | Explicitly enable the separate local listener |
+| `WATCHDOG_LOCAL_INTERFACES_HOST` | `127.0.0.1` | Literal `127.0.0.1` or `::1` only |
+| `WATCHDOG_LOCAL_INTERFACES_PORT` | `8765` | Local application port |
+| `WATCHDOG_LOCAL_INTERFACES_MAX_REQUEST_BYTES` | `8192` | Maximum investigation request body |
+| `WATCHDOG_LOCAL_INTERFACES_MAX_STATIC_ASSET_BYTES` | `262144` | Total checked-in UI asset ceiling |
 
-Investigation settings are consumed only when a trusted internal caller creates
-`InvestigationService`; the FastAPI application does not instantiate or expose
-it. Enabling requires an explicit model identifier and a same-host server that
+Investigation settings are consumed when a trusted workflow creates
+`InvestigationService`; the existing advisory FastAPI application still does not
+instantiate or expose it. The Phase 7 CLI/local app create it only behind the
+bounded workflow and after repository cleanup. Enabling requires an explicit
+model identifier and a same-host server that
 supports strict OpenAI-compatible JSON Schema responses at the fixed
 `/v1/chat/completions` path. No API key is accepted or sent.
 
@@ -168,6 +186,37 @@ Docker Compose builds and starts the standalone image without a source bind moun
 ```bash
 docker compose up --build
 ```
+
+The Phase 7 CLI calls the workflow directly and writes only the selected report
+to standard output. Watchdog accepts no output path; shell redirection is an
+operator-controlled persistence decision.
+
+```bash
+python -m apps.cli investigate \
+  --advisory CVE-2021-44228 \
+  --repository https://github.com/owner/repository \
+  --ref main \
+  --view technical \
+  --format json
+```
+
+Exit `0` means a complete report, `4` means a valid analytically incomplete
+report, `2` is invalid input, `3` is advisory/repository acquisition failure,
+`5` is cancellation/deadline, and `1` is cleanup/report/internal failure.
+
+The separate local web application is disabled by default. Start it explicitly;
+the launcher refuses hostnames, wildcards, and non-loopback addresses and does
+not launch a browser or enable access logs.
+
+```bash
+WATCHDOG_LOCAL_INTERFACES_ENABLED=true python -m apps.web
+```
+
+The fixed local surface at `http://127.0.0.1:8765` contains `/health`, `/`, two
+exact asset routes, and synchronous `POST /api/v1/investigations`. The POST
+requires `Content-Type: application/json` and
+`X-Watchdog-Local-Request: 1`. There is no OpenAPI UI, CORS, cookie, job,
+history, upload, evidence browser, arbitrary static path, or retained report.
 
 ## Phase 3 operator verification
 
@@ -429,7 +478,7 @@ that supports it. `sources` retains the raw source record by default. When
 multiple normalized source records disagree, `conflicts` retains every competing
 value and its provenance; choosing a display value does not erase the conflict.
 
-In this local working tree, the
+In this repository, the
 [Project Design and Implementation Record](docs/Nexura_Watchdog_Project_Design_and_Implementation_Record.md)
 is the canonical status and roadmap. Supporting detail is organized under
 [architecture](docs/architecture/architecture.md),
@@ -442,7 +491,7 @@ and [formal plan](docs/plans/phase-5-implementation-plan.md) define the current
 bounded internal contextual-analysis contract. The completed
 [Phase 6 evidence-bound model-investigation work order](docs/work-orders/phase-6-evidence-bound-model-investigation.md)
 and [formal plan](docs/plans/phase-6-implementation-plan.md) define the internal
-model-inference boundary. The planning-only
+model-inference boundary. The completed
 [Phase 7 reporting and local-interfaces work order](docs/work-orders/phase-7-reporting-and-local-interfaces.md)
-is ready for explicit authorization review but grants no implementation
-authority.
+and [formal plan](docs/plans/phase-7-implementation-plan.md) define the current
+report, workflow, terminal, browser, and literal-loopback interface boundary.

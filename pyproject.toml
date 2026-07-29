@@ -28,6 +28,9 @@ dev = [
 [tool.setuptools.packages.find]
 include = ["apps*", "watchdog*"]
 
+[tool.setuptools.package-data]
+"apps.web" = ["static/*.html", "static/*.css", "static/*.js"]
+
 [tool.pytest.ini_options]
 addopts = "-ra --strict-config --strict-markers"
 asyncio_mode = "auto"

@@ -18,8 +18,8 @@ describe.
   controls, and residual risks.
 - [Evidence policy](security/evidence-policy.md) defines provenance, conflicts,
   failures, acquisition metadata, the completed Phase 4 evidence contract, and
-  completed Phase 5 context evidence plus the completed Phase 6 inference/evidence
-  separation.
+  completed Phase 5 context evidence, Phase 6 inference/evidence separation, and
+  the Phase 7 report/export policy.
 
 ## Completed work orders
 
@@ -40,12 +40,14 @@ describe.
 - [Phase 6 formal implementation plan](plans/phase-6-implementation-plan.md)
   records its staged gates, tests, and mandatory escalation conditions.
 
-## Proposed Phase 7 boundary
+## Completed Phase 7 boundary
 
 - [Phase 7 evidence-safe reporting and local interfaces](work-orders/phase-7-reporting-and-local-interfaces.md)
-  is ready for explicit authorization review. It is a planning-only proposal;
-  no report, workflow, CLI, route, listener, UI, or persistence behavior is
-  authorized by its presence.
+  is the completed canonical report, workflow, CLI, and disabled literal-
+  loopback interface boundary.
+- [Phase 7 formal implementation plan](plans/phase-7-implementation-plan.md)
+  records the immutable Phase 6 baseline, completed packages, verification, and
+  mandatory escalation conditions.
 
 Supporting documents should agree with the canonical record. If they do not,
 inspect the implementation and tests, correct the canonical record first, and
@@ -58,7 +60,7 @@ then reconcile the supporting document.
 - `archive/recaps/` contains dated implementation-session snapshots.
 
 The current archived verification snapshot is
-[`development-recap-2026-07-29-phase-6.md`](archive/recaps/development-recap-2026-07-29-phase-6.md).
+[`development-recap-2026-07-29-phase-7.md`](archive/recaps/development-recap-2026-07-29-phase-7.md).
 
 Archived files preserve historical context. They are not current instructions or
 authoritative descriptions of the codebase.

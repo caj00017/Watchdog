@@ -1,18 +1,18 @@
-# Phase 7 Proposed Work Order — Evidence-Safe Reporting and Local Interfaces
+# Phase 7 Work Order — Evidence-Safe Reporting and Local Interfaces
 
-**Status:** Ready for explicit authorization review; implementation is not authorized
+**Status:** Authorized and complete; all acceptance gates passed
 
 **Prepared:** July 29, 2026
 
-**Prerequisite:** Completed Phase 6 reviewed and committed at an immutable baseline
+**Prerequisite:** Satisfied by immutable Phase 6 baseline `02abea5`
 
-**Authority:** On July 29, 2026, the user requested confirmation that Phase 6 is
-properly documented and creation of a Phase 7 work order. That request authorizes
-documentation reconciliation and planning only. It does not authorize a report
-model, workflow orchestrator, CLI, web application, investigation route,
-listener, persistence mechanism, or any other Phase 7 runtime behavior.
+**Authority:** On July 29, 2026, the user first authorized this work order as a
+planning boundary and later explicitly instructed implementation of the
+decision-complete Phase 7 plan. Implementation used `02abea5` as the immutable
+Phase 6 baseline and completed the authorized report, workflow, CLI, and local
+interface boundary without adding persistence or a new outbound destination.
 
-## Readiness finding
+## Completion finding
 
 The completed Phase 6 boundary has a governing work order, formal implementation
 plan, architecture description, active threat controls, evidence/inference
@@ -21,16 +21,16 @@ record. Its final deterministic baseline is 266 passing tests with the bounded
 live scanner contract opt-in. The completed service remains internal,
 disabled-by-default, credential-free, and restricted to literal loopback.
 
-The Phase 1–6 services now provide the validated artifacts needed to plan a
-presentation layer. Phase 7 is therefore suitable for an explicit
-implementation-authorization review once Phase 6 has been reviewed and committed
-as its own auditable baseline. Until both conditions are satisfied, the sequence
-below must not begin.
+The Phase 1–6 services provided the validated artifacts for the presentation
+layer. Phase 7 now has strict report and request schemas, deterministic bounded
+renderers, lease-safe orchestration, a stdout-only CLI, and a separately launched
+disabled literal-loopback application. The deterministic completion baseline is
+280 passing tests with the existing bounded live scanner contract opt-in.
 
 ## Objective
 
 Make the existing one-advisory/one-public-repository workflow usable by a local
-operator without weakening the evidence chain. Phase 7 would add:
+operator without weakening the evidence chain. Phase 7 adds:
 
 - one strict canonical investigation-report model assembled only from validated
   Phase 1–6 artifacts;
@@ -93,7 +93,7 @@ identity:
 Phase 7 must not silently rerun, repair, enrich, downgrade, or replace a supplied
 artifact.
 
-## Proposed user boundary
+## Implemented user boundary
 
 The initial Phase 7 request contains only:
 
@@ -112,15 +112,20 @@ The CLI and local API must construct the same strict `InvestigationWorkflowReque
 and call the same orchestration service. Neither interface may duplicate or
 weaken validation.
 
-## Proposed end-to-end service boundary
+## Implemented end-to-end service boundary
 
-The internal orchestration boundary would be:
+The internal orchestration boundary is:
 
 ```text
 InvestigationWorkflowService.run(
     request: InvestigationWorkflowRequest,
 ) -> InvestigationReport
 ```
+
+The CLI and local HTTP adapter use the companion `run_rendered` entry point,
+which applies the same admission slot and end-to-end deadline through complete
+buffered rendering. It delegates to the same validated workflow and renderer;
+it does not create a second analysis path.
 
 The workflow order is fixed:
 
@@ -148,8 +153,8 @@ repository capability and performs no network or filesystem read.
 
 ## Canonical investigation report
 
-The proposed `InvestigationReport` is a strict, frozen, extra-field-forbidden
-source-neutral domain model. It would contain bounded allowlisted projections,
+The `InvestigationReport` is a strict, frozen, extra-field-forbidden
+source-neutral domain model. It contains bounded allowlisted projections,
 not copies of raw source or provider payloads:
 
 - report schema, producer, wording-policy, and renderer versions;
@@ -271,8 +276,8 @@ advisory, ref, or model values must never enter a header.
 
 ## Direct local CLI
 
-The CLI is a thin adapter over `InvestigationWorkflowService`; it must not call
-the local HTTP API or construct shell commands. The proposed form is:
+The CLI is a thin adapter over `InvestigationWorkflowService`; it does not call
+the local HTTP API or construct shell commands. The implemented form is:
 
 ```text
 python -m apps.cli investigate \
@@ -302,7 +307,7 @@ advisory API and its OpenAPI paths remain unchanged. The Phase 7 application is
 disabled by default and must be started through a dedicated launcher that binds
 only to a configured literal `127.0.0.1` or `::1` address.
 
-The proposed local surface is deliberately small:
+The implemented local surface is deliberately small:
 
 ```text
 GET  /health
@@ -400,12 +405,12 @@ Adding output paths, automatic files, report IDs that can be retrieved later,
 resume/replay, caching, jobs, or retention changes the confidentiality and
 authorization boundary and requires separate approval.
 
-## Proposed settings and limits
+## Implemented settings and limits
 
-Phase 7 would add a strict `WATCHDOG_WORKFLOW_` and
+Phase 7 adds a strict `WATCHDOG_WORKFLOW_` and
 `WATCHDOG_LOCAL_INTERFACES_` configuration boundary. Initial ceilings are:
 
-| Limit | Proposed default | Meaning |
+| Limit | Implemented default | Meaning |
 | --- | ---: | --- |
 | Local interfaces enabled | `false` | No listener unless explicitly enabled |
 | Local host | `127.0.0.1` | Literal loopback only; `::1` also allowed |
@@ -465,7 +470,7 @@ omits path parameters, query strings, headers, bodies, and response content.
 Report output is intentionally visible to the requesting local operator but is
 not also copied to logs or telemetry.
 
-## Proposed modules
+## Implemented modules
 
 ```text
 watchdog/domain/reports.py
@@ -474,10 +479,16 @@ watchdog/reporting/limits.py
 watchdog/reporting/assembler.py
 watchdog/reporting/report_json.py
 watchdog/reporting/report_markdown.py
+watchdog/reporting/renderers.py
 watchdog/workflow/__init__.py
+watchdog/workflow/errors.py
+watchdog/workflow/limits.py
+watchdog/workflow/runtime.py
 watchdog/workflow/service.py
 apps/cli/__init__.py
 apps/cli/__main__.py
+apps/web/__init__.py
+apps/web/__main__.py
 apps/web/main.py
 apps/web/security.py
 apps/web/routes.py
@@ -490,7 +501,7 @@ The domain report model remains independent of FastAPI, terminal handling, and
 HTML. The assembler, renderers, orchestrator, CLI, HTTP security controls, and UI
 assets stay separate. `apps/api` remains unchanged.
 
-## Proposed implementation sequence
+## Completed implementation sequence
 
 1. Record explicit implementation authorization, review/commit the Phase 6
    baseline, and freeze Phase 7 request/report/status/wording vocabularies.
@@ -602,7 +613,7 @@ through the interface until its abuse-case tests pass with fakes.
 
 ## Acceptance criteria
 
-Phase 7 may be marked complete only when:
+Phase 7 was marked complete only after:
 
 1. One strict request drives exactly one bounded one-advisory/one-public-
    repository workflow using only existing validated service boundaries.
@@ -671,7 +682,7 @@ new frontend frameworks, SBOM generation, broader parsers, source-to-sink/runtim
 reachability, exploitability, deployment exposure, affected/not-affected
 classification, risk scoring, remediation guidance, upgrade commands,
 executable validation, code generation, and patch previews remain outside this
-proposed initial Phase 7 boundary.
+implemented initial Phase 7 boundary.
 
 Phase 8 remediation planning remains separate and unapproved. This Phase 7 work
 order creates no implementation authority by itself.

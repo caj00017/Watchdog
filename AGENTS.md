@@ -120,26 +120,31 @@ explicit boundary review. Phase 6 must not modify the scanner, OSV-Scanner 2.4.0
 pin or behavior, Phase 4/5 eligibility or canonical output, or any existing
 identity.
 
-## Phase 7 planning status
+## Completed Phase 7 implementation boundary
 
-`docs/work-orders/phase-7-reporting-and-local-interfaces.md` is a planning-only
-proposal for an evidence-safe reporting and local-interface boundary. The user
-authorized creation of the work order on July 29, 2026, but has not authorized
-implementation. The completed Phase 6 working tree must first be reviewed and
-committed as an immutable baseline, followed by a separate explicit Phase 7
-implementation decision.
+`docs/work-orders/phase-7-reporting-and-local-interfaces.md` and
+`docs/plans/phase-7-implementation-plan.md` define the authorized and completed
+Phase 7 boundary. The user explicitly authorized implementation on July 29,
+2026, against immutable Phase 6 baseline `02abea5`.
 
-Until then, do not add a report model or renderer, end-to-end workflow service,
-CLI investigation command, web application, investigation API or route,
-listener, UI assets, report export/persistence, or any other Phase 7 runtime
-behavior. Planning does not authorize changes to dependencies, existing public
-routes, network destinations, repository inputs, Phase 1–6 services, scanner,
-evidence/context eligibility, model controls, or canonical identities.
+Phase 7 adds only a strict canonical report, deterministic bounded JSON and
+escaped-Markdown projections, one synchronous lease-safe workflow, a direct
+stdout-only CLI, and one separately launched disabled-by-default literal-
+loopback UI/API. The existing advisory API remains unchanged. Phase 7 must
+revalidate Phase 1–6 inputs, preserve their identities and uncertainty, keep all
+Phase 2–5 work inside the verified lease, and permit Phase 6/report work only
+after cleanup. Renderers receive no repository capability and all output is
+fully buffered and bounded before emission.
 
-The proposed initial boundary is local, disabled by default, synchronous, and
-non-persistent. It preserves the one-advisory/one-public-GitHub-repository scope,
-keeps all Phase 2–5 repository work inside the verified lease, permits Phase 6
-only after cleanup, and adds no classification, reachability, exposure,
-remediation, command, or patch vocabulary. Remote or production interfaces,
-authentication, private repositories, jobs, report history, arbitrary output
-paths, remote providers, credentials, and Phase 8 remediation remain unapproved.
+Reports must keep deterministic facts, model inference, assumptions, coverage
+gaps, limitations, and validation actions structurally distinct. Hostile values
+must remain escaped data in terminals, Markdown, JSON, HTTP, and the browser.
+The local app remains synchronous, non-persistent, exact-Host/same-origin,
+literal-loopback only, without CORS, cookies, access-data logging, external
+assets, browser storage, jobs, history, uploads, or arbitrary paths.
+
+Do not add remote or production interfaces, non-loopback/container-published
+listeners, authentication, private repositories, persistence, jobs/history,
+arbitrary output paths, remote providers, credentials, new dependencies or
+destinations, classification, reachability, exposure, remediation, commands,
+code generation, or patches without a separate explicit boundary review.

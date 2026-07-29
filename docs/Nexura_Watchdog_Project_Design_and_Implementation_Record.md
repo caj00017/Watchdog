@@ -2,7 +2,7 @@
 
 ## Project Design and Implementation Record
 
-**Document version:** 6.1
+**Document version:** 7.0
 
 **Last updated:** July 29, 2026
 
@@ -12,7 +12,7 @@
 
 **Code version:** 0.1.0
 
-**Current lifecycle state:** Phases 0–6 complete; Phase 7 proposed but not authorized
+**Current lifecycle state:** Phases 0–7 complete; Phase 8 remains deferred
 
 **Primary deployment direction:** Local-first, open source
 
@@ -55,7 +55,7 @@ session.
 
 ## 2.1 Current phase
 
-Phases 0 through 6 are complete:
+Phases 0 through 7 are complete:
 
 - **Phase 0 — Foundation:** package structure, FastAPI, configuration, quality
   tooling, Docker development, and foundational documentation.
@@ -85,6 +85,11 @@ Phases 0 through 6 are complete:
   gateway injection, evidence-link and deterministic disposition validation,
   explicit run states, and one disabled credential-free literal-loopback
   OpenAI-compatible adapter.
+- **Phase 7 — Evidence-safe reporting and local interfaces:** a strict canonical
+  report with deterministic summary/technical JSON and escaped-Markdown
+  projections, one lease-safe synchronous workflow, a direct stdout-only CLI,
+  and a separate disabled literal-loopback UI/API with fixed routes and
+  same-origin controls.
 
 Phases 4 and 5 remain internal. Phase 5 observations are lexical and do not
 establish execution, runtime/data-flow reachability, exploitability, deployment
@@ -98,12 +103,11 @@ permits no repository access. It excludes remote providers, credentials,
 persistence, interfaces, remediation, runtime reachability, exposure, and
 affected/not-affected classifications.
 
-Phase 7 has a planning-only work order for evidence-safe reports and local
-interfaces. It proposes a deterministic report model, bounded orchestration,
-direct local CLI, and a separate disabled literal-loopback UI/API. No Phase 7
-runtime behavior is implemented or authorized. Phase 6 must first be reviewed
-and committed as an immutable baseline, followed by a separate explicit Phase 7
-implementation decision.
+Phase 7 is complete under its governing work order and formal plan. It preserves
+Phase 1–6 identities and uncertainty, performs all repository work inside the
+verified lease, invokes Phase 6 only after cleanup, and exports only bounded
+allowlisted report projections. It adds no persistence, remote destination,
+classification, remediation, command, or patch behavior.
 
 ## 2.2 Current health
 
@@ -123,19 +127,20 @@ implementation decision.
 | Contextual analysis | Implemented internally | Bounded evidence-linked lexical observations and non-classification signals; no route or runtime reachability |
 | Exposure classification | Not implemented | No affected/not-affected conclusions are produced |
 | LLM integration | Implemented internally | Evidence-bound, disabled by default, literal-loopback only, credential-free, strict output validation |
-| CLI and web UI | Not implemented | Planning-only Phase 7 work order; placeholder directories only |
+| CLI and web UI | Implemented locally | Direct stdout-only CLI plus separate disabled literal-loopback UI/API |
 | Persistence and jobs | Not implemented | No database, queue, or retained investigation state |
 | Container workflow | Verified | Multi-stage image builds; embedded scanner version and no-mount health pass |
-| Automated quality | Green | 266 deterministic tests pass; bounded live scanner contract remains opt-in |
-| Version-control state | Phase 0–5 tracked on `main` | Completed Phase 6 is a working-tree change pending review/commit |
+| Automated quality | Green | 280 deterministic tests pass; bounded live scanner contract remains opt-in |
+| Version-control state | Phases 0–7 ready as an immutable `main` baseline | Phase 8 remains unapproved |
 
 ## 2.3 Immediate milestone
 
-Review and commit the completed Phase 6 boundary as a small auditable change,
-then make a separate explicit authorization decision on the Phase 7 work order.
-Until then, do not add report/workflow runtime behavior, expose internal
-services, add a listener or CLI, introduce remote egress or credentials, broaden
-the disposition vocabulary, or change scanner and Phase 4–6 behavior.
+Use the completed Phase 7 boundary as the next immutable baseline. Phase 8 and
+any remote/production interface remain unapproved. A Phase 8 work order may be
+drafted against the exact Phase 7 commit, but planning does not authorize
+persistence, authentication, new destinations or dependencies, private inputs,
+classification, reachability/exposure, remediation, commands, code generation,
+or patches.
 
 ---
 
@@ -218,7 +223,8 @@ or exposure conclusions.
   copied from its digest-pinned multi-architecture image.
 - Standalone Compose service without a source bind mount or reload process.
 - Application, domain, source-adapter, repository, inventory, scanner, matching,
-  reporting, and test package boundaries, with placeholders for later phases.
+  reporting, workflow, interface, and test package boundaries, with placeholders
+  only for later unapproved phases.
 - Repository-wide security rules in `AGENTS.md`.
 
 There is no dependency lockfile, release automation, CI workflow, license,
@@ -445,7 +451,7 @@ not itself acquire or inspect a repository.
 | `watchdog/evidence` | Canonical identity/configuration, safe reads, positional selectors, redaction, and collection |
 | `watchdog/context` | Trusted catalog and targets, bounded descriptor discovery, data-only recognizers, redacted evidence, lexical graph/ranking, and collection |
 | `watchdog/analysis`, `watchdog/jobs` | Placeholders only |
-| `apps/cli`, `apps/web` | Placeholders only |
+| `apps/cli`, `apps/web` | Direct Phase 7 CLI and separate disabled literal-loopback application |
 
 ---
 
@@ -671,7 +677,7 @@ As of July 29, 2026:
 - `ruff format --check .` passes.
 - `ruff check .` passes.
 - strict `mypy` passes.
-- pytest passes 266 deterministic tests; the bounded live OSV scanner contract
+- pytest passes 280 deterministic tests; the bounded live OSV scanner contract
   is skipped unless explicitly enabled.
 - Application/test bytecode compilation passes.
 - OpenAPI contains exactly `/health` and
@@ -761,7 +767,8 @@ not a stable release identifier.
 - No remote or credentialed LLM provider, retry/fallback, model routing, tool
   call, or persistent investigation result. Phase 6 supports only an explicitly
   enabled local literal-loopback model server.
-- No investigation/report API, CLI workflow, or web UI.
+- No public/remote investigation API, production listener, retained report, or
+  hosted web UI; the Phase 7 interface is local and disabled by default.
 - No persistence, job state, authentication, hosted service, or private repos.
 - No patch preview or remediation automation.
 - No advisory URL input despite its place in the intended MVP.
@@ -778,9 +785,9 @@ not a stable release identifier.
 
 ## 10.3 Project-operational gaps
 
-- The Phase 0–5 implementation and documentation are committed on `main`; the
-  completed Phase 6 implementation and documentation are pending review and
-  commit in the current working tree.
+- The completed Phase 0–7 implementation and documentation form the next
+  immutable `main` baseline; subsequent phases must record its exact commit
+  before implementation.
 - The complete `docs/` tree is tracked so boundary and status changes can be
   reviewed and committed with the implementation they describe.
 - No dependency lock, CI, license, changelog/release process, or vulnerability
@@ -800,7 +807,7 @@ not a stable release identifier.
 | 4. Evidence engine | Complete | Internal schema, safe extraction, hashing, redaction, bounded links, and deterministic bundles |
 | 5. Contextual analysis | Complete | Bounded import, call, config, endpoint, evidence, lexical graph, and controlled context signals |
 | 6. Evidence-bound model investigation | Complete | Internal deterministic envelope, strict schema/evidence/policy validation, and disabled literal-loopback gateway |
-| 7. Evidence-safe reports and local interfaces | Ready for authorization review; not authorized | Canonical reports, bounded workflow, direct local CLI, disabled loopback UI/API |
+| 7. Evidence-safe reports and local interfaces | Complete | Canonical reports, bounded workflow, direct local CLI, disabled loopback UI/API |
 | 8. Remediation assistant | Deferred | Upgrade guidance, validation, patch previews |
 
 ---
@@ -940,17 +947,19 @@ context-unconfirmed, insufficient-evidence, and unsupported dispositions.
 
 ## 13.5 Interfaces and deployment
 
-The planning-only Phase 7 work order proposes an evidence-safe canonical report,
+The completed Phase 7 boundary implements an evidence-safe canonical report,
 deterministic summary/technical JSON and escaped-Markdown views, one bounded
 end-to-end orchestrator, a direct stdout-only CLI, and a separate
 disabled-by-default literal-loopback web application with a minimal synchronous
-investigation API. The existing advisory API remains the only implemented
-public interface today; no Phase 7 route, listener, CLI, report, or UI exists.
+investigation API. The existing advisory API remains unchanged and is the only
+default container listener.
 
-The proposal preserves all Phase 1–6 identities, keeps repository work inside
-the verified lease, invokes Phase 6 only after cleanup, and adds no persistence,
-background job, remote destination, credentials, classification, remediation,
-command, or patch behavior. A future production or hosted service still requires
+The implementation preserves all Phase 1–6 identities, keeps repository work
+inside the verified lease, invokes Phase 6 only after cleanup, and adds no
+persistence, background job, remote destination, credentials, classification,
+remediation, command, or patch behavior. The local app has five fixed routes,
+exact Host/same-origin controls, no CORS/cookies/docs/access logs, and checked-in
+dependency-free UI assets with no browser storage. A future production or hosted service still requires
 non-root containers, admission/rate limits, durable job state, isolated analysis
 workers, storage/retention policy, authentication, authorization, and
 operational monitoring under a separate review.
@@ -1128,21 +1137,29 @@ runtime/data-flow reachability, exploitability, exposure or affected/not-
 affected classifications, remediation, commands, and patches remain deferred
 and require a separate work order.
 
-## D-021 — Phase 7 planning does not authorize an interface
+## D-021 — Phase 7 required and received separate implementation authority
 
-The user requested a Phase 7 work order on July 29, 2026. The resulting proposal
-defines evidence-safe reports, bounded orchestration, a direct local CLI, and a
-separate disabled literal-loopback UI/API. The request authorizes this planning
-and Phase 6 documentation reconciliation only; it does not authorize any Phase 7
-runtime behavior.
+The user first requested a Phase 7 work order on July 29, 2026; that planning
+request did not authorize runtime behavior. After Phase 6 was reviewed and
+committed at immutable baseline `02abea5`, the user separately instructed
+implementation of the decision-complete plan. That instruction authorized the
+bounded report, workflow, direct CLI, and disabled literal-loopback UI/API now
+implemented.
 
-Phase 6 must first be reviewed and committed as an immutable baseline. A
-separate explicit decision is then required before Phase 7 implementation may
-begin. The proposed initial boundary is synchronous and non-persistent, adds no
-outbound destination, and preserves the narrower Phase 6 vocabulary. Public or
-production exposure, authentication, private repositories, jobs, durable
-reports, remote providers, credentials, reachability/exposure classification,
-remediation, commands, and patches require later independent review.
+The completed boundary is synchronous and non-persistent, adds no outbound
+destination, and preserves the narrower Phase 6 vocabulary. Public or production
+exposure, authentication, private repositories, jobs, durable reports, remote
+providers, credentials, reachability/exposure classification, remediation,
+commands, and patches still require later independent review.
+
+## D-022 — Local report interfaces are projections, not new analysis
+
+The Phase 7 report is a canonical allowlisted projection over revalidated Phase
+1–6 artifacts. It does not rerun, repair, enrich, or replace evidence and does
+not make Phase 5 lexical observations or Phase 6 inference deterministic facts.
+The direct CLI and local HTTP adapter construct the same strict workflow request
+and invoke the same service. The listener is disabled by default and literal-
+loopback only; loopback is an operator-local assumption, not authentication.
 
 ---
 
@@ -1216,7 +1233,8 @@ docs/
 │   └── architecture.md
 ├── plans/
 │   ├── phase-5-implementation-plan.md
-│   └── phase-6-implementation-plan.md
+│   ├── phase-6-implementation-plan.md
+│   └── phase-7-implementation-plan.md
 ├── security/
 │   ├── evidence-policy.md
 │   └── threat-model.md
@@ -1237,7 +1255,8 @@ docs/
         ├── development-recap-2026-07-28-phase-4.md
         ├── development-recap-2026-07-28-phase-5.md
         ├── development-recap-2026-07-29-phase-5-verification.md
-        └── development-recap-2026-07-29-phase-6.md
+        ├── development-recap-2026-07-29-phase-6.md
+        └── development-recap-2026-07-29-phase-7.md
 ```
 
 The archive preserves historical context but is not current instruction. The
@@ -1247,6 +1266,22 @@ and boundary changes.
 ---
 
 # 18. Change History
+
+## Version 7.0 — July 29, 2026
+
+- Recorded explicit Phase 7 implementation authority against immutable Phase 6
+  baseline `02abea5` and completed the governing work order and formal plan.
+- Added strict canonical report/request/configuration models, deterministic
+  identities and bounded projections, fixed evidence-safe wording, JSON and
+  hostile-text-safe Markdown renderers, and exact Phase 6 envelope/result links.
+- Added one fixed-order lease-safe workflow, a direct stdout-only CLI, and a
+  separate disabled literal-loopback application with exact Host/same-origin
+  controls, five routes, security headers, and dependency-free text-sink UI.
+- Added 14 report/workflow/CLI/HTTP/UI tests and raised the deterministic baseline
+  from 266 to 280 passing tests while preserving dependencies, existing advisory
+  routes, OSV-Scanner 2.4.0, Phase 4–6 identities, and opt-in live scanner status.
+- Kept persistence, public/remote interfaces, authentication, private inputs,
+  new destinations, classification, remediation, commands, and patches deferred.
 
 ## Version 6.1 — July 29, 2026
 
@@ -1431,9 +1466,12 @@ Phase 6 can construct a bounded deterministic envelope over those immutable
 artifacts and, when explicitly enabled, ask a literal-loopback model for a
 strictly validated evidence-linked synthesis. That synthesis is visibly model
 inference, not evidence or a vulnerability classification. The service remains
-internal, credential-free, non-persistent, and without a route, CLI, or UI.
+internal, credential-free, and non-persistent; only Phase 7 may consume its
+validated result for a report.
 
-Phase 7 is a planning-only proposal to present those artifacts through
-evidence-safe deterministic reports and local interfaces. No Phase 7 behavior is
-implemented or authorized, and its work order does not relax any existing
-security or evidence boundary.
+Phase 7 presents those artifacts through a canonical evidence-safe report,
+deterministic bounded JSON/Markdown projections, a direct stdout-only CLI, and a
+separate disabled literal-loopback UI/API. It preserves cleanup, evidence,
+inference, scanner, and non-classification boundaries and adds no persistence or
+outbound destination. Its local result remains an evidence-bound investigation,
+not an affected/not-affected or runtime-exposure determination.

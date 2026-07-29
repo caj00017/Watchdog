@@ -1,0 +1,11 @@
+:root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+body { margin: 0; }
+main { max-width: 70rem; margin: 0 auto; padding: 2rem; }
+form { display: grid; gap: 0.6rem; max-width: 48rem; }
+input, select, button { font: inherit; padding: 0.55rem; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 0.8rem; }
+section { margin-top: 2rem; }
+pre { border: 1px solid currentcolor; min-height: 8rem; overflow: auto; padding: 1rem; white-space: pre-wrap; }
+dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.4rem 1rem; }
+dd { margin: 0; overflow-wrap: anywhere; }
+button:focus-visible, input:focus-visible, select:focus-visible, pre:focus-visible { outline: 0.2rem solid currentcolor; outline-offset: 0.15rem; }

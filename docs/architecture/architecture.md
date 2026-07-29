@@ -5,7 +5,7 @@
 
 ## Current scope
 
-The current implementation contains six deliberately bounded capabilities:
+The current implementation contains seven deliberately bounded capabilities:
 
 1. The public FastAPI advisory layer validates CVE, GHSA, or OSV identifiers,
    retrieves OSV records, normalizes them into source-neutral domain models, and
@@ -26,13 +26,19 @@ The current implementation contains six deliberately bounded capabilities:
    artifacts after cleanup, constructs a bounded deterministic model envelope,
    and accepts evidence-linked inference only after strict response and policy
    validation.
+7. Phase 7 coordinates one complete investigation, builds a strict canonical
+   evidence-linked report, renders bounded JSON or escaped Markdown, and exposes
+   it through a direct stdout-only CLI or a separate disabled literal-loopback
+   application with five exact routes.
 
 Repository intake, inventory, matching, evidence, context, and investigation
-have no HTTP routes. The implemented internal pipeline does not generate an
-SBOM, execute repository code or package tooling, infer runtime/data-flow
-reachability or exposure, persist investigation content, or generate patches.
+remain internal services. Only the Phase 7 orchestrator exposes their bounded
+report projection through the local application; no canonical internal bundle
+or repository capability is routed. The pipeline does not generate an SBOM,
+execute repository code or package tooling, infer runtime/data-flow reachability
+or exposure, persist investigation content, or generate patches.
 
-Phases 4–6 are complete under their reviewed work orders. Evidence and context
+Phases 4–7 are complete under their reviewed work orders. Evidence and context
 collection remain lease-scoped; investigation runs only over their immutable
 outputs after cleanup. Every public route is unchanged.
 
@@ -62,11 +68,40 @@ flowchart LR
     Envelope --> Loopback[Optional literal-loopback model gateway]
     Loopback --> Validation[Strict schema evidence and policy validation]
     Validation --> Result[Evidence-bound inference result]
+    Result --> Report[Canonical evidence-safe report]
+    Report --> CLI[Direct stdout-only CLI]
+    Report --> LocalApp[Disabled literal-loopback UI and API]
 ```
 
-The public advisory flow remains separate from internal orchestration. A trusted
-caller can join an advisory and inventory with `AdvisoryMatchService`, but no
-public request acquires or scans a repository.
+The public advisory flow remains separate from Phase 7 orchestration. The
+existing advisory API never acquires or scans a repository. Only an explicit CLI
+invocation or request to the separately launched local app enters the bounded
+workflow.
+
+## Phase 7 reporting and local-interface architecture
+
+`InvestigationWorkflowService` validates the complete advisory/repository
+request before activity, resolves the advisory, and owns one shared admission
+deadline. Inventory, matching, evidence, and context execute sequentially inside
+one `RepositoryLease`; cancellation joins active workers and cleanup before it is
+reported. Phase 6 runs only after verified cleanup, and report assembly receives
+only immutable artifacts plus a repository snapshot without a workspace path.
+
+`InvestigationReport` is frozen, extra-forbidden, renderer-independent, and
+identified by canonical JSON excluding only its own ID. The assembler rebuilds
+the deterministic Phase 6 envelope to prove exact result linkage, selects
+evidence deterministically, keeps inference separate from facts, and records
+partial coverage and omissions. JSON and Markdown renderers fully buffer and
+size-check output before returning bytes; Markdown neutralizes HTML, syntax,
+terminal controls, and bidirectional controls.
+
+The CLI calls the workflow in process and has no output-path or HTTP behavior.
+The separate web launcher has no module-level listener and refuses startup while
+disabled. When explicitly enabled it binds only literal `127.0.0.1` or `::1`,
+disables access logs/proxy trust/docs, enforces exact Host and same-origin browser
+controls, and serves only `/health`, `/`, two exact assets, and the synchronous
+investigation POST. Assets have no external dependencies or browser persistence
+and variable values reach only text sinks.
 
 ## Advisory architecture
 
@@ -329,7 +364,11 @@ reachability/exposure, remediation, and patches are excluded.
 | `watchdog/evidence/` | Canonical IDs/configuration, descriptor-relative reads, positional selectors, redaction, and lease-scoped collection |
 | `watchdog/context/` | Trusted catalog, target derivation, descriptor discovery, data-only recognizers, context evidence, lexical graph/ranking, and lease-scoped collection |
 | `watchdog/investigation/` | Canonical envelope selection, fixed prompt/schema assets, gateway protocol, strict validation/policy, loopback adapter, and internal service |
+| `watchdog/reporting/` | Phase 7 report identity/configuration, assembly, controlled wording, and bounded renderers |
+| `watchdog/workflow/` | Fixed-order lease-safe orchestration, runtime composition, admission, deadline, and cancellation |
 | `apps/api` | Advisory API lifespan, dependencies, error mapping, and routes |
+| `apps/cli` | Direct stdout-only investigation adapter |
+| `apps/web` | Disabled literal-loopback launcher, exact local routes/security, and checked-in UI assets |
 
 ## Deployment and deferred architecture
 
@@ -342,12 +381,14 @@ Intake workspaces are local process resources and are not a durable data model.
 The scanner increases image size and requires normal outbound OSV lookup access;
 `--no-resolve` prevents dependency-resolution egress. The bounded internal
 evidence and context services add no egress or public route. Phase 6 adds only an
-explicitly enabled literal-loopback destination and no public route. Still
-deferred are SBOM generation, source-to-sink/runtime reachability, exposure
-classifications, remote model providers, credentials, persistence, background
-jobs, evidence browsing, CLI workflows, web UI, and patch previews. Exposing
-internal Phase 2–6 services through an API
-or changing the scanner version/network behavior requires a new boundary review.
+explicitly enabled literal-loopback destination. Phase 7 adds no outbound
+destination and keeps its inbound listener disabled, literal-loopback, and
+unpublished by the default container. Still deferred are SBOM generation,
+source-to-sink/runtime reachability, exposure classifications, remote model
+providers, credentials, persistence, background jobs, evidence browsing,
+remote/production interfaces, and patch previews. Exposing internal bundles,
+binding beyond loopback, or changing the scanner version/network behavior
+requires a new boundary review.
 
 `../work-orders/phase-5-contextual-analysis.md` defines the implemented separate
 context service within its documented limits. Phase 5 does not broaden Phase 4
@@ -357,8 +398,7 @@ source-reference eligibility or rewrite Phase 4 evidence identities.
 `../plans/phase-6-implementation-plan.md` define the completed internal
 investigation boundary.
 
-`../work-orders/phase-7-reporting-and-local-interfaces.md` defines a
-planning-only proposal for a canonical report, bounded orchestration, direct
-local CLI, and separate disabled literal-loopback UI/API. No such module,
-workflow, route, listener, renderer, or interface is currently implemented or
-authorized.
+`../work-orders/phase-7-reporting-and-local-interfaces.md` and
+`../plans/phase-7-implementation-plan.md` define the completed canonical report,
+bounded orchestration, direct local CLI, and separate disabled literal-loopback
+UI/API boundary.

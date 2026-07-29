@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nexura Watchdog</title>
+  <link rel="stylesheet" href="/assets/watchdog.css">
+  <script src="/assets/watchdog.js" defer></script>
+</head>
+<body>
+  <main>
+    <h1>Nexura Watchdog</h1>
+    <p>Local, evidence-bound investigation of one advisory and one public GitHub repository.</p>
+    <form id="investigation-form">
+      <label for="advisory">Advisory ID</label>
+      <input id="advisory" name="advisory" required maxlength="128" autocomplete="off">
+
+      <label for="repository">Public GitHub repository URL</label>
+      <input id="repository" name="repository" required maxlength="2048" autocomplete="off">
+
+      <label for="ref">Repository ref (optional)</label>
+      <input id="ref" name="ref" maxlength="255" autocomplete="off">
+
+      <label for="view">View</label>
+      <select id="view" name="view"><option value="summary">Summary</option><option value="technical">Technical</option></select>
+
+      <label for="format">Format</label>
+      <select id="format" name="format"><option value="json">JSON</option><option value="markdown">Markdown</option></select>
+
+      <div class="actions">
+        <button type="submit">Investigate</button>
+        <button id="reset" type="reset">Reset</button>
+        <button id="download" type="button" disabled>Download result</button>
+      </div>
+    </form>
+
+    <section aria-labelledby="result-title">
+      <h2 id="result-title">Investigation result</h2>
+      <p id="status" role="status" aria-live="polite">No investigation has run.</p>
+      <p id="disclaimer" hidden>This is an evidence-bound investigation, not an affected/not-affected or runtime-exposure determination.</p>
+      <dl id="metadata" hidden>
+        <dt>Report ID</dt><dd id="report-id"></dd>
+        <dt>Report status</dt><dd id="report-status"></dd>
+        <dt>Exact commit</dt><dd id="commit"></dd>
+        <dt>Scanner version</dt><dd id="scanner-version"></dd>
+      </dl>
+      <pre id="result" tabindex="0"></pre>
+    </section>
+  </main>
+</body>
+</html>

@@ -85,6 +85,21 @@ class Settings(BaseSettings):
     investigation_max_validation_actions: int = Field(default=32, gt=0, le=128)
     investigation_max_rationale_bytes_per_claim: int = Field(default=2_048, gt=0, le=8_192)
     investigation_max_output_tokens: int = Field(default=4_096, gt=0, le=16_384)
+    workflow_max_concurrent_requests: int = Field(default=1, ge=1, le=1)
+    workflow_deadline_seconds: float = Field(default=180.0, gt=0, le=600)
+    workflow_max_advisory_identifier_bytes: int = Field(default=128, gt=0, le=128)
+    workflow_max_repository_url_bytes: int = Field(default=2_048, gt=0, le=2_048)
+    workflow_max_repository_ref_bytes: int = Field(default=255, gt=0, le=255)
+    workflow_max_report_json_bytes: int = Field(default=1_048_576, gt=0, le=1_048_576)
+    workflow_max_markdown_bytes: int = Field(default=1_048_576, gt=0, le=1_048_576)
+    workflow_max_report_entries: int = Field(default=1_024, gt=0, le=1_024)
+    workflow_max_evidence_references: int = Field(default=2_048, gt=0, le=2_048)
+    workflow_max_report_diagnostics: int = Field(default=512, gt=0, le=512)
+    local_interfaces_enabled: bool = False
+    local_interfaces_host: Literal["127.0.0.1", "::1"] = "127.0.0.1"
+    local_interfaces_port: int = Field(default=8765, ge=1, le=65535)
+    local_interfaces_max_request_bytes: int = Field(default=8_192, gt=0, le=8_192)
+    local_interfaces_max_static_asset_bytes: int = Field(default=256 * 1024, gt=0, le=256 * 1024)
 
     @field_validator("osv_scanner_path")
     @classmethod

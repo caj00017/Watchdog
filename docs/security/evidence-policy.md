@@ -283,19 +283,34 @@ runtime/data-flow reachability, exploitability, or deployment exposure. Missing
 or partial evidence, gateway failure, invalid output, and policy failure remain
 explicit incomplete run states and never negative findings.
 
-## Phase 7 reporting proposal
+## Phase 7 reporting boundary
 
-The planning-only Phase 7 work order proposes a presentation boundary over
-validated Phase 1–6 artifacts. If separately authorized, a canonical report
-would preserve the exact distinction between deterministic fact, model
-inference, assumption, gap, limitation, and controlled validation action. Every
-vulnerability-relevant assertion would retain its existing evidence or
-provenance links; rendering would not create a new evidence category.
+The completed Phase 7 presentation boundary consumes only revalidated Phase 1–6
+artifacts. Its canonical report preserves the exact distinction between target
+metadata, deterministic fact, model inference, assumption, gap, limitation, and
+controlled validation action. Every deterministic finding and inference retains
+its existing evidence, signal, or provenance IDs; rendering creates no new
+evidence category.
 
-Summary/technical and JSON/escaped-Markdown views would be projections of the
-same canonical report. They could not hide partial coverage, turn scanner
-non-reporting or lexical non-observation into a repository negative, or broaden
-the Phase 6 disposition vocabulary. The proposal permits no raw source/provider
-payload, arbitrary evidence browsing, report persistence, affected/not-affected
-classification, reachability/exposure conclusion, remediation, command, or
-patch. No Phase 7 reporting behavior is currently implemented or authorized.
+The report assembler proves same-advisory and same-snapshot agreement, rebuilds
+the deterministic Phase 6 envelope to verify the result link, and rejects
+unknown, fabricated, omitted, stale, or cross-linked support. It selects bounded
+evidence deterministically and records upstream-envelope and report omissions.
+Report identity covers canonical renderer-independent content, configuration,
+producer, and wording policy but does not imply repeatability of a future model
+run.
+
+Summary/technical and JSON/escaped-Markdown outputs are projections of the same
+canonical report and share status, coverage, findings, inference, and
+limitations. They cannot hide partial coverage, turn scanner non-reporting or
+lexical non-observation into a repository negative, promote model prose to fact,
+or broaden Phase 6 vocabulary. The first human-readable line states that the
+report is evidence-bound and is not an affected/not-affected or runtime-exposure
+determination.
+
+Reports contain only allowlisted projections and already-redacted display
+content. They exclude raw source/provider payloads, omitted/raw repository
+content, operational paths, prompts/responses, headers, credentials, and logs.
+Phase 7 permits no arbitrary evidence browsing, server persistence,
+affected/not-affected classification, reachability/exposure conclusion,
+remediation, command, or patch.

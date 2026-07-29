@@ -300,8 +300,9 @@ general source/static or source-to-sink/runtime reachability analysis beyond the
 completed allowlisted lexical context, remote or credentialed LLM call, exposure
 classification, or patch application. Phase 3 inventory and exact-coordinate matching are internal
 only and do not assert runtime exposure. Phase 4 evidence extraction and Phase 5
-contextual analysis remain internal and have no persistence or public export
-path. Phase 5 recognizes only bounded lexical forms and does not implement
+contextual analysis remain internal and have no persistence or direct bundle
+export path; Phase 7 exposes only their allowlisted bounded report projection.
+Phase 5 recognizes only bounded lexical forms and does not implement
 source-to-sink or runtime reachability. Phase 6 remains internal, disabled by
 default, non-persistent, and limited to literal-loopback synthesis.
 
@@ -309,6 +310,47 @@ Prompt injection in source and configuration is contained as quoted untrusted
 data inside a fixed request; redacted bounded evidence, strict output schemas,
 and exact claim links are enforced locally. Generated patches remain
 previews until explicit human approval in a separately authorized phase.
+
+## Phase 7 implemented threat boundary
+
+Phase 7 introduces terminal, report, browser, inbound-loopback, orchestration,
+and cancellation boundaries without adding an outbound destination. The
+canonical assembler revalidates Phase 1–6 inputs, exact snapshot/advisory
+agreement, canonical identities, Phase 4/5 support links, and the deterministic
+Phase 6 envelope/result relationship before a report exists. Report selection is
+bounded and deterministic; missing data, partial analysis, model failure, and
+omissions remain explicit.
+
+The direct CLI calls the workflow in process and exports only a complete buffered
+report to stdout. It accepts no output path, template, prompt, command, endpoint,
+token, or config file. Trusted bounded diagnostics use stderr; argument errors do
+not echo hostile values. Markdown neutralizes raw HTML, Markdown controls,
+terminal escapes, bidirectional controls, and embedded controls before output.
+
+The separate web application has no import-time listener and is disabled by
+default. Its launcher accepts only literal loopback, disables proxy trust,
+access logs, OpenAPI/docs, automatic browser launch, and server-identifying
+headers. Requests require exact configured Host, same-origin browser metadata,
+JSON content type, a fixed non-simple custom header, bounded duplicate-aware JSON,
+and the shared workflow gate/deadline. Responses carry no-store, restrictive
+CSP, nosniff, no-referrer, and frame-denial headers and set no cookies or CORS.
+The UI has only checked-in assets, same-origin fetches, text sinks, transient
+in-memory download blobs, and no browser storage or external request.
+
+| Threat | Implemented Phase 7 control | Failure behavior or residual risk |
+| --- | --- | --- |
+| Cross-artifact or fabricated report link | Revalidate every model/identity, exact advisory/snapshot agreement, envelope/result ID, and included citations | Reject the whole report before rendering |
+| Partial/scanner/model failure shown as safety | Structural coverage/status and fixed wording; `not_reported_affected` carries its narrow limitation | Valid reports may be incomplete and use a distinct CLI exit/status |
+| Markdown/terminal/browser injection | Full-output buffering, hostile-character escaping, JSON serialization, CSP, and DOM text sinks | Report prose remains untrusted text visible to the local operator |
+| DNS rebinding or cross-site browser trigger | Exact Host including port, exact Origin, same-origin Fetch Metadata, no CORS, JSON plus fixed custom header | Literal loopback does not authenticate another same-user process |
+| Oversized/slow local request | 8 KiB request, strict schema, one shared admission slot, 180-second deadline, phase-local limits | CPU/memory isolation remains operator/container owned |
+| Disconnect races workspace cleanup | Cancel child workflow, join cooperative workers, and await lease cleanup before reporting stop | Host/process crash can still leave workspace state as documented in Phase 2 |
+| Report or browser retention | No server file/cache/history/job; no browser storage; transient bytes and revoked Blob URL | Operator stdout redirection or browser download intentionally creates an operator-owned copy |
+
+Binding beyond literal loopback, proxy/container publication, authentication,
+multi-user hosting, persistence, jobs/history, remote assets, new inputs,
+classification, remediation, command, or patch behavior is outside this threat
+boundary.
 
 ## Security change process
 
@@ -328,8 +370,7 @@ The completed
 `../work-orders/phase-6-evidence-bound-model-investigation.md` and
 `../plans/phase-6-implementation-plan.md` define the only active model boundary.
 
-The proposed `../work-orders/phase-7-reporting-and-local-interfaces.md`
-documents the additional rendering, workflow, terminal, browser, loopback
-listener, cross-origin, resource, and confidentiality threats that would need to
-be controlled by a later interface phase. It is planning-only and creates no
-active route, listener, CLI, UI, report export, or implementation authority.
+The completed `../work-orders/phase-7-reporting-and-local-interfaces.md` and
+`../plans/phase-7-implementation-plan.md` define the active rendering, workflow,
+terminal, browser, loopback-listener, cross-origin, resource, and confidentiality
+controls. Any broader interface or export requires a new reviewed boundary.
