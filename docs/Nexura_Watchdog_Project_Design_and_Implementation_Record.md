@@ -2,7 +2,7 @@
 
 ## Project Design and Implementation Record
 
-**Document version:** 8.0
+**Document version:** 8.1
 
 **Last updated:** July 29, 2026
 
@@ -12,7 +12,7 @@
 
 **Code version:** 0.1.0
 
-**Current lifecycle state:** Phases 0–8 complete
+**Current lifecycle state:** Phases 0–8 complete; Phase 9 authorized
 
 **Primary deployment direction:** Local-first, open source
 
@@ -1252,6 +1252,26 @@ The fixed no-change statement and controlled validation actions preserve the
 permanent human-approval boundary. Repository writes/apply, commands,
 lock/checksum edits, version resolution, and success/compatibility claims require
 a separate work order.
+
+## D-025 — Phase 9 received separate guided-experience authority
+
+Phase 8 was independently verified and committed at immutable baseline
+`87ea89a5313c3dcb9cdc349a27691f91d83e623d`. On July 29, 2026, the user then
+supplied and explicitly directed implementation of the decision-complete Phase
+9 plan against that exact hash.
+
+The authority is limited to an installed launcher, bounded non-repository
+scanner readiness checks, a separately selected literal-loopback guided asset
+variant, a controlled readiness projection, and human-readable projections of
+unchanged Phase 7 reports and Phase 8 plans. The guided launcher may enable the
+existing local interface and candidate planning for only its process; previews
+remain explicit opt-in and model transport remains the existing optional
+credential-free literal-loopback adapter.
+
+Hosted operation, authentication, credentials, private inputs, persistence,
+telemetry, jobs/history, installation, new egress or dependencies, repository
+writes/apply, commands, classification, reachability/exposure, compatibility or
+availability claims, and release publication remain separate work.
 
 ---
 
