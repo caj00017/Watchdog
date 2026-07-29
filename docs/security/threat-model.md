@@ -352,6 +352,44 @@ multi-user hosting, persistence, jobs/history, remote assets, new inputs,
 classification, remediation, command, or patch behavior is outside this threat
 boundary.
 
+## Phase 8 implemented threat boundary
+
+Phase 8 introduces version-ordering, source-edit-preview, plan-linkage, and a
+second opt-in local-interface boundary without adding egress, persistence, a new
+dependency, or repository writes. `RemediationWorkflowService` rejects disabled
+use before advisory/network/repository activity. Candidate derivation receives
+only strict revalidated Phase 1–5 artifacts and ignores model output for target
+creation, ranking, selection, or preview authorization. Phase 6 and the Phase 7
+report run only after verified cleanup.
+
+The optional preview collector runs inside the lease and receives only an
+internally derived Phase 3 source reference. Every path component is opened
+descriptor-relative with no-follow semantics; regular-file identity, bounded
+size, pre/post metadata, and the Phase 3 digest are required. One version token
+is replaced in bounded memory, unchanged prefix/suffix bytes are proved, and
+data-only semantic reparse must show exactly the intended dependency fact
+change. The implementation never invokes Git, a package manager, a build/test
+tool, a repository module, a shell, or a patch program and never writes the
+hypothetical bytes.
+
+| Threat | Implemented Phase 8 control | Failure behavior or residual risk |
+| --- | --- | --- |
+| Advisory target invention or wrong-package mapping | Same-component fixed facts only, exact Phase 1 provenance, normalized ecosystem/name agreement, all supports retained | Missing/ambiguous package identity or provenance omits selection and remains visible |
+| Incorrect ecosystem ordering | Isolated bounded PEP 440, strict SemVer 2.0.0, and canonical Go semantic/pseudo-version comparators | Unsupported, equal, downgrade, conflicting, conditional, or multiple targets are manual-only |
+| Lockfile fact edits the wrong declaration | Only npm uses a reviewed same-project/root exact lock-to-direct-declaration bridge | Missing, ranged, aliased, workspace, duplicate, mismatched, or cross-root declarations produce no preview |
+| Traversal, symlink, special-file, stale digest, or mutation race | Caller supplies no path; normalized source reference, descriptor-relative no-follow open, regular-file and digest/pre/post identity checks | Preview omitted with a typed limitation; scanner/evidence state is not reinterpreted |
+| Multi-token, semantic, or formatting-wide drift | Exact one-token locator, byte-identical prefix/suffix, original/hypothetical data-only reparse and one-fact comparison | Zero/multiple tokens, parser warnings, replacements, or semantic drift fail closed |
+| Secret or terminal/Markdown/browser injection in preview | Complete display span passes versioned secret redaction; JSON escapes controls; Markdown/HTML/bidi controls are neutralized; UI uses text sinks | Redaction/display failure omits the diff and cannot create a complete preview status |
+| Preview mistaken for an applied or compatible fix | Structural no-change statement, controlled statuses/actions, provenance/evidence links, no write/apply/command capability | Availability, compatibility, generated artifacts, deployment, tests, and completeness remain human responsibilities |
+| Phase 7 regression or default Phase 8 work | Shared private core; investigation supplies no Phase 8 hook; both flags default false; Phase 7 byte/ID fixtures | Any future hook/default/identity change requires a new boundary review |
+| New local route abused cross-origin | Route is absent unless both flags are true and reuses exact Host, origin, Fetch Metadata, custom-header, bounded JSON, no-CORS/cookie controls | Literal loopback remains a same-user trust assumption, not authentication |
+| Timeout/disconnect leaves work or source capability alive | One outer deadline, cancellation events, joined thread/task work, context-managed lease cleanup before controlled failure | Process/host crash retains the existing Phase 2 residual risk |
+
+The remediation UI variant has no apply, command, clipboard, upload, download,
+browser storage, external asset, or arbitrary filesystem control. A local
+operator may still persist stdout or manually act on a plan; those actions are
+outside Watchdog and do not feed a completion claim back into the artifact.
+
 ## Security change process
 
 Any new outbound destination, input type, source adapter, persistence mechanism,
@@ -375,8 +413,9 @@ The completed `../work-orders/phase-7-reporting-and-local-interfaces.md` and
 terminal, browser, loopback-listener, cross-origin, resource, and confidentiality
 controls. Any broader interface or export requires a new reviewed boundary.
 
-The proposed `../work-orders/phase-8-remediation-assistant.md` documents the new
-integrity, version-ordering, source-edit, no-write, redaction, human-approval, and
-local-interface threats that a later remediation phase would have to control. It
-is planning-only: no remediation artifact, repository preview read, workflow
-hook, command, route, patch preview, write, or apply behavior is active.
+The completed `../work-orders/phase-8-remediation-assistant.md` and
+`../plans/phase-8-implementation-plan.md` define the active integrity,
+version-ordering, source-edit-preview, no-write, redaction, human-approval, and
+opt-in local-interface controls. Repository writes/apply behavior, commands,
+multi-file or source-code changes, registry queries, compatibility claims, and
+broader interfaces require a new reviewed boundary.

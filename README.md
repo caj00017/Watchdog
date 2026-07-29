@@ -42,7 +42,7 @@ disabled-by-default credential-free literal-loopback OpenAI-compatible adapter.
 It adds no route, interface, persistence, remote provider, affected/not-affected
 classification, reachability/exposure claim, remediation, command, or patch.
 
-Phases 0–7 are complete as of July 29, 2026.
+Phases 0–8 are complete as of July 29, 2026.
 
 Phase 7 adds deterministic evidence-safe reports, a bounded end-to-end workflow,
 a direct stdout-only CLI, and a separate disabled-by-default literal-loopback
@@ -50,12 +50,12 @@ UI/API. It preserves all Phase 1–6 identities, keeps repository work inside th
 verified lease, invokes Phase 6 only after cleanup, and adds no persistence,
 remote destination, classification, remediation, command, or patch behavior.
 
-Phase 8 has a planning-only remediation-assistant work order against immutable
-Phase 7 commit `6007927`. No Phase 8 runtime behavior is implemented or
-authorized. The proposal keeps remediation local and disabled by default and
-limits it to evidence-linked source-reported upgrade candidates, controlled
-human validation actions, and narrowly bounded in-memory patch previews that
-Watchdog never writes or applies.
+Phase 8 adds a disabled-by-default evidence-bound remediation assistant against
+immutable Phase 7 commit `6007927`. It emits provenance-linked source-reported
+upgrade candidates, controlled human validation actions, and optional narrowly
+bounded in-memory previews of one direct exact-version token. It never writes or
+applies repository bytes, generates commands, executes repository or ecosystem
+tools, resolves versions, or claims compatibility or completed remediation.
 
 ## Requirements
 
@@ -170,6 +170,22 @@ Useful settings include:
 | `WATCHDOG_LOCAL_INTERFACES_PORT` | `8765` | Local application port |
 | `WATCHDOG_LOCAL_INTERFACES_MAX_REQUEST_BYTES` | `8192` | Maximum investigation request body |
 | `WATCHDOG_LOCAL_INTERFACES_MAX_STATIC_ASSET_BYTES` | `262144` | Total checked-in UI asset ceiling |
+| `WATCHDOG_REMEDIATION_ENABLED` | `false` | Explicitly enable candidate/plan workflows and the direct CLI |
+| `WATCHDOG_REMEDIATION_PREVIEW_ENABLED` | `false` | Independently enable lease-scoped in-memory previews |
+| `WATCHDOG_REMEDIATION_MAX_CONCURRENT_REQUESTS` | `1` | Whole remediation workflows per process; fixed maximum one |
+| `WATCHDOG_REMEDIATION_DEADLINE_SECONDS` | `180` | Admission through cleanup, plan assembly, and rendering |
+| `WATCHDOG_REMEDIATION_MAX_CANDIDATES` | `64` | Canonical candidate records; hard maximum 256 |
+| `WATCHDOG_REMEDIATION_MAX_CANDIDATE_VERSIONS_PER_MATCH` | `16` | Preserved targets per match; hard maximum 64 |
+| `WATCHDOG_REMEDIATION_MAX_PREVIEW_SOURCE_FILES` | `16` | Internally selected source files; hard maximum 64 |
+| `WATCHDOG_REMEDIATION_MAX_BYTES_PER_PREVIEW_SOURCE_FILE` | `5242880` | Per-file preview read ceiling |
+| `WATCHDOG_REMEDIATION_MAX_TOTAL_PREVIEW_SOURCE_BYTES` | `20971520` | Aggregate preview-read ceiling; hard maximum 25 MiB |
+| `WATCHDOG_REMEDIATION_MAX_PREVIEWS` | `16` | Canonical preview records; hard maximum 64 |
+| `WATCHDOG_REMEDIATION_MAX_DIFF_BYTES_PER_PREVIEW` | `16384` | Redacted zero-context display ceiling |
+| `WATCHDOG_REMEDIATION_MAX_TOTAL_PREVIEW_DISPLAY_BYTES` | `262144` | Aggregate redacted preview display ceiling |
+| `WATCHDOG_REMEDIATION_MAX_WARNINGS` | `128` | Controlled structured warning ceiling |
+| `WATCHDOG_REMEDIATION_MAX_VALIDATION_ACTIONS` | `32` | Controlled non-executable action ceiling |
+| `WATCHDOG_REMEDIATION_MAX_JSON_BYTES` | `1048576` | Fully buffered JSON output ceiling |
+| `WATCHDOG_REMEDIATION_MAX_MARKDOWN_BYTES` | `1048576` | Fully buffered Markdown output ceiling |
 
 Investigation settings are consumed when a trusted workflow creates
 `InvestigationService`; the existing advisory FastAPI application still does not
@@ -211,6 +227,27 @@ Exit `0` means a complete report, `4` means a valid analytically incomplete
 report, `2` is invalid input, `3` is advisory/repository acquisition failure,
 `5` is cancellation/deadline, and `1` is cleanup/report/internal failure.
 
+The Phase 8 command has the same request shape and no output-path, apply,
+command, path, selector, or replacement option. `WATCHDOG_REMEDIATION_ENABLED`
+must be explicit. Preview generation remains off unless its separate flag is
+also enabled.
+
+```bash
+WATCHDOG_REMEDIATION_ENABLED=true \
+python -m apps.cli remediate \
+  --advisory CVE-2021-44228 \
+  --repository https://github.com/owner/repository \
+  --ref main \
+  --view technical \
+  --format markdown
+```
+
+Remediation exit `0` means a candidate or complete preview is available, `4`
+means a valid unavailable/manual plan, `6` means the feature is disabled, `2`
+is invalid input, `3` is advisory/repository failure, `5` is cancellation or
+deadline, and `1` is cleanup, validation, assembly, render, or internal failure.
+Stdout receives exactly one complete plan; fixed diagnostics use stderr.
+
 The separate local web application is disabled by default. Start it explicitly;
 the launcher refuses hostnames, wildcards, and non-loopback addresses and does
 not launch a browser or enable access logs.
@@ -224,6 +261,14 @@ exact asset routes, and synchronous `POST /api/v1/investigations`. The POST
 requires `Content-Type: application/json` and
 `X-Watchdog-Local-Request: 1`. There is no OpenAPI UI, CORS, cookie, job,
 history, upload, evidence browser, arbitrary static path, or retained report.
+
+When both `WATCHDOG_LOCAL_INTERFACES_ENABLED=true` and
+`WATCHDOG_REMEDIATION_ENABLED=true`, the checked-in remediation UI variant and
+synchronous `POST /api/v1/remediations` are added. The variant uses text-only
+sinks and has no apply, command, clipboard, upload, filesystem, persistence, or
+download control. The same Host, origin, Fetch Metadata, custom-header, JSON,
+request-size, no-store, no-CORS, no-cookie, and disconnect-cleanup controls
+apply.
 
 ## Phase 3 operator verification
 
@@ -502,5 +547,8 @@ model-inference boundary. The completed
 [Phase 7 reporting and local-interfaces work order](docs/work-orders/phase-7-reporting-and-local-interfaces.md)
 and [formal plan](docs/plans/phase-7-implementation-plan.md) define the current
 report, workflow, terminal, browser, and literal-loopback interface boundary.
-The [Phase 8 remediation-assistant work order](docs/work-orders/phase-8-remediation-assistant.md)
-is a planning-only proposal and creates no implementation authority.
+The completed
+[Phase 8 remediation-assistant work order](docs/work-orders/phase-8-remediation-assistant.md)
+and [formal plan](docs/plans/phase-8-implementation-plan.md) define the current
+candidate, comparator, no-write preview, plan, CLI, and opt-in local-interface
+boundary.

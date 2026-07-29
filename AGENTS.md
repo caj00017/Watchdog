@@ -149,24 +149,40 @@ arbitrary output paths, remote providers, credentials, new dependencies or
 destinations, classification, reachability, exposure, remediation, commands,
 code generation, or patches without a separate explicit boundary review.
 
-## Phase 8 planning status
+## Completed Phase 8 implementation boundary
 
-`docs/work-orders/phase-8-remediation-assistant.md` is a planning-only proposal
-against immutable Phase 7 baseline
-`60079274ea4ea9784391b3b34712fd3b3d8ad519`. The user authorized creation,
-documentation, commit, and push of the work order on July 29, 2026, but did not
-authorize Phase 8 implementation. A separate explicit implementation decision
-and formal staged plan are required.
+`docs/work-orders/phase-8-remediation-assistant.md` and
+`docs/plans/phase-8-implementation-plan.md` define the authorized and completed
+Phase 8 boundary. The user explicitly authorized implementation on July 29,
+2026, after baseline verification proved that planning commit `8d5df91`
+descends from immutable Phase 7 commit
+`60079274ea4ea9784391b3b34712fd3b3d8ad519` and contains documentation only.
 
-Until then, do not add remediation models or services, version-selection logic,
-repository preview reads, workflow hooks, remediation CLI/API/UI behavior,
-commands, or patch previews. Planning does not authorize dependency or scanner
-changes, new egress, persistence, repository writes, package-manager/build/test
-execution, affected/not-affected or reachability/exposure classification, or any
-change to Phase 1–7 identities and default behavior.
+Phase 8 adds only a strict canonical remediation plan, provenance-linked source-
+reported fixed-version candidates, controlled non-executable validation actions,
+and optional bounded in-memory previews of one exact dependency-version token.
+It is internal, synchronous, local, non-persistent, and disabled by default;
+preview generation is independently disabled. Candidate derivation may consume
+only revalidated Phase 1–7 artifacts. Preview paths and selectors must originate
+internally from eligible Phase 3 coordinates, Phase 4 evidence, and narrowly
+allowlisted direct declarations. Every preview read remains inside the active
+lease and uses descriptor-relative no-follow opens, exact digest and file-
+identity checks, the smaller Phase 3/4/8 limits, one-token prefix/suffix proof,
+data-only semantic reparse, fail-closed redaction, and no-write behavior.
 
-The proposed initial boundary remains disabled by default, local, synchronous,
-non-persistent, and evidence-linked. It permits only source-reported fixed-
-version candidates, controlled non-executable human validation actions, and
-bounded in-memory previews for narrowly allowlisted unambiguous direct exact-
-version declarations. No change may be written or applied by Watchdog.
+Go comparison uses the exact `v`-prefixed inventory declaration without changing
+the existing Phase 3 scanner coordinate. npm's approved Phase 8-only bridge may
+link one affected exact lockfile match to exactly one same-project/root direct
+`package.json` exact declaration; it does not alter Phase 3 matching or Phase 4
+evidence eligibility. Conditional matches, conflicts, multiple targets,
+unsupported grammar, omitted evidence, ranges, generated artifacts,
+replacements, and ambiguous declarations remain manual-only or unavailable.
+
+The `remediate` CLI and `/api/v1/remediations` local route expose only fully
+buffered plans when enabled. The route exists only when both local interfaces
+and remediation are enabled. No repository byte may be written or applied, and
+no command may be generated or executed. New dependencies, egress, persistence,
+registry queries, private inputs, remote interfaces, multi-token/file or source-
+code patches, lock/checksum changes, model-selected versions, compatibility or
+availability claims, affected/not-affected or reachability/exposure conclusions,
+or any Phase 1–7 identity/default change require a separate explicit review.

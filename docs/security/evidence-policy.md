@@ -315,21 +315,56 @@ Phase 7 permits no arbitrary evidence browsing, server persistence,
 affected/not-affected classification, reachability/exposure conclusion,
 remediation, command, or patch.
 
-## Phase 8 remediation planning boundary
+## Phase 8 remediation evidence boundary
 
-The Phase 8 work order is planning-only and creates no current remediation
-artifact or behavior. It proposes that a future canonical plan treat an
-advisory `fixed` event or remediation entry only as a source-reported fact with
-exact Phase 1 provenance. Such a value would not prove compatibility,
-availability, safety, or completed remediation, and ambiguity or conflicts would
-remain explicit.
+The completed Phase 8 plan is a separate deterministic review artifact. It
+references but never rewrites the Phase 7 report or Phase 1–6 identities. A
+candidate exists only for an exact scanner-eligible `affected` or
+`affected_conditional` coordinate with a linked non-omitted Phase 4 evidence
+item. Its target is an advisory `fixed` event for the exact affected-package
+index or an unambiguous same-package remediation `fixed_version`; every raw
+target retains each exact Phase 1 `FieldProvenance` support as a separately
+identified `AdvisoryFactSupport`.
 
-A future patch preview would be a separate deterministic review artifact linked
-to one eligible exact dependency match, its Phase 4 evidence, the exact source
-reference and digest, and a source-reported candidate. It could not become
-evidence that a change was applied or that the repository was fixed. The
-proposal requires bounded no-follow reads inside the lease, in-memory-only
-single-token replacement, semantic reparse, fail-closed redaction, verified
-cleanup, and a permanent human-approval boundary. No Phase 8 repository read,
-candidate selection, plan, command, preview, write, or apply behavior is
-currently implemented or authorized.
+Source-reported fixed-version data is evidence of what the advisory reported,
+not evidence that the target is available, compatible, applicable to a deployed
+system, sufficient, or a completed remediation. Conditional matches are always
+manual-only. Conflicts, ambiguous package mappings, multiple distinct targets,
+unsupported comparator grammar, equality/downgrade, scanner/evidence
+incompleteness, and limit exhaustion remain structural limitations and cannot
+authorize a complete preview. Phase 6 output cannot create, remove, rank, or
+select a target.
+
+An optional `PatchPreview` links one selected candidate, one internally derived
+immutable source reference, the affected Phase 4 evidence IDs, original and
+hypothetical digests, one byte-token replacement, and a semantic-reparse result.
+The npm-only bridge additionally binds the affected lockfile match to exactly one
+same-project/root direct exact `package.json` declaration. It does not make that
+declaration Phase 3 scanner input or Phase 4 canonical evidence.
+
+Preview bytes may exist only transiently in bounded memory inside the repository
+lease. The reader must open every component without following symlinks, require
+a regular file, apply the smaller Phase 3/4/8 byte limits, verify pre/post file
+identity and the Phase 3 digest, and locate exactly one trusted format token.
+Original and hypothetical bytes are parsed as data and their canonical
+dependency facts may differ only in the intended component version. Parser
+warnings, replacement directives, generated files, ranges, markers,
+transitive/workspace ambiguity, token ambiguity, semantic drift, or source
+mutation omit a complete preview. No source or hypothetical byte is logged,
+persisted, exported raw, written, or supplied to a model or subprocess.
+
+The zero-context display span is secret-redacted before output escaping and is
+fully byte-bounded. Redaction failure never falls back to raw content; the diff
+is omitted and cannot establish `previews_available`. JSON and Markdown are
+bounded projections of the same canonical plan. Every plan structurally states
+that no change was applied and that availability, compatibility, deployment,
+generated artifacts, testing, and remediation completeness remain unverified.
+Validation actions are fixed human-readable descriptions, never commands or
+repository/model-provided instructions.
+
+Support, candidate, preview, configuration, and plan IDs have separate typed
+SHA-256 namespaces over compact sorted-key UTF-8 JSON. The plan ID excludes only
+its own ID; input ordering and runtime/temporary metadata cannot affect it.
+Broken, duplicate, cross-advisory, cross-snapshot, or inconsistent links reject
+the complete artifact. Repository writes/apply behavior remain outside the
+evidence boundary and require explicit human action and a separate work order.

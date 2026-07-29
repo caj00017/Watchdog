@@ -684,6 +684,6 @@ classification, risk scoring, remediation guidance, upgrade commands,
 executable validation, code generation, and patch previews remain outside this
 implemented initial Phase 7 boundary.
 
-The separate Phase 8 remediation-assistant work order is now planning-only;
-Phase 8 implementation remains unapproved. This Phase 7 work order creates no
-later-phase implementation authority by itself.
+The separate Phase 8 remediation-assistant work order was subsequently
+authorized and implemented under its own formal plan. This Phase 7 work order
+did not create that later-phase implementation authority by itself.

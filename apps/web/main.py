@@ -6,7 +6,7 @@ from pathlib import Path
 
 from fastapi import FastAPI
 
-from apps.web.routes import router
+from apps.web.routes import remediation_router, router
 from apps.web.security import security_middleware, validate_loopback_configuration
 from watchdog.config import Settings
 from watchdog.workflow.runtime import WorkflowRuntime, workflow_runtime
@@ -16,7 +16,14 @@ _ASSET_NAMES = ("index.html", "watchdog.css", "watchdog.js")
 
 def _load_assets(settings: Settings) -> dict[str, bytes]:
     root = Path(__file__).with_name("static")
-    assets = {name: (root / name).read_bytes() for name in _ASSET_NAMES}
+    source_names = {
+        "index.html": ("remediation-index.html" if settings.remediation_enabled else "index.html"),
+        "watchdog.css": "watchdog.css",
+        "watchdog.js": (
+            "remediation-watchdog.js" if settings.remediation_enabled else "watchdog.js"
+        ),
+    }
+    assets = {name: (root / source_names[name]).read_bytes() for name in _ASSET_NAMES}
     if (
         sum(len(value) for value in assets.values())
         > settings.local_interfaces_max_static_asset_bytes
@@ -54,4 +61,6 @@ def create_app(
     application.state.settings = configured
     application.middleware("http")(security_middleware)
     application.include_router(router)
+    if configured.local_interfaces_enabled and configured.remediation_enabled:
+        application.include_router(remediation_router)
     return application

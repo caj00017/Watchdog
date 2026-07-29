@@ -100,6 +100,28 @@ class Settings(BaseSettings):
     local_interfaces_port: int = Field(default=8765, ge=1, le=65535)
     local_interfaces_max_request_bytes: int = Field(default=8_192, gt=0, le=8_192)
     local_interfaces_max_static_asset_bytes: int = Field(default=256 * 1024, gt=0, le=256 * 1024)
+    remediation_enabled: bool = False
+    remediation_preview_enabled: bool = False
+    remediation_max_concurrent_requests: int = Field(default=1, ge=1, le=1)
+    remediation_deadline_seconds: float = Field(default=180.0, gt=0, le=600)
+    remediation_max_candidates: int = Field(default=64, gt=0, le=256)
+    remediation_max_candidate_versions_per_match: int = Field(default=16, gt=0, le=64)
+    remediation_max_preview_source_files: int = Field(default=16, gt=0, le=64)
+    remediation_max_bytes_per_preview_source_file: int = Field(
+        default=5 * 1024 * 1024, gt=0, le=5 * 1024 * 1024
+    )
+    remediation_max_total_preview_source_bytes: int = Field(
+        default=20 * 1024 * 1024, gt=0, le=25 * 1024 * 1024
+    )
+    remediation_max_previews: int = Field(default=16, gt=0, le=64)
+    remediation_max_diff_bytes_per_preview: int = Field(default=16 * 1024, gt=0, le=64 * 1024)
+    remediation_max_total_preview_display_bytes: int = Field(
+        default=256 * 1024, gt=0, le=1024 * 1024
+    )
+    remediation_max_warnings: int = Field(default=128, gt=0, le=512)
+    remediation_max_validation_actions: int = Field(default=32, gt=0, le=64)
+    remediation_max_json_bytes: int = Field(default=1024 * 1024, gt=0, le=1024 * 1024)
+    remediation_max_markdown_bytes: int = Field(default=1024 * 1024, gt=0, le=1024 * 1024)
 
     @field_validator("osv_scanner_path")
     @classmethod

@@ -19,7 +19,8 @@ describe.
 - [Evidence policy](security/evidence-policy.md) defines provenance, conflicts,
   failures, acquisition metadata, the completed Phase 4 evidence contract, and
   completed Phase 5 context evidence, Phase 6 inference/evidence separation, and
-  the Phase 7 report/export policy.
+  the Phase 7 report/export policy plus Phase 8 remediation support/preview
+  evidence boundary.
 
 ## Completed work orders
 
@@ -49,12 +50,14 @@ describe.
   records the immutable Phase 6 baseline, completed packages, verification, and
   mandatory escalation conditions.
 
-## Proposed Phase 8 boundary
+## Completed Phase 8 boundary
 
 - [Phase 8 evidence-bound remediation assistant](work-orders/phase-8-remediation-assistant.md)
-  is a planning-only proposal against the immutable Phase 7 baseline. It does
-  not authorize remediation models, repository preview reads, interface changes,
-  commands, patch previews, repository writes, or patch application.
+  is the completed source-reported candidate, controlled validation-action,
+  single-token in-memory preview, and no-write/human-approval boundary.
+- [Phase 8 formal implementation plan](plans/phase-8-implementation-plan.md)
+  records the immutable Phase 7 baseline, staged gates, limits, tests, and
+  permanent escalation conditions.
 
 Supporting documents should agree with the canonical record. If they do not,
 inspect the implementation and tests, correct the canonical record first, and
@@ -67,7 +70,7 @@ then reconcile the supporting document.
 - `archive/recaps/` contains dated implementation-session snapshots.
 
 The current archived verification snapshot is
-[`development-recap-2026-07-29-phase-7.md`](archive/recaps/development-recap-2026-07-29-phase-7.md).
+[`development-recap-2026-07-29-phase-8.md`](archive/recaps/development-recap-2026-07-29-phase-8.md).
 
 Archived files preserve historical context. They are not current instructions or
 authoritative descriptions of the codebase.

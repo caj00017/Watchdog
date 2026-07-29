@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import gzip
 import hashlib
 import io
 import tarfile
@@ -24,7 +25,10 @@ class TarEntry:
 
 def build_tar(entries: list[TarEntry]) -> bytes:
     buffer = io.BytesIO()
-    with tarfile.open(fileobj=buffer, mode="w:gz") as archive:
+    with (
+        gzip.GzipFile(fileobj=buffer, mode="wb", mtime=0) as compressed,
+        tarfile.open(fileobj=compressed, mode="w") as archive,
+    ):
         for entry in entries:
             info = tarfile.TarInfo(entry.name)
             if entry.kind == "file":

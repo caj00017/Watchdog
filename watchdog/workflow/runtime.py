@@ -18,6 +18,10 @@ from watchdog.inventory.limits import InventoryLimits
 from watchdog.inventory.service import DependencyInventoryService
 from watchdog.investigation.limits import InvestigationConfiguration
 from watchdog.investigation.service import InvestigationService
+from watchdog.remediation.assembler import RemediationAssembler
+from watchdog.remediation.limits import RemediationConfiguration
+from watchdog.remediation.preview import PreviewCollector
+from watchdog.remediation.renderers import RemediationRenderer
 from watchdog.reporting.assembler import ReportAssembler
 from watchdog.reporting.limits import ReportingConfiguration
 from watchdog.reporting.renderers import ReportRenderer
@@ -28,13 +32,15 @@ from watchdog.scanners.limits import ScannerLimits
 from watchdog.scanners.osv_scanner import OsvScanner
 from watchdog.vulnerability_sources.osv import OsvSource
 from watchdog.workflow.limits import WorkflowConfiguration
-from watchdog.workflow.service import InvestigationWorkflowService
+from watchdog.workflow.service import InvestigationWorkflowService, RemediationWorkflowService
 
 
 @dataclass(frozen=True, slots=True)
 class WorkflowRuntime:
     workflow: InvestigationWorkflowService
     renderer: ReportRenderer
+    remediation_workflow: RemediationWorkflowService | None = None
+    remediation_renderer: RemediationRenderer | None = None
 
 
 @asynccontextmanager
@@ -67,28 +73,59 @@ async def workflow_runtime(settings: Settings) -> AsyncIterator[WorkflowRuntime]
         )
         investigation_configuration = InvestigationConfiguration.from_settings(settings)
         reporting_configuration = ReportingConfiguration.from_settings(settings)
+        inventory_limits = InventoryLimits.from_settings(settings)
+        evidence_configuration = EvidenceConfiguration.from_settings(settings)
         investigation_service = InvestigationService(investigation_configuration)
+        inventory_service = DependencyInventoryService(inventory_limits)
+        match_service = AdvisoryMatchService(
+            OsvScanner(settings.osv_scanner_path, ScannerLimits.from_settings(settings))
+        )
+        evidence_service = EvidenceService(evidence_configuration)
+        context_service = ContextService(
+            ContextConfiguration.from_settings(settings, catalog=catalog_metadata())
+        )
+        report_assembler = ReportAssembler(
+            reporting_configuration,
+            investigation_configuration,
+        )
         workflow = InvestigationWorkflowService(
             WorkflowConfiguration.from_settings(settings),
             advisory_service=advisory_service,
             repository_service=repository_service,
-            inventory_service=DependencyInventoryService(InventoryLimits.from_settings(settings)),
-            match_service=AdvisoryMatchService(
-                OsvScanner(settings.osv_scanner_path, ScannerLimits.from_settings(settings))
-            ),
-            evidence_service=EvidenceService(EvidenceConfiguration.from_settings(settings)),
-            context_service=ContextService(
-                ContextConfiguration.from_settings(settings, catalog=catalog_metadata())
-            ),
+            inventory_service=inventory_service,
+            match_service=match_service,
+            evidence_service=evidence_service,
+            context_service=context_service,
             investigation_service=investigation_service,
-            report_assembler=ReportAssembler(
-                reporting_configuration,
-                investigation_configuration,
-            ),
+            report_assembler=report_assembler,
         )
+        remediation_workflow = None
+        remediation_renderer = None
+        if settings.remediation_enabled:
+            remediation_configuration = RemediationConfiguration.from_settings(settings)
+            remediation_workflow = RemediationWorkflowService(
+                remediation_configuration,
+                advisory_service=advisory_service,
+                repository_service=repository_service,
+                inventory_service=inventory_service,
+                match_service=match_service,
+                evidence_service=evidence_service,
+                context_service=context_service,
+                investigation_service=investigation_service,
+                report_assembler=report_assembler,
+                preview_collector=PreviewCollector(
+                    remediation_configuration,
+                    inventory_limits=inventory_limits,
+                    evidence_configuration=evidence_configuration,
+                ),
+                remediation_assembler=RemediationAssembler(remediation_configuration),
+            )
+            remediation_renderer = RemediationRenderer(remediation_configuration)
         yield WorkflowRuntime(
             workflow=workflow,
             renderer=ReportRenderer(reporting_configuration),
+            remediation_workflow=remediation_workflow,
+            remediation_renderer=remediation_renderer,
         )
     finally:
         await repository_client.aclose()

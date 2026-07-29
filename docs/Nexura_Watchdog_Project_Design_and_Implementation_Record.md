@@ -2,7 +2,7 @@
 
 ## Project Design and Implementation Record
 
-**Document version:** 7.1
+**Document version:** 8.0
 
 **Last updated:** July 29, 2026
 
@@ -12,7 +12,7 @@
 
 **Code version:** 0.1.0
 
-**Current lifecycle state:** Phases 0–7 complete; Phase 8 is planning-only
+**Current lifecycle state:** Phases 0–8 complete
 
 **Primary deployment direction:** Local-first, open source
 
@@ -55,7 +55,7 @@ session.
 
 ## 2.1 Current phase
 
-Phases 0 through 7 are complete:
+Phases 0 through 8 are complete:
 
 - **Phase 0 — Foundation:** package structure, FastAPI, configuration, quality
   tooling, Docker development, and foundational documentation.
@@ -90,6 +90,12 @@ Phases 0 through 7 are complete:
   projections, one lease-safe synchronous workflow, a direct stdout-only CLI,
   and a separate disabled literal-loopback UI/API with fixed routes and
   same-origin controls.
+- **Phase 8 — Evidence-bound remediation assistant:** strict provenance-linked
+  source-reported candidates, deterministic ecosystem comparators, controlled
+  human validation actions, optional lease-scoped one-token in-memory previews,
+  a separate canonical plan, bounded JSON/Markdown, an opt-in direct CLI, and a
+  doubly gated local route/UI variant with no write, apply, command, or execution
+  capability.
 
 Phases 4 and 5 remain internal. Phase 5 observations are lexical and do not
 establish execution, runtime/data-flow reachability, exploitability, deployment
@@ -109,13 +115,14 @@ verified lease, invokes Phase 6 only after cleanup, and exports only bounded
 allowlisted report projections. It adds no persistence, remote destination,
 classification, remediation, command, or patch behavior.
 
-Phase 8 now has a planning-only evidence-bound remediation-assistant work order
-against immutable Phase 7 commit
-`60079274ea4ea9784391b3b34712fd3b3d8ad519`. It proposes source-reported
-fixed-version candidates, controlled human validation actions, and narrowly
-bounded in-memory previews for eligible direct exact-version declarations. No
-Phase 8 model, repository read, workflow hook, command, route, preview, write, or
-apply behavior is implemented or authorized.
+Phase 8 is complete under its governing work order and formal plan against
+immutable Phase 7 baseline
+`60079274ea4ea9784391b3b34712fd3b3d8ad519`. The implementation was separately
+authorized after documentation-only ancestry verification. It preserves all
+Phase 1–7 identities and defaults, adds no dependency or egress, and never
+writes or applies repository bytes. Its plan reports only source-reported
+candidates and unapplied review previews; it cannot claim compatibility,
+availability, affectedness, reachability/exposure, or remediation success.
 
 ## 2.2 Current health
 
@@ -136,19 +143,20 @@ apply behavior is implemented or authorized.
 | Exposure classification | Not implemented | No affected/not-affected conclusions are produced |
 | LLM integration | Implemented internally | Evidence-bound, disabled by default, literal-loopback only, credential-free, strict output validation |
 | CLI and web UI | Implemented locally | Direct stdout-only CLI plus separate disabled literal-loopback UI/API |
-| Remediation assistant | Planning only | Work order drafted; no candidate, preview, write, apply, command, or interface behavior |
+| Remediation assistant | Implemented locally, disabled by default | Evidence-linked candidates, controlled actions, optional single-token no-write previews, canonical plan, CLI, and doubly gated local route |
 | Persistence and jobs | Not implemented | No database, queue, or retained investigation state |
 | Container workflow | Verified | Multi-stage image builds; embedded scanner version and no-mount health pass |
-| Automated quality | Green | 280 deterministic tests pass; bounded live scanner contract remains opt-in |
-| Version-control state | Phase 7 immutable at `6007927` | Phase 8 proposal is planning-only |
+| Automated quality | Green | Phase 8 deterministic/static/security gates pass; bounded live scanner contract remains opt-in |
+| Version-control state | Phase 7 baseline immutable at `6007927` | Phase 8 implementation is additive and preserves the baseline identities |
 
 ## 2.3 Immediate milestone
 
-Review the Phase 8 work order against the immutable Phase 7 baseline and make a
-separate implementation decision. Planning does not authorize persistence,
-authentication, new destinations or dependencies, private inputs,
-classification, reachability/exposure, remediation runtime behavior, commands,
-code generation, previews, repository writes, or patch application.
+The enumerated Phase 0–8 roadmap is complete. Any next milestone requires a new
+reviewed boundary. In particular, do not infer authority for persistence,
+authentication, new destinations or dependencies, private inputs, production or
+remote interfaces, classification, reachability/exposure, compatibility or
+availability analysis, registry queries, commands, multi-file/source patches,
+repository writes, or patch application.
 
 ---
 
@@ -445,6 +453,7 @@ not itself acquire or inspect a repository.
 | `watchdog/domain/matching.py` | Scanner coordinate/evidence and dependency match-report models |
 | `watchdog/domain/evidence.py` | Strict producer, source, redaction, item, match-link, warning, coverage, and bundle models |
 | `watchdog/domain/context.py` | Strict catalog, target, source outcome, context evidence, observation, graph, signal, coverage, and bundle models |
+| `watchdog/domain/remediation.py` | Strict Phase 8 support, candidate, preview, plan, request, coverage, and rendered-plan models |
 | `watchdog/vulnerability_sources` | Source protocol, OSV boundary, normalization, and merging |
 | `watchdog/advisory_service.py` | Identifier-to-advisory orchestration |
 | `watchdog/advisory_match_service.py` | Candidate selection, scanner-result mapping, alias matching, and match states |
@@ -458,8 +467,9 @@ not itself acquire or inspect a repository.
 | `watchdog/scanners` | Source-neutral scanner protocol and pinned OSV-Scanner subprocess boundary |
 | `watchdog/evidence` | Canonical identity/configuration, safe reads, positional selectors, redaction, and collection |
 | `watchdog/context` | Trusted catalog and targets, bounded descriptor discovery, data-only recognizers, redacted evidence, lexical graph/ranking, and collection |
+| `watchdog/remediation` | Typed identities and limits, ecosystem comparators, candidate derivation, no-write preview collection, canonical assembly, and bounded rendering |
 | `watchdog/analysis`, `watchdog/jobs` | Placeholders only |
-| `apps/cli`, `apps/web` | Direct Phase 7 CLI and separate disabled literal-loopback application |
+| `apps/cli`, `apps/web` | Direct investigation/remediation CLI adapters and separate disabled literal-loopback application with settings-gated Phase 8 variant |
 
 ---
 
@@ -668,13 +678,31 @@ Configuration uses `WATCHDOG_`-prefixed environment variables.
 | `WATCHDOG_INVESTIGATION_MAX_VALIDATION_ACTIONS` | `32` | Controlled human actions |
 | `WATCHDOG_INVESTIGATION_MAX_RATIONALE_BYTES_PER_CLAIM` | `2048` | UTF-8 rationale bytes per claim |
 | `WATCHDOG_INVESTIGATION_MAX_OUTPUT_TOKENS` | `4096` | Requested provider output ceiling |
+| `WATCHDOG_REMEDIATION_ENABLED` | `false` | Explicitly enable the Phase 8 candidate and plan workflow |
+| `WATCHDOG_REMEDIATION_PREVIEW_ENABLED` | `false` | Independently enable lease-scoped in-memory previews |
+| `WATCHDOG_REMEDIATION_MAX_CONCURRENT_REQUESTS` | `1` | Whole remediation workflows per service; fixed maximum one |
+| `WATCHDOG_REMEDIATION_DEADLINE_SECONDS` | `180` | Admission through cleanup, plan assembly, and rendering |
+| `WATCHDOG_REMEDIATION_MAX_CANDIDATES` | `64` | Candidate records; absolute maximum 256 |
+| `WATCHDOG_REMEDIATION_MAX_CANDIDATE_VERSIONS_PER_MATCH` | `16` | Source-reported targets per match; absolute maximum 64 |
+| `WATCHDOG_REMEDIATION_MAX_PREVIEW_SOURCE_FILES` | `16` | Internally selected source files; absolute maximum 64 |
+| `WATCHDOG_REMEDIATION_MAX_BYTES_PER_PREVIEW_SOURCE_FILE` | `5242880` | Per-file preview read ceiling |
+| `WATCHDOG_REMEDIATION_MAX_TOTAL_PREVIEW_SOURCE_BYTES` | `20971520` | Aggregate preview-read ceiling; maximum 25 MiB |
+| `WATCHDOG_REMEDIATION_MAX_PREVIEWS` | `16` | Canonical preview records; absolute maximum 64 |
+| `WATCHDOG_REMEDIATION_MAX_DIFF_BYTES_PER_PREVIEW` | `16384` | Per-preview redacted display ceiling |
+| `WATCHDOG_REMEDIATION_MAX_TOTAL_PREVIEW_DISPLAY_BYTES` | `262144` | Aggregate redacted display ceiling |
+| `WATCHDOG_REMEDIATION_MAX_WARNINGS` | `128` | Controlled warning ceiling; absolute maximum 512 |
+| `WATCHDOG_REMEDIATION_MAX_VALIDATION_ACTIONS` | `32` | Non-executable action ceiling; absolute maximum 64 |
+| `WATCHDOG_REMEDIATION_MAX_JSON_BYTES` | `1048576` | Fully buffered JSON output ceiling |
+| `WATCHDOG_REMEDIATION_MAX_MARKDOWN_BYTES` | `1048576` | Fully buffered Markdown output ceiling |
 
 Repository settings are consumed when an internal caller constructs
 `RepositoryLimits` and `GitHubRepositorySource`. Inventory and scanner settings
 are consumed when internal callers construct `InventoryLimits`, `ScannerLimits`,
 `OsvScanner`, `EvidenceLimits`, `EvidenceConfiguration`, and
-`ContextConfiguration`, and `InvestigationConfiguration`. The FastAPI lifespan
-currently wires only advisory settings; Phase 2–6 services remain internal.
+`ContextConfiguration`, `InvestigationConfiguration`, and
+`RemediationConfiguration`. The public FastAPI lifespan wires only advisory
+settings. The direct CLI and separate local application build the Phase 7/8
+runtime; both remediation flags remain false by default.
 
 ---
 
@@ -685,12 +713,30 @@ As of July 29, 2026:
 - `ruff format --check .` passes.
 - `ruff check .` passes.
 - strict `mypy` passes.
-- pytest passes 280 deterministic tests; the bounded live OSV scanner contract
+- pytest passes 339 deterministic tests; the bounded live OSV scanner contract
   is skipped unless explicitly enabled.
 - Application/test bytecode compilation passes.
 - OpenAPI contains exactly `/health` and
   `/api/v1/advisories/{identifier}`.
 - Docker Compose configuration parses.
+
+Phase 8 environment-dependent container acceptance also passes:
+
+- Docker Engine 29.6.2 built standalone image
+  `sha256:4a59f7e1fdd4493e53f36ed3f17e98abac3b8a95796c89d0d7196c0e5de231ae`
+  at 79,573,979 bytes without changing project dependencies.
+- The installed package contains both Phase 7 assets and the checked-in Phase 8
+  remediation HTML/JavaScript variant.
+- `/usr/local/bin/osv-scanner --version` reports OSV-Scanner 2.4.0.
+- The public application and explicitly enabled literal-loopback remediation
+  application both returned their expected health documents with network mode
+  `none` and no mounts.
+- The public OpenAPI remains exactly `/health` and
+  `/api/v1/advisories/{identifier}`; the remediation route is absent unless both
+  local-interface and remediation flags are enabled.
+- The live OSV scanner contract remains separately opt-in because it requires
+  outbound access. That unexecuted check is a coverage limitation, not a
+  negative vulnerability result.
 
 Phase 6 environment-dependent container acceptance also passes:
 
@@ -778,7 +824,10 @@ not a stable release identifier.
 - No public/remote investigation API, production listener, retained report, or
   hosted web UI; the Phase 7 interface is local and disabled by default.
 - No persistence, job state, authentication, hosted service, or private repos.
-- No patch preview or remediation automation; Phase 8 is documentation only.
+- No repository write/apply, lock/checksum regeneration, command generation,
+  dependency resolution, compatibility analysis, or remediation automation.
+  Phase 8 is limited to source-reported candidates and optional one-token
+  in-memory review previews.
 - No advisory URL input despite its place in the intended MVP.
 
 ## 10.2 Source and acquisition gaps
@@ -1168,14 +1217,16 @@ The direct CLI and local HTTP adapter construct the same strict workflow request
 and invoke the same service. The listener is disabled by default and literal-
 loopback only; loopback is an operator-local assumption, not authentication.
 
-## D-023 — Phase 8 planning preserves a permanent human-approval boundary
+## D-023 — Phase 8 required and received separate implementation authority
 
 The user requested a Phase 8 work order after Phase 7 was documented and
 committed at `60079274ea4ea9784391b3b34712fd3b3d8ad519`. That request authorizes
-planning, documentation, commit, and push only. Phase 8 implementation requires
-a separate explicit decision and a formal staged plan.
+planning, documentation, commit, and push only. On July 29, 2026 the user then
+supplied the decision-complete staged plan and explicitly instructed its
+implementation. Before runtime changes, planning commit `8d5df91` was verified
+to descend from the immutable Phase 7 baseline with a documentation-only delta.
 
-The proposal permits only provenance-linked source-reported fixed-version
+The completed boundary permits only provenance-linked source-reported fixed-version
 candidates, controlled non-executable human validation actions, and bounded
 in-memory previews for narrowly allowlisted direct exact-version declarations.
 A preview is not evidence of application, compatibility, or successful
@@ -1183,6 +1234,24 @@ remediation. Watchdog may not write, apply, stage, commit, push, execute, instal
 resolve, build, test, or generate commands. Affected/not-affected status,
 reachability/exposure, general source patches, production interfaces, and hosted
 operation remain separate decisions.
+
+## D-024 — Remediation previews are immutable review artifacts, never actions
+
+Phase 8 uses separate typed identities for advisory support facts, candidates,
+previews, configuration, and the plan. Candidate selection is deterministic and
+model-independent. The npm-only lockfile-to-declaration bridge is confined to
+one same-project/root exact direct declaration and does not change scanner input
+or evidence eligibility. Go ordering uses the exact `v`-prefixed inventory
+declaration while the frozen Phase 3 scanner coordinate remains unchanged.
+
+The preview collector receives no caller path or edit text. It performs one
+descriptor-safe digest-bound source read, one bounded in-memory token
+replacement, semantic reparse, and redacted zero-context display. The workflow
+waits for verified cleanup before Phase 6, report/plan assembly, or rendering.
+The fixed no-change statement and controlled validation actions preserve the
+permanent human-approval boundary. Repository writes/apply, commands,
+lock/checksum edits, version resolution, and success/compatibility claims require
+a separate work order.
 
 ---
 
@@ -1258,6 +1327,7 @@ docs/
 │   ├── phase-5-implementation-plan.md
 │   ├── phase-6-implementation-plan.md
 │   └── phase-7-implementation-plan.md
+│   └── phase-8-implementation-plan.md
 ├── security/
 │   ├── evidence-policy.md
 │   └── threat-model.md
@@ -1280,7 +1350,8 @@ docs/
         ├── development-recap-2026-07-28-phase-5.md
         ├── development-recap-2026-07-29-phase-5-verification.md
         ├── development-recap-2026-07-29-phase-6.md
-        └── development-recap-2026-07-29-phase-7.md
+        ├── development-recap-2026-07-29-phase-7.md
+        └── development-recap-2026-07-29-phase-8.md
 ```
 
 The archive preserves historical context but is not current instruction. The
@@ -1290,6 +1361,31 @@ and boundary changes.
 ---
 
 # 18. Change History
+
+## Version 8.0 — July 29, 2026
+
+- Recorded separate Phase 8 implementation authority and verified planning
+  commit `8d5df91` as a documentation-only descendant of immutable Phase 7
+  baseline `6007927`.
+- Added strict support/candidate/preview/configuration/plan contracts and typed
+  canonical identities, bounded remediation settings, fixed wording/statuses,
+  provenance-complete candidate derivation, and deterministic PyPI/npm/Go
+  version policies.
+- Added the optional lease-scoped no-follow preview collector for exact
+  requirements, PEP 621, npm same-root direct declarations, and direct
+  non-replaced go.mod requirements, with digest/mutation checks, one-token
+  prefix/suffix proof, semantic reparse, redaction, and no writes.
+- Added the shared private workflow core, separate disabled remediation service,
+  unchanged Phase 7 investigation path, canonical assembly/rendering,
+  stdout-only `remediate` CLI, doubly gated local route, and checked-in text-sink
+  UI variant without apply/command/clipboard/upload/download controls.
+- Added Phase 1–7 byte/identity regression fixtures and Phase 8 schema,
+  comparator, candidate, preview, no-write, workflow, CLI, HTTP, and UI security
+  tests while preserving dependencies, public advisory routes, scanner input,
+  OSV-Scanner 2.4.0, egress, and Phase 1–7 identities/defaults.
+- Kept repository writes/apply, commands, generated artifacts, package
+  resolution, registry queries, compatibility/success claims, classification,
+  remote/private interfaces, persistence, jobs, and authentication deferred.
 
 ## Version 7.1 — July 29, 2026
 
@@ -1512,9 +1608,12 @@ inference, scanner, and non-classification boundaries and adds no persistence or
 outbound destination. Its local result remains an evidence-bound investigation,
 not an affected/not-affected or runtime-exposure determination.
 
-Phase 8 exists only as a proposed work order. No remediation candidate, version
-selection, source preview read, plan, workflow hook, command, route, patch
-preview, repository write, or patch application is present. Even if the proposed
-bounded Phase 8 is later completed, affected/reachability classification,
-production/hosted operation, broader coverage, and release hardening remain
-separate work rather than implied capabilities.
+Phase 8 can now produce a separate canonical unapplied remediation plan with
+source-reported fixed-version candidates, controlled human actions, and optional
+one-token in-memory previews for narrowly eligible direct declarations. Every
+preview finishes inside the lease; Phase 6 and report/plan work wait for verified
+cleanup. The service, CLI, route, and UI remain disabled/local/non-persistent,
+and no repository byte is written. Affected/reachability classification,
+compatibility/availability conclusions, automatic or multi-file remediation,
+commands, production/hosted operation, broader coverage, and release hardening
+remain separate work rather than implied capabilities.

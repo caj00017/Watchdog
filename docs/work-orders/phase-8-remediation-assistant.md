@@ -1,18 +1,30 @@
-# Phase 8 Proposed Work Order — Evidence-Bound Remediation Assistant
+# Phase 8 Work Order — Evidence-Bound Remediation Assistant
 
-**Status:** Planning-only proposal; implementation is not authorized
+**Status:** Complete; implementation and release gates passed July 29, 2026
 
 **Prepared:** July 29, 2026
 
 **Required baseline:** Completed Phase 7 commit
 `60079274ea4ea9784391b3b34712fd3b3d8ad519`
 
-**Authority:** On July 29, 2026, the user requested a Phase 8 work order after
+**Planning authority:** On July 29, 2026, the user requested a Phase 8 work order after
 the completed Phase 7 implementation was fully documented, committed, and
 prepared for push. That request authorizes this planning artifact and its
 documentation links only. It does not authorize remediation models, repository
 reads, version-selection logic, workflow changes, interface changes, commands,
 patch generation, patch application, or any other Phase 8 runtime behavior.
+
+**Implementation authority:** On July 29, 2026, the user supplied and explicitly
+directed implementation of the formal staged Phase 8 plan in
+`../plans/phase-8-implementation-plan.md`. Before runtime work began, commit
+`8d5df91f672a2dfe027169da40c6abc9faa9909f` was verified to descend from the
+immutable Phase 7 baseline and its complete post-baseline delta was verified as
+documentation-only.
+
+**Completion finding:** All staged packages and release gates passed. The exact
+results, environment-dependent container evidence, retained live-scanner
+coverage limitation, and permanent deferrals are recorded in
+`../archive/recaps/development-recap-2026-07-29-phase-8.md`.
 
 ## Readiness finding
 
@@ -29,15 +41,15 @@ truthfully promise that a proposed change is necessary, sufficient, safe, or a
 complete fix. Its initial boundary must remain an evidence-linked remediation
 *candidate* and preview service with explicit human validation.
 
-Phase 8 is ready for implementation-plan review against the exact Phase 7
-baseline, but implementation must not begin until the user separately approves
-the boundary and a formal staged implementation plan.
+Phase 8 was approved for staged implementation against the exact Phase 7
+baseline. Each package remains subject to the gates and permanent deferrals in
+the formal plan; authorization does not extend beyond this work order.
 
 ## Objective
 
 Help a local maintainer move from a supported vulnerable dependency observation
 to a reviewable next action without crossing into autonomous remediation. The
-proposed initial Phase 8 boundary would add:
+implemented initial Phase 8 boundary adds:
 
 - a strict canonical `RemediationPlan` that references, but never rewrites, a
   validated Phase 7 report and its Phase 1–6 artifacts;
@@ -53,7 +65,7 @@ proposed initial Phase 8 boundary would add:
 - no repository write, package-manager invocation, dependency installation,
   test execution, command generation, persistence, or automatic patch apply.
 
-The proposed service answers only:
+The service answers only:
 
 > What source-reported upgrade candidates exist for this exact dependency
 > observation, what evidence supports them, what narrow edit could a maintainer
@@ -108,7 +120,7 @@ input. It must not change:
 A Phase 8 artifact may reference these identities. It may not silently rerun,
 repair, reinterpret, downgrade, or replace them.
 
-## Proposed trust and data classification
+## Implemented trust and data classification
 
 Phase 8 receives three classes of input:
 
@@ -119,14 +131,14 @@ Phase 8 receives three classes of input:
    This remains untrusted inference and may explain context, but it cannot select
    a version or authorize a preview.
 3. **Repository bytes inside the lease:** hostile source bytes from an exact
-   Phase 3 source reference. They may be read only by the proposed preview
+   Phase 3 source reference. They may be read only by the Phase 8 preview
    collector under no-follow, digest, size, selector, and mutation checks.
 
 Every remediation candidate, preview, limitation, and validation action must
 carry its supporting advisory provenance, dependency evidence, and source
 identity. A recommendation without valid support must be rejected.
 
-## Proposed eligibility gate
+## Implemented eligibility gate
 
 A remediation candidate may be created only when all of the following are true:
 
@@ -164,7 +176,7 @@ Phase 8 must distinguish source facts from Watchdog choices:
 - No version may be invented, normalized into a different meaning, or selected
   by a model.
 
-The initial implementation may compare versions only through reviewed,
+The implementation compares versions only through reviewed,
 fixture-backed, ecosystem-specific deterministic comparators. PyPI may use the
 already installed `packaging` library. npm and Go require code-native parsers
 whose accepted grammars and ordering behavior are frozen before use. If a value
@@ -180,7 +192,7 @@ the maintainer's responsibility.
 
 ## Canonical remediation plan
 
-The proposed `RemediationPlan` is a strict, frozen, extra-field-forbidden,
+The `RemediationPlan` is a strict, frozen, extra-field-forbidden,
 source-neutral artifact with a deterministic identity. It contains only bounded
 allowlisted projections:
 
@@ -212,7 +224,7 @@ artifacts.
 
 ## Candidate classifications
 
-The proposed candidate vocabulary is intentionally operational and narrower
+The candidate vocabulary is intentionally operational and narrower
 than vulnerability classification:
 
 - `source_reported`: an advisory supplied the candidate with provenance;
@@ -226,7 +238,7 @@ than vulnerability classification:
 These labels must not be reused as repository affected status, risk, confidence,
 compatibility, or remediation success.
 
-## Proposed patch-preview boundary
+## Implemented patch-preview boundary
 
 Patch previews are optional, disabled by default, and available only for direct,
 human-authored, exact-version declarations recognized by the existing data-only
@@ -292,7 +304,7 @@ package-manager command, script, URL supplied by repository content, arbitrary
 path, or model-generated instruction. Watchdog never executes a validation
 action or interprets its completion as fact.
 
-## Proposed workflow placement
+## Implemented workflow placement
 
 Patch preview collection requires exact source bytes and therefore must finish
 inside the repository lease. Plan assembly and rendering require no repository
@@ -312,20 +324,19 @@ validate request
   -> Phase 8 plan assembly and rendering
 ```
 
-The implementation must avoid copying the Phase 7 orchestration path. A formal
-plan must define one shared internal workflow core or another reviewed mechanism
-that preserves the existing Phase 7 behavior and exposes the Phase 8 hook only
-when explicitly requested and enabled. A default Phase 7 investigation must not
-perform Phase 8 reads or create a remediation artifact.
+The implementation uses one shared internal workflow core that preserves the
+existing Phase 7 behavior and exposes the Phase 8 hook only when explicitly
+requested and enabled. A default Phase 7 investigation does not perform Phase 8
+reads or create a remediation artifact.
 
 The outer deadline includes admission, preview collection, cleanup, plan
 assembly, and rendering. Timeout, cancellation, or client disconnect must cancel
 and join child work, wait for verified cleanup, and emit no partial preview
 bytes.
 
-## Proposed local user boundary
+## Implemented local user boundary
 
-Phase 8 remains local-only and opt-in. A formal implementation plan may propose:
+Phase 8 remains local-only and opt-in. The implementation adds:
 
 - `python -m apps.cli remediate` with the same advisory, public GitHub
   repository, optional ref, view, and format inputs as the investigation CLI;
@@ -345,7 +356,7 @@ and local HTTP security tests pass. Hostile values reach text-only sinks. No
 browser storage, remote asset, automatic download, clipboard write, file-system
 API, or auto-apply control is permitted.
 
-## Proposed renderers
+## Implemented renderers
 
 Summary and technical JSON plus escaped Markdown project the same canonical
 plan. Every renderer:
@@ -366,12 +377,12 @@ Raw advisory records, raw repository files, unredacted content, provider
 requests/responses, prompts, environment values, temporary paths, and logs never
 enter the plan.
 
-## Proposed settings and absolute limits
+## Implemented settings and absolute limits
 
-Phase 8 would add a strict `WATCHDOG_REMEDIATION_` configuration boundary. The
-initial ceilings proposed for implementation review are:
+Phase 8 adds a strict `WATCHDOG_REMEDIATION_` configuration boundary. The
+implemented ceilings are:
 
-| Limit | Proposed default | Absolute maximum | Meaning |
+| Limit | Default | Absolute maximum | Meaning |
 | --- | ---: | ---: | --- |
 | Remediation enabled | `false` | n/a | No Phase 8 collection or interface unless explicitly enabled |
 | Preview generation enabled | `false` | n/a | Guidance can remain enabled while source previews stay off |
@@ -432,7 +443,7 @@ copied to logs, telemetry, caches, history, or server files. Operator-directed
 stdout redirection or browser download creates an operator-owned copy outside
 Watchdog's retention boundary.
 
-## Proposed modules
+## Implemented modules
 
 ```text
 watchdog/domain/remediation.py
@@ -453,8 +464,7 @@ apps/web/static/*                           # fixed local mode only
 
 The domain artifact remains independent from filesystem, FastAPI, terminal, and
 HTML code. Version comparison, source preview, plan assembly, rendering,
-orchestration, and adapters remain separate. A formal implementation plan may
-adjust names, but it must preserve these capability boundaries.
+orchestration, and adapters remain separate.
 
 ## Required staged implementation plan
 
@@ -628,10 +638,10 @@ patches or instructions, pull requests, commits, uploads, remote registries,
 compatibility analysis, changelog/release-note analysis, affected/not-affected or
 reachability/exposure classification, production/hosted service, authentication,
 private repositories, persistence, jobs/history, and remote providers remain
-outside this proposed initial Phase 8 boundary.
+outside this implemented initial Phase 8 boundary.
 
-Completing this bounded Phase 8 work would finish the currently enumerated
-Phase 0–8 feature roadmap. It would not by itself make Watchdog a production
-hosted service or complete the still-deferred classification, ecosystem breadth,
+Completion of this bounded Phase 8 work finishes the currently enumerated Phase
+0–8 feature roadmap. It does not by itself make Watchdog a production hosted
+service or complete the still-deferred classification, ecosystem breadth,
 release-engineering, and operational-hardening work. Those decisions require
 separate planning rather than being silently folded into remediation.

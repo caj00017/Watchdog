@@ -5,7 +5,7 @@
 
 ## Current scope
 
-The current implementation contains seven deliberately bounded capabilities:
+The current implementation contains eight deliberately bounded capabilities:
 
 1. The public FastAPI advisory layer validates CVE, GHSA, or OSV identifiers,
    retrieves OSV records, normalizes them into source-neutral domain models, and
@@ -30,15 +30,22 @@ The current implementation contains seven deliberately bounded capabilities:
    evidence-linked report, renders bounded JSON or escaped Markdown, and exposes
    it through a direct stdout-only CLI or a separate disabled literal-loopback
    application with five exact routes.
+8. Phase 8 derives provenance-linked source-reported fixed-version candidates
+   and, when separately enabled, creates one-token in-memory previews for a
+   narrow direct-declaration allowlist before cleanup. After cleanup it assembles
+   a separate canonical plan and exposes only fully buffered local projections.
 
-Repository intake, inventory, matching, evidence, context, and investigation
+Repository intake, inventory, matching, evidence, context, investigation, and
+remediation
 remain internal services. Only the Phase 7 orchestrator exposes their bounded
 report projection through the local application; no canonical internal bundle
 or repository capability is routed. The pipeline does not generate an SBOM,
 execute repository code or package tooling, infer runtime/data-flow reachability
-or exposure, persist investigation content, or generate patches.
+or exposure, persist investigation content, write repository bytes, or generate
+commands. Phase 8 previews are structured unapplied review artifacts, not patch
+application or evidence of remediation.
 
-Phases 4–7 are complete under their reviewed work orders. Evidence and context
+Phases 4–8 are complete under their reviewed work orders. Evidence and context
 collection remain lease-scoped; investigation runs only over their immutable
 outputs after cleanup. Every public route is unchanged.
 
@@ -63,14 +70,20 @@ flowchart LR
     Scanner --> Match[Source-linked match report]
     Match --> Evidence[Bounded redacted evidence bundle]
     Evidence --> Context[Bounded lexical context bundle]
-    Context --> Cleanup[Verified archive and workspace deletion]
+    Context --> RemediationFacts[Source reported candidate derivation]
+    RemediationFacts --> Preview[Optional no follow one token in memory preview]
+    Preview --> Cleanup[Verified archive and workspace deletion]
+    Context --> Cleanup
     Cleanup --> Envelope[Bounded deterministic investigation envelope]
     Envelope --> Loopback[Optional literal-loopback model gateway]
     Loopback --> Validation[Strict schema evidence and policy validation]
     Validation --> Result[Evidence-bound inference result]
     Result --> Report[Canonical evidence-safe report]
+    Report --> Plan[Canonical unapplied remediation plan]
     Report --> CLI[Direct stdout-only CLI]
     Report --> LocalApp[Disabled literal-loopback UI and API]
+    Plan --> RemediationCLI[Opt-in stdout-only remediate CLI]
+    Plan --> LocalApp
 ```
 
 The public advisory flow remains separate from Phase 7 orchestration. The
@@ -102,6 +115,50 @@ disables access logs/proxy trust/docs, enforces exact Host and same-origin brows
 controls, and serves only `/health`, `/`, two exact assets, and the synchronous
 investigation POST. Assets have no external dependencies or browser persistence
 and variable values reach only text sinks.
+
+## Phase 8 remediation architecture
+
+`RemediationWorkflowService` rejects disabled use before advisory lookup or
+repository acquisition and owns a separate one-slot end-to-end deadline. The
+private workflow core is shared with Phase 7: investigations pass no Phase 8
+hook, while remediation runs data-only candidate derivation after Phase 5 and
+installs the repository-capable preview hook only when preview generation is
+enabled. Candidate and preview drafts finish inside the lease. Phase 6, the
+unchanged Phase 7 report, `RemediationPlan` assembly, and rendering occur only
+after cleanup is verified.
+
+Candidate selection accepts only `affected` or `affected_conditional` exact
+scanner-eligible coordinates with a linked non-omitted Phase 4 evidence item.
+Targets come only from same-component advisory `fixed` events or unambiguous
+same-package remediation fields with exact Phase 1 provenance. Identical target
+facts retain every support record. Conditional matches, source conflicts,
+multiple target values, incomplete evidence, unsupported grammar, equality, and
+downgrades remain explicit manual outcomes. PyPI uses installed PEP 440
+comparison; npm uses strict exact SemVer 2.0.0; Go uses canonical `v`-prefixed
+module semantic/pseudo-version parsing. The existing Phase 3 Go scanner
+coordinate remains unchanged; comparison uses the exact inventory declaration.
+
+`PreviewCollector` accepts no caller path, selector, version, or candidate ID.
+It derives one eligible source reference internally. Python permits one exact
+unconditional `==` token in `requirements*.txt` or a direct PEP 621 dependency;
+Go permits one direct non-replaced `go.mod` requirement; npm uses the reviewed
+same-project/root bridge from one affected lockfile coordinate to exactly one
+direct exact `package.json` declaration. Descriptor-relative reads reject every
+symlink component and non-regular file, bind pre/post identity and Phase 3
+digest, and apply the smallest Phase 3/4/8 limits. Prefix and suffix remain
+byte-identical around the one replacement, original and hypothetical bytes are
+reparsed as data, and only a redacted bounded zero-context display may leave the
+collector. No hypothetical byte is written.
+
+The strict plan has separate typed support, candidate, preview, configuration,
+and plan identities. It references but never rewrites the Phase 7 report or any
+Phase 1–6 identity. Its four statuses distinguish unavailable, manual review,
+candidate availability, and a complete preview. Every projection begins with
+the fixed no-change/compatibility/completeness limitation. The `remediate` CLI
+has no output or apply option. The local route is registered only when both the
+existing local-interface flag and remediation flag are enabled; the selected UI
+variant adds no apply, command, clipboard, upload, download, storage, or external
+asset capability.
 
 ## Advisory architecture
 
@@ -349,6 +406,7 @@ reachability/exposure, remediation, and patches are excluded.
 | `watchdog/domain/evidence.py` | Strict immutable producer, source, redaction, item, link, warning, coverage, configuration, and bundle models |
 | `watchdog/domain/context.py` | Strict immutable target, catalog, observation, graph, signal, coverage, and bundle models |
 | `watchdog/domain/investigation.py` | Strict immutable envelope, response, claim, run-status, coverage, and result models |
+| `watchdog/domain/remediation.py` | Strict immutable support, candidate, preview, plan, coverage, request, and rendered-plan models |
 | `watchdog/domain/errors.py` | Base expected-failure vocabulary independent of HTTP |
 | `watchdog/vulnerability_sources/` | OSV boundary, normalization, and source-neutral contracts |
 | `watchdog/advisory_service.py` | Identifier-to-source orchestration |
@@ -365,10 +423,11 @@ reachability/exposure, remediation, and patches are excluded.
 | `watchdog/context/` | Trusted catalog, target derivation, descriptor discovery, data-only recognizers, context evidence, lexical graph/ranking, and lease-scoped collection |
 | `watchdog/investigation/` | Canonical envelope selection, fixed prompt/schema assets, gateway protocol, strict validation/policy, loopback adapter, and internal service |
 | `watchdog/reporting/` | Phase 7 report identity/configuration, assembly, controlled wording, and bounded renderers |
+| `watchdog/remediation/` | Phase 8 identities, limits, version comparators, candidate derivation, no-write preview collection, assembly, and bounded renderers |
 | `watchdog/workflow/` | Fixed-order lease-safe orchestration, runtime composition, admission, deadline, and cancellation |
 | `apps/api` | Advisory API lifespan, dependencies, error mapping, and routes |
-| `apps/cli` | Direct stdout-only investigation adapter |
-| `apps/web` | Disabled literal-loopback launcher, exact local routes/security, and checked-in UI assets |
+| `apps/cli` | Direct stdout-only investigation and opt-in remediation adapters |
+| `apps/web` | Disabled literal-loopback launcher, exact settings-gated routes/security, and checked-in UI variants |
 
 ## Deployment and deferred architecture
 
@@ -386,9 +445,9 @@ destination and keeps its inbound listener disabled, literal-loopback, and
 unpublished by the default container. Still deferred are SBOM generation,
 source-to-sink/runtime reachability, exposure classifications, remote model
 providers, credentials, persistence, background jobs, evidence browsing,
-remote/production interfaces, and patch-preview runtime behavior. Phase 8 has a
-planning-only remediation-assistant proposal; it adds no current module, read,
-workflow hook, route, command, or patch. Exposing internal bundles, binding
+remote/production interfaces, repository writes/apply behavior, multi-token or
+multi-file previews, lock/checksum changes, commands, registry queries, and
+general source patches. Exposing internal bundles, binding
 beyond loopback, or changing the scanner version/network behavior requires a new
 boundary review.
 
@@ -405,6 +464,7 @@ investigation boundary.
 bounded orchestration, direct local CLI, and separate disabled literal-loopback
 UI/API boundary.
 
-`../work-orders/phase-8-remediation-assistant.md` proposes a separate
-evidence-linked candidate, validation-action, and in-memory preview architecture.
-It is planning-only and does not alter the runtime flow above.
+`../work-orders/phase-8-remediation-assistant.md` and
+`../plans/phase-8-implementation-plan.md` define the completed evidence-linked
+candidate, validation-action, in-memory preview, no-write, and local-interface
+architecture.
