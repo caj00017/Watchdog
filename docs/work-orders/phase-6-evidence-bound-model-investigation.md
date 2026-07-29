@@ -1,39 +1,43 @@
-# Phase 6 Proposed Work Order — Evidence-Bound Model Investigation
+# Phase 6 Completed Work Order — Evidence-Bound Model Investigation
 
-**Status:** Ready for explicit authorization review; implementation is not authorized
+**Status:** Complete; acceptance criteria passed
 
 **Prepared:** July 28, 2026
 
 **Readiness reviewed:** July 29, 2026
 
+**Implementation authorized:** July 29, 2026
+
+**Completed:** July 29, 2026
+
 **Prerequisite:** Completed Phase 5 deterministic contextual analysis
 
-**Authority:** The user requested a Phase 6 work order and a documentation
-status pass on July 28, 2026, then requested a Phase 5 completion and Phase 6
-readiness audit on July 29, 2026. Those requests authorize planning,
-reconciliation, and readiness review, not runtime model integration.
-Implementation requires separate explicit authorization and synchronized
-updates to `AGENTS.md`, the canonical project record, architecture, threat
-model, and evidence policy.
+**Authority:** The user requested a Phase 6 work order and documentation status
+pass on July 28, 2026, a Phase 5 completion and Phase 6 readiness audit on July
+29, 2026, and then explicitly authorized implementation of the resulting formal
+plan on July 29, 2026. Implementation is limited to this work order and
+`../plans/phase-6-implementation-plan.md`; every mandatory pause condition
+remains controlling.
 
 ## Readiness finding
 
 The July 29 review confirmed the prerequisite Phase 5 boundary against its work
 order, tightened the remaining fail-closed gaps, synchronized active
 documentation, and reproduced the deterministic and container acceptance gates.
-The Phase 1–5 inputs required by this proposal are therefore available as strict
-internal domain objects, and the proposed Phase 6 scope is sufficiently bounded
-for an explicit implementation-authorization decision.
+The Phase 1–5 inputs required by Phase 6 were therefore available as strict
+internal domain objects, and the reviewed Phase 6 scope was sufficiently bounded
+for the implementation-authorization decision.
 
-This is a readiness finding only. Until that separate authorization is granted,
-the implementation sequence below must not begin and no Phase 6 model schema,
-prompt, gateway, setting, network behavior, or result may be added.
+The readiness finding and explicit authorization permitted the staged sequence
+below. The sequence completed without skipping a gate or adding a capability
+listed as deferred or requiring escalation.
 
 ## Objective
 
-Add a separate internal investigation service that asks a model to synthesize a
-bounded, redacted, evidence-linked view of one advisory and one repository
-snapshot. The service may identify supported dependency/context relationships,
+Provide a separate internal investigation service that asks a model to
+synthesize a bounded, redacted, evidence-linked view of one advisory and one
+repository snapshot. The service may identify supported dependency/context
+relationships,
 state assumptions and missing evidence, and select controlled follow-up
 validation steps. It must never treat the model as a scanner or evidence source.
 
@@ -60,9 +64,9 @@ status, and inference/evidence separation. The service remains internal until a
 later interface phase reviews authentication, retention, authorization, and
 presentation.
 
-## Proposed service boundary
+## Implemented service boundary
 
-The proposed internal boundary is:
+The implemented internal boundary is:
 
 ```text
 InvestigationService.investigate(
@@ -90,9 +94,9 @@ Before constructing model input, the service must verify:
 
 Input disagreement must fail before any model gateway is invoked.
 
-## Proposed implementation boundary
+## Implemented boundary
 
-If separately authorized, the initial implementation may:
+The completed initial implementation:
 
 - add strict source-neutral models for the model-input envelope, gateway
   request, validated model draft, investigation claims, run status, coverage,
@@ -111,7 +115,7 @@ If separately authorized, the initial implementation may:
 - content-address the exact validated result and record the input-envelope,
   prompt, policy, gateway, model, and parameter versions used.
 
-The initial implementation may not:
+The completed initial implementation does not:
 
 - accept an `AcquiredRepository`, repository path, caller-selected source
   content, arbitrary evidence, prompt, system instruction, schema, tool, or
@@ -208,7 +212,7 @@ The provider-neutral `ModelGateway` protocol accepts only a validated request
 object and returns bounded response bytes plus allowlisted operational metadata.
 Tests use an in-memory fake gateway.
 
-The proposed first concrete gateway is disabled by default and restricted to a
+The implemented first concrete gateway is disabled by default and restricted to a
 plain-HTTP literal loopback address (`127.0.0.1` or `[::1]`) with an explicit port
 and fixed OpenAI-compatible path. It must reject user information, DNS hostnames,
 query strings, fragments, redirects, alternate response destinations, and
@@ -297,10 +301,10 @@ Phase 6 does not accept or emit shell commands, package-manager invocations,
 scripts, code blocks, file edits, upgrade versions, or patches. Model-selected
 actions are suggestions for human investigation, never executable instructions.
 
-## Proposed limits
+## Implemented limits
 
-The implementation must add `WATCHDOG_INVESTIGATION_` settings and a strict
-configuration model. Proposed initial defaults are:
+The implementation adds `WATCHDOG_INVESTIGATION_` settings and a strict
+configuration model. The implemented defaults are:
 
 | Limit | Default | Meaning |
 | --- | ---: | --- |
@@ -334,7 +338,7 @@ overflow, invalid response, evidence-link failure, and policy-gate failure are
 distinct controlled run statuses. They never become a clean negative assessment
 and never cause a fallback provider request.
 
-Initial implementation performs one request and no automatic retry. Cancellation
+The implementation performs one request and no automatic retry. Cancellation
 must close/abort the HTTP operation and await worker/client termination before
 returning. Phase 6 has no repository lease or raw repository buffer to retain.
 
@@ -343,7 +347,7 @@ kind, model configuration digest, envelope/result IDs, and bounded numeric
 counts. They must not contain prompts, evidence display text, model response
 text, headers, endpoint credentials, provider opaque IDs, or repository paths.
 
-## Proposed modules
+## Implemented modules
 
 ```text
 watchdog/domain/investigation.py
@@ -362,7 +366,9 @@ The domain module remains provider-neutral. Envelope selection, prompt assets,
 transport, response validation, policy gates, and orchestration remain separate
 so no provider response type crosses into the domain layer.
 
-## Proposed implementation sequence
+## Completed implementation sequence
+
+Phase 6 was implemented and accepted through this staged sequence:
 
 1. Record explicit implementation authorization and freeze the disposition,
    claim, validation-action, limit, and configuration vocabulary.
@@ -439,7 +445,7 @@ schema, evidence, destination, or failure controls established earlier.
 
 ## Acceptance criteria
 
-Phase 6 may be marked complete only when:
+Phase 6 was marked complete after confirming:
 
 1. The service accepts only validated, same-snapshot Phase 1 and Phase 3–5
    objects and never receives repository access.
@@ -492,4 +498,4 @@ streaming, tools, retrieval, embeddings, multimodal input, source-to-sink or
 runtime reachability, deployment context, exposure and affected/not-affected
 classification, reports, investigation APIs, CLI/web UI, remediation guidance,
 package commands, executable validation, and patch previews remain outside this
-proposed initial Phase 6 boundary.
+implemented initial Phase 6 boundary.

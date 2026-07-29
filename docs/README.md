@@ -18,7 +18,7 @@ describe.
   controls, and residual risks.
 - [Evidence policy](security/evidence-policy.md) defines provenance, conflicts,
   failures, acquisition metadata, the completed Phase 4 evidence contract, and
-  completed Phase 5 context evidence plus the proposed Phase 6 inference/evidence
+  completed Phase 5 context evidence plus the completed Phase 6 inference/evidence
   separation.
 
 ## Completed work orders
@@ -33,13 +33,19 @@ describe.
   records the completed sequential work packages, gates, tests, risks, and
   mandatory pause conditions.
 
-## Proposed work orders
+## Completed Phase 6 boundary
 
 - [Phase 6 evidence-bound model investigation](work-orders/phase-6-evidence-bound-model-investigation.md)
-  is a readiness-reviewed proposal for an internal, strictly validated model
-  synthesis boundary. It is ready for an explicit authorization decision but
-  does not authorize implementation, network access, credentials, interfaces,
-  persistence, exposure classification, or remediation behavior.
+  is the completed internal, strictly validated model-synthesis boundary.
+- [Phase 6 formal implementation plan](plans/phase-6-implementation-plan.md)
+  records its staged gates, tests, and mandatory escalation conditions.
+
+## Proposed Phase 7 boundary
+
+- [Phase 7 evidence-safe reporting and local interfaces](work-orders/phase-7-reporting-and-local-interfaces.md)
+  is ready for explicit authorization review. It is a planning-only proposal;
+  no report, workflow, CLI, route, listener, UI, or persistence behavior is
+  authorized by its presence.
 
 Supporting documents should agree with the canonical record. If they do not,
 inspect the implementation and tests, correct the canonical record first, and
@@ -52,7 +58,7 @@ then reconcile the supporting document.
 - `archive/recaps/` contains dated implementation-session snapshots.
 
 The current archived verification snapshot is
-[`development-recap-2026-07-29-phase-5-verification.md`](archive/recaps/development-recap-2026-07-29-phase-5-verification.md).
+[`development-recap-2026-07-29-phase-6.md`](archive/recaps/development-recap-2026-07-29-phase-6.md).
 
 Archived files preserve historical context. They are not current instructions or
 authoritative descriptions of the codebase.

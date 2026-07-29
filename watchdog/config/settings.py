@@ -69,6 +69,22 @@ class Settings(BaseSettings):
     context_max_bundle_display_bytes: int = Field(default=5 * 1024 * 1024, gt=0)
     context_max_redactions_per_item: int = Field(default=100, gt=0)
     context_max_warnings: int = Field(default=1_000, gt=0)
+    investigation_enabled: bool = False
+    investigation_loopback_host: Literal["127.0.0.1", "::1"] = "127.0.0.1"
+    investigation_loopback_port: int = Field(default=11434, ge=1, le=65535)
+    investigation_model: str | None = Field(default=None, min_length=1, max_length=256)
+    investigation_deadline_seconds: float = Field(default=60.0, gt=0, le=600)
+    investigation_max_concurrent_requests: int = Field(default=1, ge=1, le=1)
+    investigation_max_input_bytes: int = Field(default=256 * 1024, gt=0, le=1024 * 1024)
+    investigation_max_output_bytes: int = Field(default=64 * 1024, gt=0, le=256 * 1024)
+    investigation_max_evidence_items: int = Field(default=256, gt=0, le=1_000)
+    investigation_max_claims: int = Field(default=64, gt=0, le=256)
+    investigation_max_evidence_links_per_claim: int = Field(default=32, gt=0, le=128)
+    investigation_max_assumptions: int = Field(default=32, gt=0, le=128)
+    investigation_max_missing_evidence_codes: int = Field(default=64, gt=0, le=256)
+    investigation_max_validation_actions: int = Field(default=32, gt=0, le=128)
+    investigation_max_rationale_bytes_per_claim: int = Field(default=2_048, gt=0, le=8_192)
+    investigation_max_output_tokens: int = Field(default=4_096, gt=0, le=16_384)
 
     @field_validator("osv_scanner_path")
     @classmethod

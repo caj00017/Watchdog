@@ -95,20 +95,51 @@ evidence browser, or patch behavior. Any such expansion, any new parser
 dependency, or any change to the scanner or Phase 4 canonical output requires a
 separate explicit boundary review.
 
-## Phase 6 planning status
+## Completed Phase 6 implementation boundary
 
 `docs/work-orders/phase-6-evidence-bound-model-investigation.md` is a
-readiness-reviewed proposal for the next roadmap phase. It is ready for an
-explicit authorization decision, but its presence does not authorize
-implementation. Until the user separately authorizes Phase 6, do not add a model
-gateway or call, prompt construction, investigation models or settings,
-loopback or remote model network access, credentials, model-derived
-dispositions, or any other Phase 6 runtime behavior.
+readiness-reviewed, authorized, and completed boundary. The user explicitly
+authorized implementation on July 29, 2026, and the staged gates in
+`docs/plans/phase-6-implementation-plan.md` were completed the same day.
 
-The proposal preserves completed Phase 1–5 artifacts as immutable validated
-inputs and permits no repository access in the model phase. Its proposed initial
-vocabulary remains narrower than an affected/not-affected or exposure
-classification. Remote providers, provider credentials, persistence, public or
-private routes, CLI/web interfaces, runtime/data-flow reachability, remediation,
-commands, and patches remain unapproved and require their own explicit boundary
-review even if initial Phase 6 implementation is later authorized.
+Phase 6 preserves completed Phase 1–5 artifacts as immutable validated inputs
+and permits no repository access in the model phase. The implementation adds
+strict investigation models, deterministic bounded envelopes, fixed
+versioned prompts, an injected provider-neutral gateway, strict response and
+evidence-link validation, controlled dispositions, and one disabled-by-default,
+credential-free, literal-loopback OpenAI-compatible adapter using the existing
+HTTP dependency. It remains internal, non-streaming, tool-free,
+redirect-free, proxy-independent, bounded, and non-persistent.
+
+The Phase 6 vocabulary remains narrower than an affected/not-affected or
+exposure classification. Remote or hostname-based providers, credentials,
+provider SDKs, persistence, public or private routes, CLI/web interfaces,
+runtime/data-flow reachability, exploitability, deployment exposure,
+remediation, commands, and patches remain unapproved and require their own
+explicit boundary review. Phase 6 must not modify the scanner, OSV-Scanner 2.4.0
+pin or behavior, Phase 4/5 eligibility or canonical output, or any existing
+identity.
+
+## Phase 7 planning status
+
+`docs/work-orders/phase-7-reporting-and-local-interfaces.md` is a planning-only
+proposal for an evidence-safe reporting and local-interface boundary. The user
+authorized creation of the work order on July 29, 2026, but has not authorized
+implementation. The completed Phase 6 working tree must first be reviewed and
+committed as an immutable baseline, followed by a separate explicit Phase 7
+implementation decision.
+
+Until then, do not add a report model or renderer, end-to-end workflow service,
+CLI investigation command, web application, investigation API or route,
+listener, UI assets, report export/persistence, or any other Phase 7 runtime
+behavior. Planning does not authorize changes to dependencies, existing public
+routes, network destinations, repository inputs, Phase 1–6 services, scanner,
+evidence/context eligibility, model controls, or canonical identities.
+
+The proposed initial boundary is local, disabled by default, synchronous, and
+non-persistent. It preserves the one-advisory/one-public-GitHub-repository scope,
+keeps all Phase 2–5 repository work inside the verified lease, permits Phase 6
+only after cleanup, and adds no classification, reachability, exposure,
+remediation, command, or patch vocabulary. Remote or production interfaces,
+authentication, private repositories, jobs, report history, arbitrary output
+paths, remote providers, credentials, and Phase 8 remediation remain unapproved.

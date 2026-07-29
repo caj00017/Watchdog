@@ -2,7 +2,7 @@
 
 ## Project Design and Implementation Record
 
-**Document version:** 5.2
+**Document version:** 6.1
 
 **Last updated:** July 29, 2026
 
@@ -12,7 +12,7 @@
 
 **Code version:** 0.1.0
 
-**Current lifecycle state:** Phases 0–5 complete; Phase 6 ready for authorization review
+**Current lifecycle state:** Phases 0–6 complete; Phase 7 proposed but not authorized
 
 **Primary deployment direction:** Local-first, open source
 
@@ -55,7 +55,7 @@ session.
 
 ## 2.1 Current phase
 
-Phases 0 through 5 are complete:
+Phases 0 through 6 are complete:
 
 - **Phase 0 — Foundation:** package structure, FastAPI, configuration, quality
   tooling, Docker development, and foundational documentation.
@@ -79,6 +79,12 @@ Phases 0 through 5 are complete:
   data-only Python/JavaScript/TypeScript/Go and JSON/TOML recognition, redacted
   context evidence, a lexical observation graph, controlled non-classification
   signals, and cancellation-safe lease integration.
+- **Phase 6 — Evidence-bound model investigation:** strict source-neutral
+  investigation models, deterministic bounded envelopes over validated Phase
+  1/3–5 artifacts, fixed versioned prompt/schema assets, provider-neutral
+  gateway injection, evidence-link and deterministic disposition validation,
+  explicit run states, and one disabled credential-free literal-loopback
+  OpenAI-compatible adapter.
 
 Phases 4 and 5 remain internal. Phase 5 observations are lexical and do not
 establish execution, runtime/data-flow reachability, exploitability, deployment
@@ -86,12 +92,18 @@ exposure, or repository affected/not-affected status. The completed boundary is
 recorded in `docs/work-orders/phase-5-contextual-analysis.md` and
 `docs/plans/phase-5-implementation-plan.md`.
 
-Phase 6 is not implemented or authorized. A readiness-reviewed work order at
-`docs/work-orders/phase-6-evidence-bound-model-investigation.md` proposes a
-separate internal model-synthesis boundary over validated Phase 1 and Phase 3–5
-artifacts. It permits no repository access and initially excludes remote
-providers, credentials, persistence, interfaces, remediation, runtime
-reachability, exposure, and affected/not-affected classifications.
+Phase 6 is complete under its governing work order and formal plan. Its separate
+internal model-synthesis boundary operates only after repository cleanup and
+permits no repository access. It excludes remote providers, credentials,
+persistence, interfaces, remediation, runtime reachability, exposure, and
+affected/not-affected classifications.
+
+Phase 7 has a planning-only work order for evidence-safe reports and local
+interfaces. It proposes a deterministic report model, bounded orchestration,
+direct local CLI, and a separate disabled literal-loopback UI/API. No Phase 7
+runtime behavior is implemented or authorized. Phase 6 must first be reviewed
+and committed as an immutable baseline, followed by a separate explicit Phase 7
+implementation decision.
 
 ## 2.2 Current health
 
@@ -110,21 +122,20 @@ reachability, exposure, and affected/not-affected classifications.
 | Evidence engine | Implemented internally | Bounded redacted dependency-source bundles; no API, persistence, model, or exposure result |
 | Contextual analysis | Implemented internally | Bounded evidence-linked lexical observations and non-classification signals; no route or runtime reachability |
 | Exposure classification | Not implemented | No affected/not-affected conclusions are produced |
-| LLM integration | Ready for authorization review | Phase 6 work order reviewed; no model code, gateway, credentials, or call |
-| CLI and web UI | Not implemented | Placeholder directories only |
+| LLM integration | Implemented internally | Evidence-bound, disabled by default, literal-loopback only, credential-free, strict output validation |
+| CLI and web UI | Not implemented | Planning-only Phase 7 work order; placeholder directories only |
 | Persistence and jobs | Not implemented | No database, queue, or retained investigation state |
 | Container workflow | Verified | Multi-stage image builds; embedded scanner version and no-mount health pass |
-| Automated quality | Green | 243 deterministic tests pass; bounded live scanner contract remains opt-in |
-| Version-control state | Phase 0–4 tracked on `main` | Completed Phase 5 implementation is a working-tree change pending review/commit |
+| Automated quality | Green | 266 deterministic tests pass; bounded live scanner contract remains opt-in |
+| Version-control state | Phase 0–5 tracked on `main` | Completed Phase 6 is a working-tree change pending review/commit |
 
 ## 2.3 Immediate milestone
 
-Review and commit the completed, reverified Phase 5 implementation as a bounded
-change set. The Phase 6 work order is ready for a separate explicit
-authorization decision; this readiness finding does not authorize
-implementation. Do not expose internal services, add a model call or gateway,
-introduce broader parsers, or change scanner/network behavior without that
-authorization.
+Review and commit the completed Phase 6 boundary as a small auditable change,
+then make a separate explicit authorization decision on the Phase 7 work order.
+Until then, do not add report/workflow runtime behavior, expose internal
+services, add a listener or CLI, introduce remote egress or credentials, broaden
+the disposition vocabulary, or change scanner and Phase 4–6 behavior.
 
 ---
 
@@ -627,13 +638,29 @@ Configuration uses `WATCHDOG_`-prefixed environment variables.
 | `WATCHDOG_CONTEXT_MAX_BUNDLE_DISPLAY_BYTES` | `5242880` | Maximum redacted display bytes per context bundle |
 | `WATCHDOG_CONTEXT_MAX_REDACTIONS_PER_ITEM` | `100` | Maximum redactions per item |
 | `WATCHDOG_CONTEXT_MAX_WARNINGS` | `1000` | Maximum retained context warnings |
+| `WATCHDOG_INVESTIGATION_ENABLED` | `false` | Explicitly enable the internal model request |
+| `WATCHDOG_INVESTIGATION_LOOPBACK_HOST` | `127.0.0.1` | Literal IPv4 or IPv6 loopback address only |
+| `WATCHDOG_INVESTIGATION_LOOPBACK_PORT` | `11434` | Loopback model-server port |
+| `WATCHDOG_INVESTIGATION_MODEL` | unset | Required bounded model identifier when enabled |
+| `WATCHDOG_INVESTIGATION_DEADLINE_SECONDS` | `60` | Request-through-validation deadline |
+| `WATCHDOG_INVESTIGATION_MAX_CONCURRENT_REQUESTS` | `1` | Per-service request concurrency |
+| `WATCHDOG_INVESTIGATION_MAX_INPUT_BYTES` | `262144` | Canonical envelope byte ceiling |
+| `WATCHDOG_INVESTIGATION_MAX_OUTPUT_BYTES` | `65536` | Provider response byte ceiling |
+| `WATCHDOG_INVESTIGATION_MAX_EVIDENCE_ITEMS` | `256` | Included Phase 4/5 evidence items |
+| `WATCHDOG_INVESTIGATION_MAX_CLAIMS` | `64` | Validated claims |
+| `WATCHDOG_INVESTIGATION_MAX_EVIDENCE_LINKS_PER_CLAIM` | `32` | Citations per claim |
+| `WATCHDOG_INVESTIGATION_MAX_ASSUMPTIONS` | `32` | Controlled assumption codes |
+| `WATCHDOG_INVESTIGATION_MAX_MISSING_EVIDENCE_CODES` | `64` | Controlled gap codes |
+| `WATCHDOG_INVESTIGATION_MAX_VALIDATION_ACTIONS` | `32` | Controlled human actions |
+| `WATCHDOG_INVESTIGATION_MAX_RATIONALE_BYTES_PER_CLAIM` | `2048` | UTF-8 rationale bytes per claim |
+| `WATCHDOG_INVESTIGATION_MAX_OUTPUT_TOKENS` | `4096` | Requested provider output ceiling |
 
 Repository settings are consumed when an internal caller constructs
 `RepositoryLimits` and `GitHubRepositorySource`. Inventory and scanner settings
 are consumed when internal callers construct `InventoryLimits`, `ScannerLimits`,
 `OsvScanner`, `EvidenceLimits`, `EvidenceConfiguration`, and
-`ContextConfiguration`. The FastAPI lifespan currently wires only advisory
-settings.
+`ContextConfiguration`, and `InvestigationConfiguration`. The FastAPI lifespan
+currently wires only advisory settings; Phase 2–6 services remain internal.
 
 ---
 
@@ -644,12 +671,23 @@ As of July 29, 2026:
 - `ruff format --check .` passes.
 - `ruff check .` passes.
 - strict `mypy` passes.
-- pytest passes 243 deterministic tests; the bounded live OSV scanner contract
+- pytest passes 266 deterministic tests; the bounded live OSV scanner contract
   is skipped unless explicitly enabled.
 - Application/test bytecode compilation passes.
 - OpenAPI contains exactly `/health` and
   `/api/v1/advisories/{identifier}`.
 - Docker Compose configuration parses.
+
+Phase 6 environment-dependent container acceptance also passes:
+
+- Docker built the standalone image with ID
+  `sha256:ca3e5ea6b9c9d9495de444fda10a1e823d2ffd846dd31a3b4e07c86e753a2a3f`
+  and size 79,204,201 bytes.
+- The image started with network mode `none` and no mounts and returned HTTP 200
+  with `{"status":"ok","version":"0.1.0"}` from `/health` over loopback.
+- `/usr/local/bin/osv-scanner --version` reports OSV-Scanner 2.4.0.
+- No live model request was required; the concrete gateway remains disabled by
+  default and all transport acceptance uses deterministic mocked loopback I/O.
 
 Phase 5 environment-dependent container acceptance also passes:
 
@@ -720,8 +758,9 @@ not a stable release identifier.
 - No general static/source-to-sink or runtime reachability analysis, deployment
   configuration analysis, exploitability decision, or exposure result. Phase 5
   configuration observations remain catalog-limited lexical facts.
-- No LLM provider, model gateway/call, model-input envelope, or investigation
-  result; Phase 6 is readiness-reviewed but remains unauthorized.
+- No remote or credentialed LLM provider, retry/fallback, model routing, tool
+  call, or persistent investigation result. Phase 6 supports only an explicitly
+  enabled local literal-loopback model server.
 - No investigation/report API, CLI workflow, or web UI.
 - No persistence, job state, authentication, hosted service, or private repos.
 - No patch preview or remediation automation.
@@ -739,8 +778,8 @@ not a stable release identifier.
 
 ## 10.3 Project-operational gaps
 
-- The Phase 0–4 implementation and documentation are committed on `main`; the
-  completed Phase 5 implementation and documentation are pending review and
+- The Phase 0–5 implementation and documentation are committed on `main`; the
+  completed Phase 6 implementation and documentation are pending review and
   commit in the current working tree.
 - The complete `docs/` tree is tracked so boundary and status changes can be
   reviewed and committed with the implementation they describe.
@@ -760,8 +799,8 @@ not a stable release identifier.
 | 3. Dependency inventory and matching | Complete | Bounded parsers, graph, pinned OSV-Scanner, exact matching |
 | 4. Evidence engine | Complete | Internal schema, safe extraction, hashing, redaction, bounded links, and deterministic bundles |
 | 5. Contextual analysis | Complete | Bounded import, call, config, endpoint, evidence, lexical graph, and controlled context signals |
-| 6. Evidence-bound model investigation | Ready for authorization review | Readiness-reviewed work order for a provider-neutral gateway, strict schema, and evidence validation; implementation not authorized |
-| 7. Reports and interfaces | Deferred | Full reports, CLI, web UI, investigation API |
+| 6. Evidence-bound model investigation | Complete | Internal deterministic envelope, strict schema/evidence/policy validation, and disabled literal-loopback gateway |
+| 7. Evidence-safe reports and local interfaces | Ready for authorization review; not authorized | Canonical reports, bounded workflow, direct local CLI, disabled loopback UI/API |
 | 8. Remediation assistant | Deferred | Upgrade guidance, validation, patch previews |
 
 ---
@@ -806,12 +845,12 @@ coordinate lookup and is never repository-level not-affected evidence.
 Acceptance is covered by data-only Python/npm/Go and hostile fixtures,
 deterministic scanner runners, lease-cleanup integration, unchanged public API
 tests, and an opt-in bounded live `github.com/gogo/protobuf@1.3.1` /
-`GO-2021-0053` contract smoke. Syft, SBOM, reachability, exposure, LLM,
-persistence, and public routes remain deferred.
+`GO-2021-0053` contract smoke. Syft, SBOM, reachability, exposure, remote model
+providers, persistence, and public routes remain deferred.
 
 ---
 
-# 13. Phase 4 and Phase 5 Implementation
+# 13. Phase 4 through Phase 6 Implementation
 
 ## 13.1 Phase 4 implementation
 
@@ -861,26 +900,27 @@ evidence.
 
 ## 13.3 LLM strategy
 
-LLM integration remains unimplemented. The readiness-reviewed Phase 6 work
-order at `docs/work-orders/phase-6-evidence-bound-model-investigation.md`
-proposes the first model boundary but grants no implementation authority.
+Phase 6 is complete under
+`docs/work-orders/phase-6-evidence-bound-model-investigation.md` and
+`docs/plans/phase-6-implementation-plan.md` as the first model boundary.
 
-The proposed initial service would operate after repository cleanup and consume
-only validated, bounded, redacted Phase 1 and Phase 3–5 artifacts. It would use a
-provider-neutral gateway, a canonical input envelope, fixed versioned prompts,
-strict JSON/schema/evidence-link validation, and deterministic policy gates.
-Model output would remain inference rather than evidence and would never rewrite
-existing canonical artifacts.
+The internal service operates after repository cleanup and consumes only
+validated, bounded, redacted Phase 1 and Phase 3–5 artifacts. It uses a
+provider-neutral gateway, canonical bounded input envelope, fixed versioned
+prompt and strict response-schema assets, duplicate-aware JSON parsing, exact
+evidence-link validation, and deterministic disposition gates. Model output
+remains inference rather than evidence and never rewrites existing canonical
+artifacts.
 
-The first proposed concrete gateway is disabled by default, credential-free, and
-limited to a literal loopback OpenAI-compatible endpoint. It permits no DNS
+The only concrete gateway is disabled by default, credential-free, and limited
+to a literal loopback OpenAI-compatible endpoint. It permits no DNS
 hostname, redirect, ambient proxy, tool call, streaming, persistence, or remote
 provider. Remote BYOK providers remain a later destination and credential-
 handling decision.
 
 Nexura-hosted inference remains deferred because it requires authentication,
 billing, tenant/job isolation, retention policy, encryption, abuse controls, and
-cost management. No model mode exists in the current implementation.
+cost management. No model workflow is exposed through the API, CLI, or web UI.
 
 ## 13.4 Controlled classifications
 
@@ -894,19 +934,26 @@ The planned classifications are:
 - Insufficient evidence
 - Unsupported ecosystem
 
-They are reserved for a later validated investigation result. The current
-advisory, intake, inventory, matching, evidence, and context services do not emit
-them. The proposed initial Phase 6 vocabulary does not implement the affected or
-exposure classifications; it is limited to dependency/context-observed,
+The affected, reachability, and exposure classifications remain reserved for a
+later work order. Phase 6 implements only dependency/context-observed,
 context-unconfirmed, insufficient-evidence, and unsupported dispositions.
 
 ## 13.5 Interfaces and deployment
 
-Planned local interfaces are a CLI, minimal web UI, and investigation API. The
-existing advisory API is the only public interface today. A future production or
-hosted service requires non-root containers, admission/rate limits, durable job
-state, isolated analysis workers, storage/retention policy, authentication, and
-operational monitoring.
+The planning-only Phase 7 work order proposes an evidence-safe canonical report,
+deterministic summary/technical JSON and escaped-Markdown views, one bounded
+end-to-end orchestrator, a direct stdout-only CLI, and a separate
+disabled-by-default literal-loopback web application with a minimal synchronous
+investigation API. The existing advisory API remains the only implemented
+public interface today; no Phase 7 route, listener, CLI, report, or UI exists.
+
+The proposal preserves all Phase 1–6 identities, keeps repository work inside
+the verified lease, invokes Phase 6 only after cleanup, and adds no persistence,
+background job, remote destination, credentials, classification, remediation,
+command, or patch behavior. A future production or hosted service still requires
+non-root containers, admission/rate limits, durable job state, isolated analysis
+workers, storage/retention policy, authentication, authorization, and
+operational monitoring under a separate review.
 
 ---
 
@@ -929,8 +976,8 @@ adoption.
 
 ## D-004 — BYOK or local model direction
 
-Initial model integration, when implemented, should use user-controlled
-credentials or a local endpoint. Nexura-hosted inference is deferred.
+Initial model integration uses a local literal-loopback endpoint without
+credentials. Remote BYOK and Nexura-hosted inference are deferred.
 
 ## D-005 — Public repositories first
 
@@ -1059,6 +1106,44 @@ deployment exposure. Remote providers and every broader capability require a
 separate explicit amendment even if initial Phase 6 implementation is later
 authorized.
 
+## D-020 — Phase 6 is a local evidence-bound inference service
+
+The user explicitly authorized the formal Phase 6 plan on July 29, 2026. The
+completed service is separate from repository acquisition and consumes only
+revalidated Phase 1 and Phase 3–5 domain objects after repository cleanup. Its
+canonical envelope includes only allowlisted advisory facts, relevant matches,
+redacted evidence, lexical observations/graph relationships/signals, and
+explicit coverage and omission state.
+
+The checked-in prompt and strict JSON Schema, duplicate-aware parser, exact
+evidence links, controlled codes, and deterministic disposition gates are the
+acceptance boundary. Model output remains untrusted inference. The only concrete
+transport is disabled by default, credential-free, non-streaming, tool-free,
+single-shot, proxy-independent, redirect-free, and restricted to a literal
+loopback `/v1/chat/completions` destination. Existing Phase 1–5 identities,
+scanner behavior, dependencies, and public routes remain unchanged.
+
+Remote providers, credentials, persistence, interfaces, retries/fallbacks,
+runtime/data-flow reachability, exploitability, exposure or affected/not-
+affected classifications, remediation, commands, and patches remain deferred
+and require a separate work order.
+
+## D-021 — Phase 7 planning does not authorize an interface
+
+The user requested a Phase 7 work order on July 29, 2026. The resulting proposal
+defines evidence-safe reports, bounded orchestration, a direct local CLI, and a
+separate disabled literal-loopback UI/API. The request authorizes this planning
+and Phase 6 documentation reconciliation only; it does not authorize any Phase 7
+runtime behavior.
+
+Phase 6 must first be reviewed and committed as an immutable baseline. A
+separate explicit decision is then required before Phase 7 implementation may
+begin. The proposed initial boundary is synchronous and non-persistent, adds no
+outbound destination, and preserves the narrower Phase 6 vocabulary. Public or
+production exposure, authentication, private repositories, jobs, durable
+reports, remote providers, credentials, reachability/exposure classification,
+remediation, commands, and patches require later independent review.
+
 ---
 
 # 15. Risks and Mitigation Direction
@@ -1130,26 +1215,29 @@ docs/
 ├── architecture/
 │   └── architecture.md
 ├── plans/
-│   └── phase-5-implementation-plan.md
+│   ├── phase-5-implementation-plan.md
+│   └── phase-6-implementation-plan.md
 ├── security/
 │   ├── evidence-policy.md
 │   └── threat-model.md
 ├── work-orders/
 │   ├── phase-4-evidence-engine.md
 │   ├── phase-5-contextual-analysis.md
-│   └── phase-6-evidence-bound-model-investigation.md
+│   ├── phase-6-evidence-bound-model-investigation.md
+│   └── phase-7-reporting-and-local-interfaces.md
 └── archive/
     ├── planning/
     │   └── nexura_watchdog_formal_plan.md
     ├── prompts/
     │   └── phase-1-foundation-prompt.txt
-	    └── recaps/
-	        ├── development-recap-2026-07-27-phase-1.md
-	        ├── development-recap-2026-07-27-phase-2.md
-	        ├── development-recap-2026-07-27-phase-3.md
-	        ├── development-recap-2026-07-28-phase-4.md
-	        ├── development-recap-2026-07-28-phase-5.md
-	        └── development-recap-2026-07-29-phase-5-verification.md
+    └── recaps/
+        ├── development-recap-2026-07-27-phase-1.md
+        ├── development-recap-2026-07-27-phase-2.md
+        ├── development-recap-2026-07-27-phase-3.md
+        ├── development-recap-2026-07-28-phase-4.md
+        ├── development-recap-2026-07-28-phase-5.md
+        ├── development-recap-2026-07-29-phase-5-verification.md
+        └── development-recap-2026-07-29-phase-6.md
 ```
 
 The archive preserves historical context but is not current instruction. The
@@ -1159,6 +1247,36 @@ and boundary changes.
 ---
 
 # 18. Change History
+
+## Version 6.1 — July 29, 2026
+
+- Reconciled the completed Phase 6 work order and supporting architecture and
+  evidence policy with implemented rather than proposal-era wording.
+- Added a planning-only Phase 7 evidence-safe reporting and local-interfaces
+  work order with strict report/evidence semantics, lease-safe orchestration,
+  deterministic renderers, a direct local CLI, and a disabled literal-loopback
+  UI/API proposal.
+- Recorded that Phase 7 implementation remains unauthorized and requires the
+  completed Phase 6 boundary to be reviewed and committed first.
+
+## Version 6.0 — July 29, 2026
+
+- Recorded explicit Phase 6 implementation authority and completed the formal
+  staged work packages from the Phase 5 commit `7cdcf88`.
+- Added strict investigation models and identities, deterministic bounded
+  envelopes over revalidated Phase 1/3–5 artifacts, fixed prompt/schema assets,
+  exact evidence-link validation, deterministic dispositions, and explicit run
+  states.
+- Added the provider-neutral gateway and one disabled-by-default,
+  credential-free, literal-loopback OpenAI-compatible adapter with strict
+  destination, redirect, proxy, response, deadline, concurrency, retry, and
+  cancellation controls.
+- Added 23 focused adversarial/unit/integration/security tests and raised the
+  deterministic baseline to 266 passing tests with the bounded live scanner
+  contract still opt-in.
+- Reproduced static checks, compilation, exact public routes, Compose, a fresh
+  no-network/no-mount container health smoke, and OSV-Scanner 2.4.0 verification
+  without changing dependencies, scanner behavior, or Phase 4/5 identities.
 
 ## Version 5.2 — July 29, 2026
 
@@ -1307,6 +1425,15 @@ redacted, deterministic internal evidence bundles before lease cleanup and add
 bounded evidence-linked lexical observations, graph edges, and controlled
 non-classification signals. This is deterministic package, artifact, and lexical
 evidence, not runtime/data-flow reachability, exploitability, deployment
-exposure, or an affected/not-affected repository classification. Phase 6 exists
-only as a review work order; Watchdog does not currently construct model input,
-call a model, or emit an investigation result.
+exposure, or an affected/not-affected repository classification.
+
+Phase 6 can construct a bounded deterministic envelope over those immutable
+artifacts and, when explicitly enabled, ask a literal-loopback model for a
+strictly validated evidence-linked synthesis. That synthesis is visibly model
+inference, not evidence or a vulnerability classification. The service remains
+internal, credential-free, non-persistent, and without a route, CLI, or UI.
+
+Phase 7 is a planning-only proposal to present those artifacts through
+evidence-safe deterministic reports and local interfaces. No Phase 7 behavior is
+implemented or authorized, and its work order does not relax any existing
+security or evidence boundary.

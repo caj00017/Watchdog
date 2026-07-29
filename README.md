@@ -17,7 +17,7 @@ workspace, and verifies deletion when its context closes. Inside that lease,
 Phase 3 reads bounded dependency data without invoking package managers or
 repository code. Exact PyPI, npm, and Go coordinates can be sent to pinned
 OSV-Scanner 2.4.0 through a generated custom input. SBOMs, runtime/data-flow
-reachability, LLM calls, and patch generation remain out of scope.
+reachability, remote model providers, and patch generation remain out of scope.
 
 Phase 4 implements the reviewed internal evidence-engine work order. It turns
 only Watchdog-generated Phase 3 source references into bounded, redacted,
@@ -34,13 +34,20 @@ observations, graph edges, and non-classification signals. It adds no route,
 subprocess, dependency, network client, persistence, model call, runtime
 reachability, exposure classification, or patch behavior.
 
-Phases 0–5 are complete and the Phase 5 boundary was reverified on July 29,
-2026. A readiness-reviewed Phase 6 work order proposes an internal, evidence-
-bound model investigation service over validated Phase 1 and Phase 3–5 artifacts.
-It is ready for an explicit authorization decision, but no Phase 6 code, model
-gateway, model network access, credential, investigation result, route,
-interface, persistence, or affected/not-affected classification is implemented
-or authorized yet.
+Phase 6 implements a separate internal `InvestigationService` over validated
+Phase 1 and Phase 3–5 artifacts after repository cleanup. It builds a canonical
+bounded envelope, uses fixed versioned instructions and strict JSON Schema,
+requires exact evidence links plus deterministic disposition gates, and has one
+disabled-by-default credential-free literal-loopback OpenAI-compatible adapter.
+It adds no route, interface, persistence, remote provider, affected/not-affected
+classification, reachability/exposure claim, remediation, command, or patch.
+
+Phases 0–6 are complete as of July 29, 2026.
+
+Phase 7 is planning-only. Its proposed work order defines deterministic
+evidence-safe reports, a bounded end-to-end workflow, a direct local CLI, and a
+separate disabled literal-loopback UI/API. No Phase 7 report, workflow, route,
+listener, CLI, UI, or persistence behavior is implemented or authorized yet.
 
 ## Requirements
 
@@ -124,6 +131,28 @@ Useful settings include:
 | `WATCHDOG_CONTEXT_MAX_BUNDLE_DISPLAY_BYTES` | `5242880` | Maximum redacted display bytes per context bundle |
 | `WATCHDOG_CONTEXT_MAX_REDACTIONS_PER_ITEM` | `100` | Maximum redactions per context item |
 | `WATCHDOG_CONTEXT_MAX_WARNINGS` | `1000` | Maximum retained context warnings |
+| `WATCHDOG_INVESTIGATION_ENABLED` | `false` | Explicitly enable the internal model request |
+| `WATCHDOG_INVESTIGATION_LOOPBACK_HOST` | `127.0.0.1` | Literal loopback only: `127.0.0.1` or `::1` |
+| `WATCHDOG_INVESTIGATION_LOOPBACK_PORT` | `11434` | Explicit loopback model-server port |
+| `WATCHDOG_INVESTIGATION_MODEL` | unset | Required bounded model identifier when enabled |
+| `WATCHDOG_INVESTIGATION_DEADLINE_SECONDS` | `60` | Concurrency, request, response, validation, and result deadline |
+| `WATCHDOG_INVESTIGATION_MAX_CONCURRENT_REQUESTS` | `1` | Requests per service instance; fixed maximum of one |
+| `WATCHDOG_INVESTIGATION_MAX_INPUT_BYTES` | `262144` | Maximum canonical envelope bytes |
+| `WATCHDOG_INVESTIGATION_MAX_OUTPUT_BYTES` | `65536` | Maximum provider response bytes |
+| `WATCHDOG_INVESTIGATION_MAX_EVIDENCE_ITEMS` | `256` | Maximum Phase 4/5 evidence items in the envelope |
+| `WATCHDOG_INVESTIGATION_MAX_CLAIMS` | `64` | Maximum validated model claims |
+| `WATCHDOG_INVESTIGATION_MAX_EVIDENCE_LINKS_PER_CLAIM` | `32` | Maximum citations per claim |
+| `WATCHDOG_INVESTIGATION_MAX_ASSUMPTIONS` | `32` | Maximum controlled assumption codes |
+| `WATCHDOG_INVESTIGATION_MAX_MISSING_EVIDENCE_CODES` | `64` | Maximum controlled gap codes |
+| `WATCHDOG_INVESTIGATION_MAX_VALIDATION_ACTIONS` | `32` | Maximum controlled human-validation actions |
+| `WATCHDOG_INVESTIGATION_MAX_RATIONALE_BYTES_PER_CLAIM` | `2048` | Maximum UTF-8 rationale bytes per claim |
+| `WATCHDOG_INVESTIGATION_MAX_OUTPUT_TOKENS` | `4096` | Requested provider output ceiling |
+
+Investigation settings are consumed only when a trusted internal caller creates
+`InvestigationService`; the FastAPI application does not instantiate or expose
+it. Enabling requires an explicit model identifier and a same-host server that
+supports strict OpenAI-compatible JSON Schema responses at the fixed
+`/v1/chat/completions` path. No API key is accepted or sent.
 
 ## Run locally
 
@@ -410,7 +439,10 @@ tracked with the implementation. The completed implementation contract is the
 [Phase 4 evidence engine work order](docs/work-orders/phase-4-evidence-engine.md).
 The completed [Phase 5 contextual-analysis work order](docs/work-orders/phase-5-contextual-analysis.md)
 and [formal plan](docs/plans/phase-5-implementation-plan.md) define the current
-bounded internal contextual-analysis contract. The readiness-reviewed
+bounded internal contextual-analysis contract. The completed
 [Phase 6 evidence-bound model-investigation work order](docs/work-orders/phase-6-evidence-bound-model-investigation.md)
-is ready for an explicit authorization decision and does not itself authorize
-implementation.
+and [formal plan](docs/plans/phase-6-implementation-plan.md) define the internal
+model-inference boundary. The planning-only
+[Phase 7 reporting and local-interfaces work order](docs/work-orders/phase-7-reporting-and-local-interfaces.md)
+is ready for explicit authorization review but grants no implementation
+authority.

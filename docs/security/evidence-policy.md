@@ -250,37 +250,52 @@ Discovery, recognizer, ambiguity, mapping, deadline, cancellation, redaction, or
 capacity failure must remain explicit partial coverage. Missing context evidence
 can never be converted into a negative conclusion.
 
-## Proposed Phase 6 model input and inference
+## Phase 6 model input and inference
 
-The readiness-reviewed
-`../work-orders/phase-6-evidence-bound-model-investigation.md` proposes a model-
-facing envelope and is ready for an explicit authorization decision, but does
-not authorize its implementation. There is currently no model input, gateway,
-request, response, investigation result, or model evidence category.
+The completed Phase 6 work order implements a model-facing envelope and strict
+inference boundary. It does not add a model evidence category: model output is
+always inference over existing evidence.
 
-If separately authorized, the envelope would be a deterministic bounded view of
+The envelope is a deterministic bounded view of
 validated normalized advisory facts, relevant Phase 3 matches, safe Phase 4
 evidence, Phase 5 context evidence/signals, and their complete visible coverage
-state. It would exclude raw OSV records, unrelated inventory, omitted/raw
+state. It excludes raw OSV records, unrelated inventory, omitted/raw
 content, repository access, temporary paths, environment data, credentials, and
-operational diagnostics. Reaching an input limit would produce explicit omitted
+operational diagnostics. Reaching an input limit produces explicit omitted
 counts and incomplete input rather than silent loss.
 
-Model output would never become evidence. A validated investigation result would
-remain an inference artifact that cites immutable evidence IDs. Every claim
-would require an included evidence link, while facts, model inference,
+Model output never becomes evidence. A validated investigation result remains
+an inference artifact that cites immutable evidence IDs. Every claim requires
+an included evidence link, while facts, model inference,
 assumptions, gaps, and controlled human-validation actions remain distinct.
-Unknown, omitted, cross-snapshot, or fabricated links would invalidate the whole
+Unknown, omitted, cross-snapshot, or fabricated links invalidate the whole
 response instead of being repaired.
 
-The exact validated output could receive a canonical content identity, but that
-identity would attest only to those validated bytes and producer/configuration
-versions. It would not claim that a nondeterministic model repeats the result.
+The exact validated output receives a canonical content identity, but that
+identity attests only to those validated bytes and producer/configuration
+versions. It does not claim that a nondeterministic model repeats the result.
 Raw provider responses, opaque provider IDs, prompts, headers, and evidence text
-would remain transient and absent from logs, exceptions, persistence, and the
+remain transient and absent from logs, exceptions, persistence, and the
 canonical result.
 
-The proposed initial dispositions cannot express affected/not-affected status,
+The implemented initial dispositions cannot express affected/not-affected status,
 runtime/data-flow reachability, exploitability, or deployment exposure. Missing
 or partial evidence, gateway failure, invalid output, and policy failure remain
 explicit incomplete run states and never negative findings.
+
+## Phase 7 reporting proposal
+
+The planning-only Phase 7 work order proposes a presentation boundary over
+validated Phase 1–6 artifacts. If separately authorized, a canonical report
+would preserve the exact distinction between deterministic fact, model
+inference, assumption, gap, limitation, and controlled validation action. Every
+vulnerability-relevant assertion would retain its existing evidence or
+provenance links; rendering would not create a new evidence category.
+
+Summary/technical and JSON/escaped-Markdown views would be projections of the
+same canonical report. They could not hide partial coverage, turn scanner
+non-reporting or lexical non-observation into a repository negative, or broaden
+the Phase 6 disposition vocabulary. The proposal permits no raw source/provider
+payload, arbitrary evidence browsing, report persistence, affected/not-affected
+classification, reachability/exposure conclusion, remediation, command, or
+patch. No Phase 7 reporting behavior is currently implemented or authorized.

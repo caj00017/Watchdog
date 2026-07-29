@@ -7,7 +7,8 @@
 
 This model covers the advisory API, internal public-GitHub intake, bounded Phase
 3 dependency parsing, exact-coordinate OSV-Scanner matching, and the implemented
-Phase 4 evidence and Phase 5 deterministic contextual-analysis boundaries.
+Phase 4 evidence, Phase 5 deterministic contextual-analysis, and Phase 6
+evidence-bound model-investigation boundaries.
 The repository boundary assumes every byte, filename, link, and metadata value in
 an acquired project is hostile. The scanner boundary trusts only the pinned
 binary and Watchdog-generated controls; it does not trust repository manifests,
@@ -35,7 +36,10 @@ The current objectives are to:
   extraction cannot complete; and
 - constrain Phase 5 discovery to a trusted allowlist/catalog, use bounded data-
   only recognizers, preserve lexical-only semantics, redact before model
-  construction, and make every limitation explicit.
+  construction, and make every limitation explicit; and
+- constrain Phase 6 to validated redacted artifacts, a deterministic envelope,
+  strict evidence-linked output, and a disabled credential-free literal-
+  loopback destination.
 
 ## Assets
 
@@ -52,6 +56,8 @@ The current objectives are to:
   evidence identities, match links, redactions, and coverage state
 - Integrity of Phase 5 targets, catalog identity, context evidence,
   observations, graph relationships, signals, and coverage state
+- Confidentiality and integrity of the Phase 6 envelope, fixed prompt/schema,
+  controlled model inference, policy decisions, and result identity
 
 ## Trust boundaries
 
@@ -243,56 +249,65 @@ recognizer, redaction, determinism, cancellation, and lease-cleanup tests:
 | A valid ID cites unrelated context evidence | Strict bundle validation checks target, match, kind, source anchor/digest, graph-node relationship, and signal vocabulary linkage | Reject the complete bundle before a later phase can consume it |
 | Cancellation races lease cleanup | One deadline/cancellation event; await worker termination before propagation | No descriptor or raw buffer remains active when lease cleanup begins |
 
-Adding a parser dependency, Tree-sitter/native grammar, subprocess, network,
-persistence, model, route, caller-defined rule, or Phase 3/4 semantic change is
-not covered by this authorization and requires a new threat-boundary review.
+Adding a parser dependency, Tree-sitter/native grammar, subprocess, remote model
+network, credential, persistence, route, caller-defined rule, or Phase 3–5
+semantic change is not covered and requires a new threat-boundary review.
 
-## Proposed Phase 6 threat boundary
+## Phase 6 implemented threat boundary
 
-The readiness-reviewed work order at
-`../work-orders/phase-6-evidence-bound-model-investigation.md` proposes, but does
-not authorize, a new model boundary. The proposed service would receive no
-repository lease or filesystem access. It would construct a deterministic
+The completed work order implements a separate model boundary. The service
+receives no repository lease or filesystem access. It constructs a deterministic
 bounded envelope from validated Phase 1 and Phase 3–5 artifacts after cleanup,
 mark every advisory/repository value as untrusted data, and keep model output
 separate from evidence.
 
-The principal new threats are prompt injection, fabricated evidence links,
+The principal threats are prompt injection, fabricated evidence links,
 unsupported conclusions, response/resource exhaustion, model nondeterminism,
 local endpoint abuse, accidental proxy/redirect egress, response or evidence
-logging, and treating model inference as deterministic fact. Proposed controls
+logging, and treating model inference as deterministic fact. Implemented controls
 are fixed versioned prompts, strict local byte/time/concurrency limits,
 disabled-by-default literal-loopback transport, no credentials/tools/streaming,
 strict JSON/schema validation, exact envelope-evidence linkage, deterministic
 disposition gates, generic diagnostics, and explicit incomplete run states.
 
-The operator would trust the chosen same-host model service with the bounded
+The operator trusts the chosen same-host model service with the bounded
 envelope. Literal loopback prevents external routing but does not authenticate
 the process listening on the selected port; multi-user-host authentication,
-Unix sockets, or TLS are not covered by the initial proposal.
+Unix sockets, or TLS are not covered by the initial implementation.
 
-These controls are planned, not implemented. The proposal is ready for an
-explicit authorization decision, but no model call exists today. A
-remote provider, credential, new destination, persistence path, interface,
+Targeted tests cover same-snapshot validation, deterministic selection,
+structured-output schema strictness, fabricated and cross-linked evidence,
+policy eligibility, destination/redirect/overflow controls, no retry,
+concurrency, cancellation cleanup, and sensitive response logging. A remote
+provider, credential, new destination, persistence path, interface,
 affected/not-affected classification, reachability/exposure claim, remediation,
 or patch path requires a separate amendment.
+
+| Threat | Implemented Phase 6 control | Failure behavior or residual risk |
+| --- | --- | --- |
+| Hostile evidence changes model controls | Repository/advisory values appear only in canonical JSON under a fixed versioned instruction and schema | Prompt separation is defense in depth; local validation remains authoritative |
+| Model invents or cross-links evidence | Reject unknown IDs and require contextual claims to cite related Phase 5 and supporting Phase 4 evidence | Validly cited prose remains nondeterministic inference |
+| Partial input becomes a positive conclusion | Deterministic policy permits only insufficient or unsupported dispositions when coverage is partial | Broader negative classifications remain deferred |
+| Endpoint escapes the host | Accept only `127.0.0.1` or `::1`; fixed HTTP path; disable redirects, proxies, netrc, credentials, retry, and fallback | Loopback does not authenticate the listening same-host process |
+| Response exhausts or contaminates state | Bound deadline, concurrency, request/response bytes, JSON nesting, fields, strings, collections, and citations | Local model resource governance is operator-owned |
+| Sensitive content enters diagnostics | No body/header/evidence/provider-ID logging or exception text; raw response is transient | A validated bounded rationale is still untrusted model inference |
 
 ## Explicitly absent capabilities
 
 There is currently no repository API endpoint, GitHub authentication, private
 repository support, Git clone, archive retention, SBOM tool,
 general source/static or source-to-sink/runtime reachability analysis beyond the
-completed allowlisted lexical context, LLM call, exposure classification, or
-patch application. Phase 3 inventory and exact-coordinate matching are internal
+completed allowlisted lexical context, remote or credentialed LLM call, exposure
+classification, or patch application. Phase 3 inventory and exact-coordinate matching are internal
 only and do not assert runtime exposure. Phase 4 evidence extraction and Phase 5
 contextual analysis remain internal and have no persistence or public export
 path. Phase 5 recognizes only bounded lexical forms and does not implement
-source-to-sink or runtime reachability.
+source-to-sink or runtime reachability. Phase 6 remains internal, disabled by
+default, non-persistent, and limited to literal-loopback synthesis.
 
-Prompt injection in source and configuration becomes operationally relevant only
-when model analysis exists. The proposed Phase 6 work order requires quoted
-untrusted data, redacted bounded evidence, strict output schemas, and exact claim
-links, but it grants no implementation authority. Generated patches remain
+Prompt injection in source and configuration is contained as quoted untrusted
+data inside a fixed request; redacted bounded evidence, strict output schemas,
+and exact claim links are enforced locally. Generated patches remain
 previews until explicit human approval in a separately authorized phase.
 
 ## Security change process
@@ -308,3 +323,13 @@ The completed `../work-orders/phase-5-contextual-analysis.md` and
 discovery and lexical-recognition boundary. Any broader parser, source format,
 search semantics, egress, route, persistence, model, or classification requires
 a new reviewed boundary and synchronized documentation.
+
+The completed
+`../work-orders/phase-6-evidence-bound-model-investigation.md` and
+`../plans/phase-6-implementation-plan.md` define the only active model boundary.
+
+The proposed `../work-orders/phase-7-reporting-and-local-interfaces.md`
+documents the additional rendering, workflow, terminal, browser, loopback
+listener, cross-origin, resource, and confidentiality threats that would need to
+be controlled by a later interface phase. It is planning-only and creates no
+active route, listener, CLI, UI, report export, or implementation authority.
