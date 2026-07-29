@@ -374,3 +374,9 @@ The completed `../work-orders/phase-7-reporting-and-local-interfaces.md` and
 `../plans/phase-7-implementation-plan.md` define the active rendering, workflow,
 terminal, browser, loopback-listener, cross-origin, resource, and confidentiality
 controls. Any broader interface or export requires a new reviewed boundary.
+
+The proposed `../work-orders/phase-8-remediation-assistant.md` documents the new
+integrity, version-ordering, source-edit, no-write, redaction, human-approval, and
+local-interface threats that a later remediation phase would have to control. It
+is planning-only: no remediation artifact, repository preview read, workflow
+hook, command, route, patch preview, write, or apply behavior is active.

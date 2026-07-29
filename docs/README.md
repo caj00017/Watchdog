@@ -49,6 +49,13 @@ describe.
   records the immutable Phase 6 baseline, completed packages, verification, and
   mandatory escalation conditions.
 
+## Proposed Phase 8 boundary
+
+- [Phase 8 evidence-bound remediation assistant](work-orders/phase-8-remediation-assistant.md)
+  is a planning-only proposal against the immutable Phase 7 baseline. It does
+  not authorize remediation models, repository preview reads, interface changes,
+  commands, patch previews, repository writes, or patch application.
+
 Supporting documents should agree with the canonical record. If they do not,
 inspect the implementation and tests, correct the canonical record first, and
 then reconcile the supporting document.

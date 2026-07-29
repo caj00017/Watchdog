@@ -314,3 +314,22 @@ content, operational paths, prompts/responses, headers, credentials, and logs.
 Phase 7 permits no arbitrary evidence browsing, server persistence,
 affected/not-affected classification, reachability/exposure conclusion,
 remediation, command, or patch.
+
+## Phase 8 remediation planning boundary
+
+The Phase 8 work order is planning-only and creates no current remediation
+artifact or behavior. It proposes that a future canonical plan treat an
+advisory `fixed` event or remediation entry only as a source-reported fact with
+exact Phase 1 provenance. Such a value would not prove compatibility,
+availability, safety, or completed remediation, and ambiguity or conflicts would
+remain explicit.
+
+A future patch preview would be a separate deterministic review artifact linked
+to one eligible exact dependency match, its Phase 4 evidence, the exact source
+reference and digest, and a source-reported candidate. It could not become
+evidence that a change was applied or that the repository was fixed. The
+proposal requires bounded no-follow reads inside the lease, in-memory-only
+single-token replacement, semantic reparse, fail-closed redaction, verified
+cleanup, and a permanent human-approval boundary. No Phase 8 repository read,
+candidate selection, plan, command, preview, write, or apply behavior is
+currently implemented or authorized.

@@ -50,6 +50,13 @@ UI/API. It preserves all Phase 1–6 identities, keeps repository work inside th
 verified lease, invokes Phase 6 only after cleanup, and adds no persistence,
 remote destination, classification, remediation, command, or patch behavior.
 
+Phase 8 has a planning-only remediation-assistant work order against immutable
+Phase 7 commit `6007927`. No Phase 8 runtime behavior is implemented or
+authorized. The proposal keeps remediation local and disabled by default and
+limits it to evidence-linked source-reported upgrade candidates, controlled
+human validation actions, and narrowly bounded in-memory patch previews that
+Watchdog never writes or applies.
+
 ## Requirements
 
 - Python 3.12 or newer
@@ -495,3 +502,5 @@ model-inference boundary. The completed
 [Phase 7 reporting and local-interfaces work order](docs/work-orders/phase-7-reporting-and-local-interfaces.md)
 and [formal plan](docs/plans/phase-7-implementation-plan.md) define the current
 report, workflow, terminal, browser, and literal-loopback interface boundary.
+The [Phase 8 remediation-assistant work order](docs/work-orders/phase-8-remediation-assistant.md)
+is a planning-only proposal and creates no implementation authority.

@@ -2,7 +2,7 @@
 
 ## Project Design and Implementation Record
 
-**Document version:** 7.0
+**Document version:** 7.1
 
 **Last updated:** July 29, 2026
 
@@ -12,7 +12,7 @@
 
 **Code version:** 0.1.0
 
-**Current lifecycle state:** Phases 0–7 complete; Phase 8 remains deferred
+**Current lifecycle state:** Phases 0–7 complete; Phase 8 is planning-only
 
 **Primary deployment direction:** Local-first, open source
 
@@ -109,6 +109,14 @@ verified lease, invokes Phase 6 only after cleanup, and exports only bounded
 allowlisted report projections. It adds no persistence, remote destination,
 classification, remediation, command, or patch behavior.
 
+Phase 8 now has a planning-only evidence-bound remediation-assistant work order
+against immutable Phase 7 commit
+`60079274ea4ea9784391b3b34712fd3b3d8ad519`. It proposes source-reported
+fixed-version candidates, controlled human validation actions, and narrowly
+bounded in-memory previews for eligible direct exact-version declarations. No
+Phase 8 model, repository read, workflow hook, command, route, preview, write, or
+apply behavior is implemented or authorized.
+
 ## 2.2 Current health
 
 | Area | Status | Current reality |
@@ -128,19 +136,19 @@ classification, remediation, command, or patch behavior.
 | Exposure classification | Not implemented | No affected/not-affected conclusions are produced |
 | LLM integration | Implemented internally | Evidence-bound, disabled by default, literal-loopback only, credential-free, strict output validation |
 | CLI and web UI | Implemented locally | Direct stdout-only CLI plus separate disabled literal-loopback UI/API |
+| Remediation assistant | Planning only | Work order drafted; no candidate, preview, write, apply, command, or interface behavior |
 | Persistence and jobs | Not implemented | No database, queue, or retained investigation state |
 | Container workflow | Verified | Multi-stage image builds; embedded scanner version and no-mount health pass |
 | Automated quality | Green | 280 deterministic tests pass; bounded live scanner contract remains opt-in |
-| Version-control state | Phases 0–7 ready as an immutable `main` baseline | Phase 8 remains unapproved |
+| Version-control state | Phase 7 immutable at `6007927` | Phase 8 proposal is planning-only |
 
 ## 2.3 Immediate milestone
 
-Use the completed Phase 7 boundary as the next immutable baseline. Phase 8 and
-any remote/production interface remain unapproved. A Phase 8 work order may be
-drafted against the exact Phase 7 commit, but planning does not authorize
-persistence, authentication, new destinations or dependencies, private inputs,
-classification, reachability/exposure, remediation, commands, code generation,
-or patches.
+Review the Phase 8 work order against the immutable Phase 7 baseline and make a
+separate implementation decision. Planning does not authorize persistence,
+authentication, new destinations or dependencies, private inputs,
+classification, reachability/exposure, remediation runtime behavior, commands,
+code generation, previews, repository writes, or patch application.
 
 ---
 
@@ -770,7 +778,7 @@ not a stable release identifier.
 - No public/remote investigation API, production listener, retained report, or
   hosted web UI; the Phase 7 interface is local and disabled by default.
 - No persistence, job state, authentication, hosted service, or private repos.
-- No patch preview or remediation automation.
+- No patch preview or remediation automation; Phase 8 is documentation only.
 - No advisory URL input despite its place in the intended MVP.
 
 ## 10.2 Source and acquisition gaps
@@ -785,9 +793,8 @@ not a stable release identifier.
 
 ## 10.3 Project-operational gaps
 
-- The completed Phase 0–7 implementation and documentation form the next
-  immutable `main` baseline; subsequent phases must record its exact commit
-  before implementation.
+- The completed Phase 0–7 implementation and documentation are committed at
+  immutable baseline `60079274ea4ea9784391b3b34712fd3b3d8ad519`.
 - The complete `docs/` tree is tracked so boundary and status changes can be
   reviewed and committed with the implementation they describe.
 - No dependency lock, CI, license, changelog/release process, or vulnerability
@@ -808,7 +815,7 @@ not a stable release identifier.
 | 5. Contextual analysis | Complete | Bounded import, call, config, endpoint, evidence, lexical graph, and controlled context signals |
 | 6. Evidence-bound model investigation | Complete | Internal deterministic envelope, strict schema/evidence/policy validation, and disabled literal-loopback gateway |
 | 7. Evidence-safe reports and local interfaces | Complete | Canonical reports, bounded workflow, direct local CLI, disabled loopback UI/API |
-| 8. Remediation assistant | Deferred | Upgrade guidance, validation, patch previews |
+| 8. Remediation assistant | Proposed; implementation unauthorized | Evidence-linked upgrade candidates, human validation, bounded patch previews |
 
 ---
 
@@ -1161,6 +1168,22 @@ The direct CLI and local HTTP adapter construct the same strict workflow request
 and invoke the same service. The listener is disabled by default and literal-
 loopback only; loopback is an operator-local assumption, not authentication.
 
+## D-023 — Phase 8 planning preserves a permanent human-approval boundary
+
+The user requested a Phase 8 work order after Phase 7 was documented and
+committed at `60079274ea4ea9784391b3b34712fd3b3d8ad519`. That request authorizes
+planning, documentation, commit, and push only. Phase 8 implementation requires
+a separate explicit decision and a formal staged plan.
+
+The proposal permits only provenance-linked source-reported fixed-version
+candidates, controlled non-executable human validation actions, and bounded
+in-memory previews for narrowly allowlisted direct exact-version declarations.
+A preview is not evidence of application, compatibility, or successful
+remediation. Watchdog may not write, apply, stage, commit, push, execute, install,
+resolve, build, test, or generate commands. Affected/not-affected status,
+reachability/exposure, general source patches, production interfaces, and hosted
+operation remain separate decisions.
+
 ---
 
 # 15. Risks and Mitigation Direction
@@ -1242,7 +1265,8 @@ docs/
 │   ├── phase-4-evidence-engine.md
 │   ├── phase-5-contextual-analysis.md
 │   ├── phase-6-evidence-bound-model-investigation.md
-│   └── phase-7-reporting-and-local-interfaces.md
+│   ├── phase-7-reporting-and-local-interfaces.md
+│   └── phase-8-remediation-assistant.md
 └── archive/
     ├── planning/
     │   └── nexura_watchdog_formal_plan.md
@@ -1266,6 +1290,18 @@ and boundary changes.
 ---
 
 # 18. Change History
+
+## Version 7.1 — July 29, 2026
+
+- Recorded completed Phase 7 commit
+  `60079274ea4ea9784391b3b34712fd3b3d8ad519` as the immutable Phase 8 baseline.
+- Added a planning-only Phase 8 evidence-bound remediation-assistant work order
+  with strict provenance, candidate, version-policy, preview, no-write,
+  redaction, cleanup, human-approval, interface, limit, test, and escalation
+  requirements.
+- Kept all Phase 8 runtime behavior unauthorized and made explicit that the
+  current Phase 0–8 roadmap still excludes affected/reachability classification,
+  production hosting, broader ecosystem coverage, and release hardening.
 
 ## Version 7.0 — July 29, 2026
 
@@ -1475,3 +1511,10 @@ separate disabled literal-loopback UI/API. It preserves cleanup, evidence,
 inference, scanner, and non-classification boundaries and adds no persistence or
 outbound destination. Its local result remains an evidence-bound investigation,
 not an affected/not-affected or runtime-exposure determination.
+
+Phase 8 exists only as a proposed work order. No remediation candidate, version
+selection, source preview read, plan, workflow hook, command, route, patch
+preview, repository write, or patch application is present. Even if the proposed
+bounded Phase 8 is later completed, affected/reachability classification,
+production/hosted operation, broader coverage, and release hardening remain
+separate work rather than implied capabilities.

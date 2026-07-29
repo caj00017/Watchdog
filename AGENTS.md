@@ -148,3 +148,25 @@ listeners, authentication, private repositories, persistence, jobs/history,
 arbitrary output paths, remote providers, credentials, new dependencies or
 destinations, classification, reachability, exposure, remediation, commands,
 code generation, or patches without a separate explicit boundary review.
+
+## Phase 8 planning status
+
+`docs/work-orders/phase-8-remediation-assistant.md` is a planning-only proposal
+against immutable Phase 7 baseline
+`60079274ea4ea9784391b3b34712fd3b3d8ad519`. The user authorized creation,
+documentation, commit, and push of the work order on July 29, 2026, but did not
+authorize Phase 8 implementation. A separate explicit implementation decision
+and formal staged plan are required.
+
+Until then, do not add remediation models or services, version-selection logic,
+repository preview reads, workflow hooks, remediation CLI/API/UI behavior,
+commands, or patch previews. Planning does not authorize dependency or scanner
+changes, new egress, persistence, repository writes, package-manager/build/test
+execution, affected/not-affected or reachability/exposure classification, or any
+change to Phase 1–7 identities and default behavior.
+
+The proposed initial boundary remains disabled by default, local, synchronous,
+non-persistent, and evidence-linked. It permits only source-reported fixed-
+version candidates, controlled non-executable human validation actions, and
+bounded in-memory previews for narrowly allowlisted unambiguous direct exact-
+version declarations. No change may be written or applied by Watchdog.

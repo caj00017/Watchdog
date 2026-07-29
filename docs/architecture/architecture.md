@@ -386,9 +386,11 @@ destination and keeps its inbound listener disabled, literal-loopback, and
 unpublished by the default container. Still deferred are SBOM generation,
 source-to-sink/runtime reachability, exposure classifications, remote model
 providers, credentials, persistence, background jobs, evidence browsing,
-remote/production interfaces, and patch previews. Exposing internal bundles,
-binding beyond loopback, or changing the scanner version/network behavior
-requires a new boundary review.
+remote/production interfaces, and patch-preview runtime behavior. Phase 8 has a
+planning-only remediation-assistant proposal; it adds no current module, read,
+workflow hook, route, command, or patch. Exposing internal bundles, binding
+beyond loopback, or changing the scanner version/network behavior requires a new
+boundary review.
 
 `../work-orders/phase-5-contextual-analysis.md` defines the implemented separate
 context service within its documented limits. Phase 5 does not broaden Phase 4
@@ -402,3 +404,7 @@ investigation boundary.
 `../plans/phase-7-implementation-plan.md` define the completed canonical report,
 bounded orchestration, direct local CLI, and separate disabled literal-loopback
 UI/API boundary.
+
+`../work-orders/phase-8-remediation-assistant.md` proposes a separate
+evidence-linked candidate, validation-action, and in-memory preview architecture.
+It is planning-only and does not alter the runtime flow above.
