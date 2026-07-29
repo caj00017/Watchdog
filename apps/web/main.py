@@ -6,15 +6,16 @@ from pathlib import Path
 
 from fastapi import FastAPI
 
-from apps.web.routes import remediation_router, router
+from apps.web.routes import guided_router, remediation_router, router
 from apps.web.security import security_middleware, validate_loopback_configuration
 from watchdog.config import Settings
+from watchdog.readiness import GuidedReadiness, check_scanner_readiness, guided_readiness
 from watchdog.workflow.runtime import WorkflowRuntime, workflow_runtime
 
 _ASSET_NAMES = ("index.html", "watchdog.css", "watchdog.js")
 
 
-def _load_assets(settings: Settings) -> dict[str, bytes]:
+def _load_assets(settings: Settings, *, guided: bool = False) -> dict[str, bytes]:
     root = Path(__file__).with_name("static")
     source_names = {
         "index.html": ("remediation-index.html" if settings.remediation_enabled else "index.html"),
@@ -23,6 +24,12 @@ def _load_assets(settings: Settings) -> dict[str, bytes]:
             "remediation-watchdog.js" if settings.remediation_enabled else "watchdog.js"
         ),
     }
+    if guided:
+        source_names = {
+            "index.html": "guided-index.html",
+            "watchdog.css": "guided-watchdog.css",
+            "watchdog.js": "guided-watchdog.js",
+        }
     assets = {name: (root / source_names[name]).read_bytes() for name in _ASSET_NAMES}
     if (
         sum(len(value) for value in assets.values())
@@ -36,13 +43,20 @@ def create_app(
     settings: Settings | None = None,
     *,
     runtime: WorkflowRuntime | None = None,
+    guided: bool = False,
+    readiness: GuidedReadiness | None = None,
 ) -> FastAPI:
     configured = settings or Settings()
     validate_loopback_configuration(configured)
 
     @asynccontextmanager
     async def lifespan(application: FastAPI) -> AsyncIterator[None]:
-        application.state.assets = _load_assets(configured)
+        application.state.assets = _load_assets(configured, guided=guided)
+        if guided:
+            application.state.readiness = readiness or guided_readiness(
+                configured,
+                await check_scanner_readiness(configured),
+            )
         if runtime is not None:
             application.state.runtime = runtime
             yield
@@ -59,8 +73,11 @@ def create_app(
         lifespan=lifespan,
     )
     application.state.settings = configured
+    application.state.guided = guided
     application.middleware("http")(security_middleware)
     application.include_router(router)
     if configured.local_interfaces_enabled and configured.remediation_enabled:
         application.include_router(remediation_router)
+    if guided:
+        application.include_router(guided_router)
     return application

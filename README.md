@@ -42,7 +42,7 @@ disabled-by-default credential-free literal-loopback OpenAI-compatible adapter.
 It adds no route, interface, persistence, remote provider, affected/not-affected
 classification, reachability/exposure claim, remediation, command, or patch.
 
-Phases 0–8 are complete as of July 29, 2026.
+Phases 0–9 are complete as of July 29, 2026.
 
 Phase 7 adds deterministic evidence-safe reports, a bounded end-to-end workflow,
 a direct stdout-only CLI, and a separate disabled-by-default literal-loopback
@@ -56,6 +56,13 @@ upgrade candidates, controlled human validation actions, and optional narrowly
 bounded in-memory previews of one direct exact-version token. It never writes or
 applies repository bytes, generates commands, executes repository or ecosystem
 tools, resolves versions, or claims compatibility or completed remediation.
+
+Phase 9 adds the installed `watchdog` launcher, bounded scanner readiness, and a
+separately selected guided literal-loopback experience. It changes no Phase
+1–8 artifact, renderer, scanner, route default, or analytical claim. The guided
+launcher enables the local UI and candidate planning only for its process;
+previews remain explicit opt-in, AI remains optional and literal-loopback, and
+no repository byte is written or retained.
 
 ## Requirements
 
@@ -76,6 +83,35 @@ source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -e '.[dev]'
 ```
+
+Check prerequisites and start the guided local experience:
+
+```bash
+watchdog doctor
+watchdog ui
+```
+
+`doctor` validates configuration and invokes only the configured scanner's
+bounded `--version` operation. It requires exactly OSV-Scanner 2.4.0 and never
+contacts an advisory, GitHub, OSV, registry, repository, or model endpoint. It
+prints only fixed readiness text and does not reveal configured paths or
+environment values.
+
+After successful binding, `watchdog ui` prints the exact literal-loopback URL
+and opens it in the system browser. Use `--no-open` to leave browser opening to
+the operator. The initial page needs only an advisory ID and a public GitHub
+URL; optional ref, view, and artifact format are under Advanced. The page stores
+no investigation, uses no external assets, and offers remediation candidate
+review only after an investigation completes.
+
+AI is `Off` by default. `watchdog ui --model MODEL` enables the existing
+credential-free literal-loopback OpenAI-compatible adapter for that process;
+the existing explicit investigation settings remain supported. A model outage,
+timeout, malformed response, or schema/policy rejection leaves the deterministic
+report available with a controlled limitation. `watchdog ui --enable-previews`
+independently opts into the existing bounded one-token
+in-memory preview behavior. No option installs a scanner or model, persists a
+result, generates a command, or applies a change.
 
 Configuration is read from environment variables prefixed with `WATCHDOG_`.
 Useful settings include:
@@ -195,7 +231,28 @@ model identifier and a same-host server that
 supports strict OpenAI-compatible JSON Schema responses at the fixed
 `/v1/chat/completions` path. No API key is accepted or sent.
 
+Phase 9 adds no environment setting. Guided mode is selected only by the
+installed `watchdog ui` launcher. It uses immutable per-process overrides to
+enable the local interface and candidate planning, forces previews off unless
+`--enable-previews` is present, and retains the validated configured loopback
+host and port. This does not change the disabled defaults used by `python -m
+apps.cli` or `python -m apps.web`.
+
 ## Run locally
+
+The primary native first-run path is:
+
+```bash
+watchdog doctor
+watchdog ui
+```
+
+The installed launcher also exposes the unchanged direct workflows as
+`watchdog investigate ...` and `watchdog remediate ...`. They delegate to the
+same implementation as the legacy module commands and preserve stdout, stderr,
+and exit behavior.
+
+The public advisory API remains available separately for development:
 
 ```bash
 uvicorn apps.api.main:app --reload
@@ -248,9 +305,9 @@ is invalid input, `3` is advisory/repository failure, `5` is cancellation or
 deadline, and `1` is cleanup, validation, assembly, render, or internal failure.
 Stdout receives exactly one complete plan; fixed diagnostics use stderr.
 
-The separate local web application is disabled by default. Start it explicitly;
-the launcher refuses hostnames, wildcards, and non-loopback addresses and does
-not launch a browser or enable access logs.
+The legacy separate local web application is still disabled by default. Start
+it explicitly; the launcher refuses hostnames, wildcards, and non-loopback
+addresses and does not launch a browser or enable access logs.
 
 ```bash
 WATCHDOG_LOCAL_INTERFACES_ENABLED=true python -m apps.web
@@ -269,6 +326,13 @@ sinks and has no apply, command, clipboard, upload, filesystem, persistence, or
 download control. The same Host, origin, Fetch Metadata, custom-header, JSON,
 request-size, no-store, no-CORS, no-cookie, and disconnect-cleanup controls
 apply.
+
+The guided launcher adds only `/api/v1/readiness` to its own local process. The
+bounded response contains controlled scanner, AI, remediation, and preview
+states. When the scanner is unavailable, the page remains available with fixed
+guidance, but both workflows are rejected before request parsing, advisory
+lookup, network access, or repository lease acquisition. The route and guided
+assets do not exist in legacy mode.
 
 ## Phase 3 operator verification
 

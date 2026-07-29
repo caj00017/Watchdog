@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import tomllib
 from pathlib import Path
 
 from tests.report_fixtures import build_report
@@ -36,13 +37,18 @@ async def test_phase7_report_identity_and_rendered_bytes_remain_frozen(
         assert hashlib.sha256(rendered.body).hexdigest() == expected
 
 
-def test_phase8_did_not_change_dependencies_or_scanner_pin() -> None:
-    project = Path("pyproject.toml").read_bytes()
+def test_phase9_did_not_change_dependencies_or_scanner_pin() -> None:
+    project = tomllib.loads(Path("pyproject.toml").read_text())
     dockerfile = Path("Dockerfile").read_text()
     scanner = Path("watchdog/scanners/osv_scanner.py").read_text()
 
-    assert hashlib.sha256(project).hexdigest() == (
-        "eafe9a470a3c8b81f19e20d10fb305c7df721a961879bb529b0181f36994a922"
-    )
+    assert project["project"]["dependencies"] == [
+        "fastapi>=0.115,<1",
+        "httpx>=0.27,<1",
+        "packaging>=24.2,<26",
+        "pydantic>=2.10,<3",
+        "pydantic-settings>=2.7,<3",
+        "uvicorn[standard]>=0.34,<1",
+    ]
     assert "ghcr.io/google/osv-scanner:v2.4.0@sha256:" in dockerfile
     assert 'OSV_SCANNER_VERSION = "2.4.0"' in scanner

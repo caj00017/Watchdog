@@ -5,7 +5,7 @@
 
 ## Current scope
 
-The current implementation contains eight deliberately bounded capabilities:
+The current implementation contains nine deliberately bounded capabilities:
 
 1. The public FastAPI advisory layer validates CVE, GHSA, or OSV identifiers,
    retrieves OSV records, normalizes them into source-neutral domain models, and
@@ -34,6 +34,9 @@ The current implementation contains eight deliberately bounded capabilities:
    and, when separately enabled, creates one-token in-memory previews for a
    narrow direct-declaration allowlist before cleanup. After cleanup it assembles
    a separate canonical plan and exposes only fully buffered local projections.
+9. Phase 9 provides an installed local launcher, a bounded non-repository
+   scanner preflight, and a separately selected guided browser projection over
+   the unchanged Phase 7 report and Phase 8 plan.
 
 Repository intake, inventory, matching, evidence, context, investigation, and
 remediation
@@ -45,7 +48,7 @@ or exposure, persist investigation content, write repository bytes, or generate
 commands. Phase 8 previews are structured unapplied review artifacts, not patch
 application or evidence of remediation.
 
-Phases 4–8 are complete under their reviewed work orders. Evidence and context
+Phases 4–9 are complete under their reviewed work orders. Evidence and context
 collection remain lease-scoped; investigation runs only over their immutable
 outputs after cleanup. Every public route is unchanged.
 
@@ -84,6 +87,11 @@ flowchart LR
     Report --> LocalApp[Disabled literal-loopback UI and API]
     Plan --> RemediationCLI[Opt-in stdout-only remediate CLI]
     Plan --> LocalApp
+    Doctor[watchdog doctor] --> Version[Bounded scanner version preflight]
+    Guided[watchdog ui] --> Version
+    Version --> Readiness[Controlled readiness state]
+    Readiness --> GuidedApp[Guided literal loopback projection]
+    GuidedApp --> LocalApp
 ```
 
 The public advisory flow remains separate from Phase 7 orchestration. The
@@ -159,6 +167,46 @@ has no output or apply option. The local route is registered only when both the
 existing local-interface flag and remediation flag are enabled; the selected UI
 variant adds no apply, command, clipboard, upload, download, storage, or external
 asset capability.
+
+## Phase 9 guided-experience architecture
+
+The installed `watchdog` entry point delegates `investigate` and `remediate`
+directly to the unchanged Phase 7/8 CLI implementation. `doctor` validates the
+existing bounded cross-field configurations and calls `check_scanner_readiness`.
+That service accepts only the trusted absolute scanner path, verifies a regular
+executable, creates a private control directory, and invokes exactly
+`(<scanner>, "--version")` through the existing argument-array subprocess
+runner. The operation has a ten-second and 64 KiB-per-stream ceiling, a minimal
+proxy-free environment, process-group termination, and fixed result codes. It
+never constructs an advisory, repository, registry, or model client.
+
+`watchdog ui` creates a validated settings copy for one process: local
+interfaces and Phase 8 candidate planning are on, previews are forced off unless
+the explicit option is present, and an optional model identifier enables only
+the existing credential-free literal-loopback gateway. Host and port remain the
+validated configured literal loopback. The launcher binds a socket before it
+prints or opens the fixed root URL, uses an explicit standard-library browser
+controller without a shell or environment-selected command template, treats
+browser failure as non-fatal, and always closes the listener after Uvicorn
+returns. Existing signal handling and application lifespan cleanup remain
+controlling.
+
+Guided mode is a trusted `create_app` capability, not an environment setting.
+It selects three separate checked-in assets and conditionally registers
+`/api/v1/readiness`; legacy asset choices and route tables are unchanged. The
+readiness response contains only controlled scanner, AI, remediation, and
+preview states. A non-ready scanner gates both workflow POSTs before content-
+type/body parsing or any service call. The page uses the same Host, origin,
+Fetch Metadata, non-simple local header, no-store, no-CORS, no-cookie, CSP, and
+disconnect cleanup controls as Phase 7/8.
+
+The browser renders canonical JSON into status, exact snapshot, dependency
+findings, evidence links, model synthesis, coverage, limitations, and validation
+actions through DOM construction and `textContent`. Model inference is styled
+separately from deterministic facts. Raw JSON or Markdown bytes remain in a
+collapsed advanced region. Remediation is a later, independent synchronous POST
+with fixed no-apply wording. The page has no download, clipboard, upload,
+filesystem, storage, history, external asset, or apply capability.
 
 ## Advisory architecture
 
@@ -424,10 +472,12 @@ reachability/exposure, remediation, and patches are excluded.
 | `watchdog/investigation/` | Canonical envelope selection, fixed prompt/schema assets, gateway protocol, strict validation/policy, loopback adapter, and internal service |
 | `watchdog/reporting/` | Phase 7 report identity/configuration, assembly, controlled wording, and bounded renderers |
 | `watchdog/remediation/` | Phase 8 identities, limits, version comparators, candidate derivation, no-write preview collection, assembly, and bounded renderers |
+| `watchdog/readiness.py` | Phase 9 bounded scanner preflight, cross-field configuration validation, and controlled guided capability projection |
+| `watchdog/launcher.py` | Installed command dispatch, per-process guided settings, fixed browser target, and pre-bound Uvicorn lifecycle |
 | `watchdog/workflow/` | Fixed-order lease-safe orchestration, runtime composition, admission, deadline, and cancellation |
 | `apps/api` | Advisory API lifespan, dependencies, error mapping, and routes |
 | `apps/cli` | Direct stdout-only investigation and opt-in remediation adapters |
-| `apps/web` | Disabled literal-loopback launcher, exact settings-gated routes/security, and checked-in UI variants |
+| `apps/web` | Disabled legacy literal-loopback launcher, exact gated routes/security, and separately selected Phase 7/8/9 checked-in UI variants |
 
 ## Deployment and deferred architecture
 
@@ -468,3 +518,10 @@ UI/API boundary.
 `../plans/phase-8-implementation-plan.md` define the completed evidence-linked
 candidate, validation-action, in-memory preview, no-write, and local-interface
 architecture.
+
+`../work-orders/phase-9-local-first-guided-experience.md` and
+`../plans/phase-9-implementation-plan.md` define the completed installed
+launcher, readiness, fixed browser target, guided admission, progressive UI,
+and legacy-regression boundary. Hosted or non-loopback service, authentication,
+installation, persistence, repository mutation, and release publication remain
+deferred.

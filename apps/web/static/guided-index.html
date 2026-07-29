@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nexura Watchdog</title>
+  <link rel="stylesheet" href="/assets/watchdog.css">
+  <script src="/assets/watchdog.js" defer></script>
+</head>
+<body>
+  <main>
+    <header class="masthead">
+      <p class="eyebrow">Local-first vulnerability investigation</p>
+      <h1>Nexura Watchdog</h1>
+      <p class="lede">Trace one advisory through one exact public GitHub snapshot, with evidence and uncertainty kept visible.</p>
+      <dl class="readiness" aria-label="Local readiness">
+        <div><dt>Scanner</dt><dd id="scanner-state">Checking</dd></div>
+        <div><dt>AI</dt><dd id="ai-state">Checking</dd></div>
+        <div><dt>Remediation</dt><dd id="remediation-state">Checking</dd></div>
+        <div><dt>Previews</dt><dd id="preview-state">Checking</dd></div>
+      </dl>
+    </header>
+
+    <section class="panel" aria-labelledby="start-title">
+      <h2 id="start-title">Start an investigation</h2>
+      <form id="guided-form">
+        <fieldset id="workflow-fields">
+          <label for="advisory">Advisory ID</label>
+          <input id="advisory" name="advisory" required maxlength="128" autocomplete="off" placeholder="CVE-2026-12345">
+
+          <label for="repository">Public GitHub repository URL</label>
+          <input id="repository" name="repository" type="url" required maxlength="2048" autocomplete="off" placeholder="https://github.com/owner/repository">
+
+          <details class="advanced">
+            <summary>Advanced</summary>
+            <div class="advanced-grid">
+              <label for="ref">Repository ref (optional)</label>
+              <input id="ref" name="ref" maxlength="255" autocomplete="off">
+
+              <label for="view">Report view</label>
+              <select id="view" name="view">
+                <option value="summary">Summary</option>
+                <option value="technical">Technical</option>
+              </select>
+
+              <label for="format">Artifact format</label>
+              <select id="format" name="format">
+                <option value="json">JSON</option>
+                <option value="markdown">Markdown</option>
+              </select>
+            </div>
+          </details>
+
+          <button id="investigate" class="primary" type="submit" disabled>Investigate</button>
+        </fieldset>
+        <button id="cancel" class="secondary" type="button" hidden>Cancel</button>
+      </form>
+      <p id="status" class="status" role="status" aria-live="polite">Checking local readiness.</p>
+      <p id="readiness-guidance" class="guidance" hidden>OSV-Scanner 2.4.0 is required. Run <code>watchdog doctor</code> for readiness guidance.</p>
+    </section>
+
+    <section id="results" class="panel results" aria-labelledby="results-title" hidden>
+      <p class="eyebrow">Evidence-bound output</p>
+      <h2 id="results-title" tabindex="-1">Investigation summary</h2>
+      <p class="boundary">This is not an affected/not-affected or runtime-exposure determination.</p>
+      <div id="structured-result" class="structured-result"></div>
+      <div class="remediation-action">
+        <button id="remediate" class="secondary" type="button" hidden>Review remediation candidates</button>
+        <p id="remediation-note" hidden>Candidate review starts a separate workflow. Nothing is applied or written.</p>
+      </div>
+      <details class="raw-result">
+        <summary>Advanced: raw canonical artifact</summary>
+        <pre id="raw-result" tabindex="0"></pre>
+      </details>
+    </section>
+  </main>
+</body>
+</html>

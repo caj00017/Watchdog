@@ -2,7 +2,7 @@
 
 ## Project Design and Implementation Record
 
-**Document version:** 8.1
+**Document version:** 9.0
 
 **Last updated:** July 29, 2026
 
@@ -12,7 +12,7 @@
 
 **Code version:** 0.1.0
 
-**Current lifecycle state:** Phases 0–8 complete; Phase 9 authorized
+**Current lifecycle state:** Phases 0–9 complete
 
 **Primary deployment direction:** Local-first, open source
 
@@ -55,7 +55,7 @@ session.
 
 ## 2.1 Current phase
 
-Phases 0 through 8 are complete:
+Phases 0 through 9 are complete:
 
 - **Phase 0 — Foundation:** package structure, FastAPI, configuration, quality
   tooling, Docker development, and foundational documentation.
@@ -96,6 +96,10 @@ Phases 0 through 8 are complete:
   a separate canonical plan, bounded JSON/Markdown, an opt-in direct CLI, and a
   doubly gated local route/UI variant with no write, apply, command, or execution
   capability.
+- **Phase 9 — Local-first guided experience:** an installed command dispatcher,
+  bounded non-repository scanner readiness, per-process guided launcher, fixed
+  literal-loopback browser target, separately selected progressive UI, and
+  controlled readiness admission over unchanged Phase 7/8 artifacts.
 
 Phases 4 and 5 remain internal. Phase 5 observations are lexical and do not
 establish execution, runtime/data-flow reachability, exploitability, deployment
@@ -124,6 +128,15 @@ writes or applies repository bytes. Its plan reports only source-reported
 candidates and unapplied review previews; it cannot claim compatibility,
 availability, affectedness, reachability/exposure, or remediation success.
 
+Phase 9 is complete under its governing work order and formal plan against
+immutable Phase 8 baseline
+`87ea89a5313c3dcb9cdc349a27691f91d83e623d`. It adds no analysis or artifact
+schema. The guided launcher enables the existing local interface and candidate
+planning only for its process, forces previews off without explicit opt-in, and
+retains the optional credential-free literal-loopback model boundary. Legacy
+module commands, routes, assets, defaults, renderer bytes, scanner behavior,
+egress, and Phase 1–8 identities remain unchanged.
+
 ## 2.2 Current health
 
 | Area | Status | Current reality |
@@ -142,17 +155,20 @@ availability, affectedness, reachability/exposure, or remediation success.
 | Contextual analysis | Implemented internally | Bounded evidence-linked lexical observations and non-classification signals; no route or runtime reachability |
 | Exposure classification | Not implemented | No affected/not-affected conclusions are produced |
 | LLM integration | Implemented internally | Evidence-bound, disabled by default, literal-loopback only, credential-free, strict output validation |
-| CLI and web UI | Implemented locally | Direct stdout-only CLI plus separate disabled literal-loopback UI/API |
+| CLI and web UI | Implemented locally | Installed guided launcher plus unchanged direct stdout-only CLI and disabled legacy literal-loopback UI/API |
+| Readiness | Implemented locally | Fixed safe configuration/scanner doctor and controlled guided capability projection |
 | Remediation assistant | Implemented locally, disabled by default | Evidence-linked candidates, controlled actions, optional single-token no-write previews, canonical plan, CLI, and doubly gated local route |
 | Persistence and jobs | Not implemented | No database, queue, or retained investigation state |
 | Container workflow | Verified | Multi-stage image builds; embedded scanner version and no-mount health pass |
-| Automated quality | Green | Phase 8 deterministic/static/security gates pass; bounded live scanner contract remains opt-in |
-| Version-control state | Phase 7 baseline immutable at `6007927` | Phase 8 implementation is additive and preserves the baseline identities |
+| Automated quality | Green | Phase 9 deterministic/static/security gates pass; bounded live scanner contract remains opt-in |
+| Version-control state | Phase 8 baseline immutable at `87ea89a` | Phase 9 planning is separate at `81763ff`; implementation preserves Phase 1–8 identities |
 
 ## 2.3 Immediate milestone
 
-The enumerated Phase 0–8 roadmap is complete. Any next milestone requires a new
-reviewed boundary. In particular, do not infer authority for persistence,
+The enumerated Phase 0–9 product roadmap is complete. The immediate next
+milestone is release hardening beginning at item 2 of `~/TODO.txt`: a separate
+work order, governance, locking, CI, release-candidate validation, and local-first
+v0.1.0 publication. Do not infer authority for persistence,
 authentication, new destinations or dependencies, private inputs, production or
 remote interfaces, classification, reachability/exposure, compatibility or
 availability analysis, registry queries, commands, multi-file/source patches,
@@ -468,8 +484,10 @@ not itself acquire or inspect a repository.
 | `watchdog/evidence` | Canonical identity/configuration, safe reads, positional selectors, redaction, and collection |
 | `watchdog/context` | Trusted catalog and targets, bounded descriptor discovery, data-only recognizers, redacted evidence, lexical graph/ranking, and collection |
 | `watchdog/remediation` | Typed identities and limits, ecosystem comparators, candidate derivation, no-write preview collection, canonical assembly, and bounded rendering |
+| `watchdog/readiness.py` | Bounded scanner preflight, cross-field configuration validation, and controlled guided capability states |
+| `watchdog/launcher.py` | Installed command dispatch, per-process guided configuration, fixed browser target, and pre-bound local server lifecycle |
 | `watchdog/analysis`, `watchdog/jobs` | Placeholders only |
-| `apps/cli`, `apps/web` | Direct investigation/remediation CLI adapters and separate disabled literal-loopback application with settings-gated Phase 8 variant |
+| `apps/cli`, `apps/web` | Unchanged direct adapters plus separately selected disabled Phase 7/8 legacy and Phase 9 guided literal-loopback variants |
 
 ---
 
@@ -704,6 +722,14 @@ are consumed when internal callers construct `InventoryLimits`, `ScannerLimits`,
 settings. The direct CLI and separate local application build the Phase 7/8
 runtime; both remediation flags remain false by default.
 
+Phase 9 adds no environment setting. `watchdog ui` creates one validated
+in-memory settings copy, enables local interfaces and candidate planning, and
+forces previews off unless `--enable-previews` is supplied. `--model` enables
+only the existing credential-free literal-loopback adapter. Configured loopback
+host/port and all bounded Phase 1–8 settings remain controlling. `watchdog
+doctor` validates cross-field configurations and performs only the bounded
+scanner `--version` preflight.
+
 ---
 
 # 9. Verification Baseline
@@ -713,12 +739,30 @@ As of July 29, 2026:
 - `ruff format --check .` passes.
 - `ruff check .` passes.
 - strict `mypy` passes.
-- pytest passes 339 deterministic tests; the bounded live OSV scanner contract
+- pytest passes 361 deterministic tests; the bounded live OSV scanner contract
   is skipped unless explicitly enabled.
 - Application/test bytecode compilation passes.
 - OpenAPI contains exactly `/health` and
   `/api/v1/advisories/{identifier}`.
 - Docker Compose configuration parses.
+
+Phase 9 environment-dependent container acceptance also passes:
+
+- Docker built standalone image
+  `sha256:1f9334892518e47df0611d1668e63c3e1d63a60b2803fbde5d7f3090f117d859`
+  at 79,631,529 bytes with the installed console entry point and unchanged
+  dependency list.
+- All four installed `watchdog` commands invoke; direct invalid-command
+  stdout/stderr/exit behavior is byte-identical to the legacy module commands.
+- All Phase 7/8/9 checked-in assets are installed; the three guided assets total
+  22,389 bytes.
+- `watchdog doctor` reports ready and the embedded scanner reports exactly
+  OSV-Scanner 2.4.0.
+- Public and guided applications returned their expected health documents with
+  network mode `none` and mounts `[]`; guided readiness returned only controlled
+  scanner/AI/remediation/preview states with no-store.
+- SIGTERM produced complete Uvicorn application shutdown and exit 0 for both
+  public and guided processes; the disposable containers were removed.
 
 Phase 8 environment-dependent container acceptance also passes:
 
@@ -842,8 +886,9 @@ not a stable release identifier.
 
 ## 10.3 Project-operational gaps
 
-- The completed Phase 0–7 implementation and documentation are committed at
-  immutable baseline `60079274ea4ea9784391b3b34712fd3b3d8ad519`.
+- The completed Phase 0–8 implementation and documentation are committed at
+  immutable baseline `87ea89a5313c3dcb9cdc349a27691f91d83e623d`; Phase 9
+  planning is separately committed at `81763ffd84aef418c49793e9059b3bb16492e93c`.
 - The complete `docs/` tree is tracked so boundary and status changes can be
   reviewed and committed with the implementation they describe.
 - No dependency lock, CI, license, changelog/release process, or vulnerability
@@ -864,7 +909,9 @@ not a stable release identifier.
 | 5. Contextual analysis | Complete | Bounded import, call, config, endpoint, evidence, lexical graph, and controlled context signals |
 | 6. Evidence-bound model investigation | Complete | Internal deterministic envelope, strict schema/evidence/policy validation, and disabled literal-loopback gateway |
 | 7. Evidence-safe reports and local interfaces | Complete | Canonical reports, bounded workflow, direct local CLI, disabled loopback UI/API |
-| 8. Remediation assistant | Proposed; implementation unauthorized | Evidence-linked upgrade candidates, human validation, bounded patch previews |
+| 8. Remediation assistant | Complete | Evidence-linked upgrade candidates, human validation, bounded no-write previews |
+| 9. Local-first guided experience | Complete | Installed launcher, scanner readiness, and progressive literal-loopback UI |
+| Release hardening | Next; separate work order required | Governance, locking, CI, release candidate, and v0.1.0 publication |
 
 ---
 
@@ -1260,6 +1307,11 @@ Phase 8 was independently verified and committed at immutable baseline
 supplied and explicitly directed implementation of the decision-complete Phase
 9 plan against that exact hash.
 
+The authorized packages are now implemented and verified. Runtime work began
+only after documentation-only planning commit
+`81763ffd84aef418c49793e9059b3bb16492e93c` was created separately from the
+immutable Phase 8 baseline.
+
 The authority is limited to an installed launcher, bounded non-repository
 scanner readiness checks, a separately selected literal-loopback guided asset
 variant, a controlled readiness projection, and human-readable projections of
@@ -1371,7 +1423,8 @@ docs/
         ├── development-recap-2026-07-29-phase-5-verification.md
         ├── development-recap-2026-07-29-phase-6.md
         ├── development-recap-2026-07-29-phase-7.md
-        └── development-recap-2026-07-29-phase-8.md
+        ├── development-recap-2026-07-29-phase-8.md
+        └── development-recap-2026-07-29-phase-9.md
 ```
 
 The archive preserves historical context but is not current instruction. The
@@ -1381,6 +1434,29 @@ and boundary changes.
 ---
 
 # 18. Change History
+
+## Version 9.0 — July 29, 2026
+
+- Verified and committed Phase 8 at immutable baseline `87ea89a`, then recorded
+  Phase 9 authority in separate documentation-only commit `81763ff` before
+  runtime work.
+- Added the installed `watchdog` dispatcher with unchanged direct command
+  delegation, bounded fixed-text `doctor`, trusted per-process `ui` settings,
+  strict literal-loopback browser target, bind-before-open behavior, and
+  verified listener cleanup.
+- Added bounded exact-version scanner readiness and guided-only admission before
+  body parsing or workflow activity, plus the controlled readiness projection.
+- Added separate guided HTML/CSS/JavaScript assets with two-field first run,
+  collapsed advanced controls, text-only structured rendering, distinct model
+  inference, raw canonical artifact access, separate no-apply remediation
+  review, and cancellation through existing disconnect cleanup.
+- Preserved Phase 1–8 identities, canonical renderer bytes, legacy module and UI
+  assets, existing routes/defaults, scanner arguments/version/network behavior,
+  dependencies, no-write behavior, and the public advisory API.
+- Kept installation, hosted/non-loopback operation, authentication, credentials,
+  persistence, telemetry, private inputs, jobs/history, new destinations,
+  classification, repository mutation, commands, and release publication
+  deferred.
 
 ## Version 8.0 — July 29, 2026
 
@@ -1637,3 +1713,12 @@ and no repository byte is written. Affected/reachability classification,
 compatibility/availability conclusions, automatic or multi-file remediation,
 commands, production/hosted operation, broader coverage, and release hardening
 remain separate work rather than implied capabilities.
+
+Phase 9 makes those unchanged artifacts easier to use locally through one
+installed launcher, fixed scanner readiness guidance, and a progressive
+literal-loopback projection. The default guided form needs only the advisory ID
+and public GitHub URL; deterministic facts, model inference, coverage,
+limitations, and validation actions remain distinct, with raw canonical output
+available. The UI is synchronous, transient, non-writing, non-applying, and has
+no storage, upload, download, clipboard, command, job, history, or external
+asset capability. Release hardening and hosted operation remain separate work.

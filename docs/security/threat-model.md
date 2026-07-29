@@ -390,6 +390,41 @@ browser storage, external asset, or arbitrary filesystem control. A local
 operator may still persist stdout or manually act on a plan; those actions are
 outside Watchdog and do not feed a completion claim back into the artifact.
 
+## Phase 9 implemented threat boundary
+
+Phase 9 adds launcher, readiness, browser-opening, and progressive-rendering
+risks without changing the analytical pipeline. Guided mode is callable only by
+the installed launcher and has no environment flag. It preserves literal
+loopback, same-user assumptions, synchronous requests, transient memory, and
+the existing Phase 2–8 cleanup and no-write guarantees.
+
+Scanner readiness invokes one trusted configured executable with only
+`--version`, an argument array, private working directory, minimal proxy-free
+environment, bounded output/time, and process-group cleanup. Missing, wrong-
+type, non-executable, failed, malformed, timed-out, overflowing, and non-2.4.0
+results all produce the same externally controlled unavailable state. Neither
+doctor nor readiness constructs source or model clients, and fixed status text
+contains no path, environment value, response body, exception, token, or
+credential.
+
+| Threat | Implemented Phase 9 control | Failure behavior or residual risk |
+| --- | --- | --- |
+| Browser command or URL injection | URL is constructed only from validated literal loopback host/port, reparsed to reject userinfo/path/query/fragment, and passed to an explicit standard-library controller without a shell | Desktop browser integration is operator-owned; failure is non-fatal and the fixed URL remains printed |
+| Port conflict or orphan server | Socket binds before print/open; bind failure opens nothing; Uvicorn signal handling, lifespan cleanup, and `finally` listener close | Host/process crash retains normal OS cleanup assumptions |
+| Readiness interpreted as a scan result | Projection says only scanner capability, never repository affectedness; failed state gates before body parsing or workflow service activity | Readiness does not prove later OSV network availability; scanner failure remains explicit in legacy flows |
+| Readiness leaks configuration or causes egress | Four controlled capability states only; doctor uses fixed text; scanner preflight uses minimal environment and `--version`; no advisory/repository/model client | Local executable integrity and installation remain operator responsibilities |
+| Hostile canonical data becomes active browser content | Separate checked-in assets, restrictive CSP, no external assets, DOM construction and `textContent`, plaintext bidi containment | Hostile text remains visible data and can still be socially misleading |
+| Cancellation presented as immediate cleanup | AbortController disconnects the request and wording says cleanup is being verified; server uses existing disconnect monitor and lease cleanup | Process/host crash retains Phase 2 residual risk |
+| Guided view hides uncertainty | Fixed sections preserve coverage, limitations, validation actions, scanner state, and visually separate model inference; raw canonical artifact remains available | Markdown selection uses raw canonical display because structured projection is JSON-only |
+| Preview or plan mistaken for apply | Candidate review is a second explicit action, preview startup is separate opt-in, and fixed text states nothing is applied or written | Operator actions outside Watchdog remain outside the artifact |
+| Legacy behavior broadens silently | Guided routes/assets require an explicit app capability; Phase 7/8 module and asset hashes, routes, defaults, renderer bytes, and canonical HTTP bytes have regression fixtures | A future shared-boundary change still requires separate review |
+
+The guided page has no browser storage, download, clipboard, upload, arbitrary
+path, external asset, automatic request history, job, apply, or command control.
+Remote/non-loopback listening, authentication, credentials, private inputs,
+telemetry, persistence, installation, model/scanner distribution, repository
+mutation, and hosted operation remain outside the boundary.
+
 ## Security change process
 
 Any new outbound destination, input type, source adapter, persistence mechanism,
@@ -419,3 +454,10 @@ version-ordering, source-edit-preview, no-write, redaction, human-approval, and
 opt-in local-interface controls. Repository writes/apply behavior, commands,
 multi-file or source-code changes, registry queries, compatibility claims, and
 broader interfaces require a new reviewed boundary.
+
+The completed `../work-orders/phase-9-local-first-guided-experience.md` and
+`../plans/phase-9-implementation-plan.md` define the installed launcher,
+scanner-readiness, browser-open, guided-admission, text-rendering, cancellation,
+and legacy-regression controls. Hosted operation, authentication, installation,
+persistence, new destinations, and repository writes require a new reviewed
+boundary.

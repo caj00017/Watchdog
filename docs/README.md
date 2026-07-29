@@ -59,14 +59,14 @@ describe.
   records the immutable Phase 7 baseline, staged gates, limits, tests, and
   permanent escalation conditions.
 
-## Authorized Phase 9 boundary
+## Completed Phase 9 boundary
 
 - [Phase 9 local-first guided experience](work-orders/phase-9-local-first-guided-experience.md)
-  is the authorized launcher, readiness, guided projection, and local-only
+  is the completed launcher, readiness, guided projection, and local-only
   usability boundary against immutable Phase 8 commit `87ea89a`.
 - [Phase 9 formal implementation plan](plans/phase-9-implementation-plan.md)
-  records its sequential gates, fixed interface choices, regression matrix, and
-  mandatory escalation boundary.
+  records its completed sequential gates, fixed interface choices, regression
+  matrix, and mandatory escalation boundary.
 
 Supporting documents should agree with the canonical record. If they do not,
 inspect the implementation and tests, correct the canonical record first, and
@@ -79,7 +79,7 @@ then reconcile the supporting document.
 - `archive/recaps/` contains dated implementation-session snapshots.
 
 The current archived verification snapshot is
-[`development-recap-2026-07-29-phase-8.md`](archive/recaps/development-recap-2026-07-29-phase-8.md).
+[`development-recap-2026-07-29-phase-9.md`](archive/recaps/development-recap-2026-07-29-phase-9.md).
 
 Archived files preserve historical context. They are not current instructions or
 authoritative descriptions of the codebase.

@@ -1,6 +1,7 @@
 # Phase 9 Formal Implementation Plan — Local-First Guided Experience
 
-**Status:** Authorized for staged implementation
+**Status:** Implementation complete; automated and environment-capable gates
+passed; desktop usability sign-off remains manual
 
 **Authorized:** July 29, 2026
 
@@ -120,3 +121,22 @@ pass and the current implementation is committed separately from the immutable
 Phase 8 baseline and this planning record. Scanner/model installation, hosted
 operation, authentication, persistence, repository mutation, release publishing,
 and all work-order pause conditions remain deferred even after completion.
+
+## Completion result
+
+All nine gates completed on July 29, 2026. The full deterministic suite passes
+361 tests with the separately enabled live OSV scanner network contract skipped
+by default. Ruff format/lint, strict mypy, compileall, Compose, public routes,
+guided asset limits, installed-wheel command invocation, legacy command-byte
+compatibility, package assets, standalone image build, embedded scanner 2.4.0,
+public/guided no-network/no-mount health, controlled readiness, and SIGTERM
+cleanup all pass. Exact environment-dependent evidence is preserved in
+`../archive/recaps/development-recap-2026-07-29-phase-9.md`.
+
+The local environment's sandboxed Firefox failed during graphics initialization
+before producing a screenshot, even with an isolated profile, software
+rendering, and a bounded timeout. The five-minute first-time desktop visual and
+usability sign-off therefore remains an explicit operator acceptance item. This
+is a coverage limitation, not evidence of a UI failure; live server/readiness,
+responsive markup, keyboard semantics, cancellation, and text-sink behavior are
+covered separately.

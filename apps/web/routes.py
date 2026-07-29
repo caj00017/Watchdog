@@ -48,6 +48,7 @@ from watchdog.workflow.runtime import WorkflowRuntime
 
 router = APIRouter()
 remediation_router = APIRouter()
+guided_router = APIRouter()
 
 
 class LocalInvestigationRequest(BaseModel):
@@ -162,12 +163,39 @@ async def script(request: Request) -> Response:
     )
 
 
+def _guided_scanner_unavailable(request: Request) -> Response | None:
+    if not request.app.state.guided:
+        return None
+    if request.app.state.readiness.scanner == "ready":
+        return None
+    return generic_error(
+        503,
+        "scanner_unavailable",
+        "OSV-Scanner 2.4.0 is required. Run watchdog doctor for readiness guidance.",
+    )
+
+
+@guided_router.get("/api/v1/readiness")
+async def readiness(request: Request) -> Response:
+    if request.headers.get(LOCAL_REQUEST_HEADER) != LOCAL_REQUEST_VALUE:
+        return generic_error(
+            403, "local_request_header_required", "The local request was rejected."
+        )
+    return Response(
+        content=request.app.state.readiness.model_dump_json(),
+        media_type="application/json",
+    )
+
+
 @router.post("/api/v1/investigations")
 async def investigate(request: Request) -> Response:
     if request.headers.get(LOCAL_REQUEST_HEADER) != LOCAL_REQUEST_VALUE:
         return generic_error(
             403, "local_request_header_required", "The local request was rejected."
         )
+    unavailable = _guided_scanner_unavailable(request)
+    if unavailable is not None:
+        return unavailable
     content_type = request.headers.get("content-type", "").split(";", 1)[0].strip().casefold()
     if content_type != "application/json":
         return generic_error(415, "unsupported_media_type", "Expected application/json.")
@@ -241,6 +269,9 @@ async def remediate(request: Request) -> Response:
         return generic_error(
             403, "local_request_header_required", "The local request was rejected."
         )
+    unavailable = _guided_scanner_unavailable(request)
+    if unavailable is not None:
+        return unavailable
     content_type = request.headers.get("content-type", "").split(";", 1)[0].strip().casefold()
     if content_type != "application/json":
         return generic_error(415, "unsupported_media_type", "Expected application/json.")

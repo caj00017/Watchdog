@@ -186,3 +186,44 @@ registry queries, private inputs, remote interfaces, multi-token/file or source-
 code patches, lock/checksum changes, model-selected versions, compatibility or
 availability claims, affected/not-affected or reachability/exposure conclusions,
 or any Phase 1–7 identity/default change require a separate explicit review.
+
+## Completed Phase 9 implementation boundary
+
+`docs/work-orders/phase-9-local-first-guided-experience.md` and
+`docs/plans/phase-9-implementation-plan.md` define the authorized and completed
+Phase 9 boundary. The user explicitly authorized implementation on July 29,
+2026, after Phase 8 was independently verified and committed at immutable
+baseline `87ea89a5313c3dcb9cdc349a27691f91d83e623d`.
+
+Phase 9 adds only an installed local command dispatcher, bounded non-repository
+scanner readiness, a fixed validated browser opener, and a separately selected
+guided projection over unchanged Phase 7 reports and Phase 8 plans. `watchdog
+ui` enables literal-loopback interfaces and candidate planning only for its
+process; previews require `--enable-previews`, AI remains off unless explicitly
+configured, and legacy module commands, assets, routes, output bytes, exit
+codes, defaults, scanner behavior, egress, and Phase 1–8 identities remain
+unchanged.
+
+Doctor and UI readiness may invoke only the configured regular executable with
+the bounded `--version` argument-array operation and must require exactly
+OSV-Scanner 2.4.0. They must not make advisory, repository, GitHub, OSV,
+registry, or model requests or expose paths/environment values. In guided mode,
+an unavailable scanner must reject workflows before body parsing, advisory
+lookup, network access, or lease acquisition. The readiness response contains
+only controlled scanner, AI, remediation, and preview states.
+
+Guided assets must preserve the existing exact-Host, same-origin, Fetch
+Metadata, local-request-header, no-store, no-CORS, no-cookie, bounded-body,
+fully-buffered, disconnect-cleanup, and literal-loopback controls. Hostile data
+may enter the DOM only as text. The page has no external asset, browser storage,
+clipboard, upload, download, arbitrary path, history/job, command, write, or
+apply behavior.
+
+Do not add hosted/non-loopback operation, authentication, credentials, private
+repositories, remote providers, persistence, telemetry, installation or
+download of scanners/models, new dependencies/destinations, classification,
+reachability/exposure, compatibility/availability claims, repository writes,
+commands, apply behavior, or any Phase 1–8 identity/default change without a
+separate explicit review. Release governance, locking, CI, release-candidate
+production, and publication remain in the subsequent release-hardening work
+order.
