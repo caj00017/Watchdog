@@ -161,7 +161,7 @@ egress, and Phase 1–8 identities remain unchanged.
 | Persistence and jobs | Not implemented | No database, queue, or retained investigation state |
 | Container workflow | Verified | Multi-stage image builds; embedded scanner version and no-mount health pass |
 | Automated quality | Green | Phase 9 deterministic/static/security gates pass; bounded live scanner contract remains opt-in |
-| Version-control state | Phase 8 baseline immutable at `87ea89a` | Phase 9 planning is separate at `81763ff`; implementation preserves Phase 1–8 identities |
+| Version-control state | Phase 9 implementation committed at `5c8be6c` | Phase 8 baseline `87ea89a` and planning `81763ff` remain separate; Phase 1–8 identities are preserved |
 
 ## 2.3 Immediate milestone
 

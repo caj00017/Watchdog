@@ -17,6 +17,8 @@ baseline above.
 
 **Planning commit:** `81763ffd84aef418c49793e9059b3bb16492e93c`
 
+**Implementation commit:** `5c8be6cb732ef46bb43b62675b8d4276eba91723`
+
 **Completion finding:** All staged implementation packages and automated or
 environment-capable acceptance gates passed. Exact deterministic,
 installed-wheel, container, scanner, route, asset, no-network/no-mount,
