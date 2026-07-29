@@ -3,8 +3,9 @@
 Nexura Watchdog is an evidence-driven vulnerability investigation project. The
 current implementation provides advisory intelligence plus bounded internal
 services for safely acquiring public GitHub repository snapshots,
-deterministically inventorying allowlisted dependency files, and matching exact
-coordinates, and collecting redacted dependency-source evidence. The API accepts
+deterministically inventorying allowlisted dependency files, matching exact
+coordinates, collecting redacted dependency-source evidence, and producing
+bounded evidence-linked lexical context. The API accepts
 a CVE, GHSA, or OSV database identifier, retrieves
 the corresponding OSV record, and returns a source-neutral advisory with
 field-level provenance.
@@ -15,8 +16,8 @@ that SHA's GitHub archive, extracts only validated data into a disposable
 workspace, and verifies deletion when its context closes. Inside that lease,
 Phase 3 reads bounded dependency data without invoking package managers or
 repository code. Exact PyPI, npm, and Go coordinates can be sent to pinned
-OSV-Scanner 2.4.0 through a generated custom input. SBOMs, source/reachability
-analysis, LLM calls, and patch generation remain out of scope.
+OSV-Scanner 2.4.0 through a generated custom input. SBOMs, runtime/data-flow
+reachability, LLM calls, and patch generation remain out of scope.
 
 Phase 4 implements the reviewed internal evidence-engine work order. It turns
 only Watchdog-generated Phase 3 source references into bounded, redacted,
@@ -24,6 +25,22 @@ deterministic evidence while the repository lease remains active. It adds no
 arbitrary repository browsing, general source/reachability analysis, subprocess,
 new network access, persistence, model call, exposure classification, or public
 route.
+
+Phase 5 implements a separate internal `ContextService`. It validates the same
+Phase 3/4 snapshot and evidence links, discovers only allowlisted Python,
+JavaScript/TypeScript, Go, and catalog-selected JSON/TOML files with bounded
+descriptor-relative no-follow reads, and emits deterministic redacted lexical
+observations, graph edges, and non-classification signals. It adds no route,
+subprocess, dependency, network client, persistence, model call, runtime
+reachability, exposure classification, or patch behavior.
+
+Phases 0–5 are complete and the Phase 5 boundary was reverified on July 29,
+2026. A readiness-reviewed Phase 6 work order proposes an internal, evidence-
+bound model investigation service over validated Phase 1 and Phase 3–5 artifacts.
+It is ready for an explicit authorization decision, but no Phase 6 code, model
+gateway, model network access, credential, investigation result, route,
+interface, persistence, or affected/not-affected classification is implemented
+or authorized yet.
 
 ## Requirements
 
@@ -87,6 +104,26 @@ Useful settings include:
 | `WATCHDOG_EVIDENCE_MAX_BUNDLE_DISPLAY_BYTES` | `5242880` | Maximum redacted display bytes per bundle |
 | `WATCHDOG_EVIDENCE_MAX_REDACTIONS_PER_ITEM` | `100` | Maximum replacements recorded per item |
 | `WATCHDOG_EVIDENCE_MAX_WARNINGS` | `1000` | Maximum retained evidence warnings, including overflow summary |
+| `WATCHDOG_CONTEXT_DEADLINE_SECONDS` | `120` | Whole Phase 5 contextual-analysis deadline |
+| `WATCHDOG_CONTEXT_MAX_DIRECTORIES` | `5000` | Maximum source directories enumerated |
+| `WATCHDOG_CONTEXT_MAX_CANDIDATE_PATHS` | `10000` | Maximum directory entries considered before filtering |
+| `WATCHDOG_CONTEXT_MAX_DIRECTORY_DEPTH` | `64` | Maximum descriptor-relative traversal depth |
+| `WATCHDOG_CONTEXT_MAX_PATH_BYTES` | `4096` | Maximum UTF-8 bytes in a normalized relative path |
+| `WATCHDOG_CONTEXT_MAX_SOURCE_FILES` | `2000` | Maximum allowlisted source/configuration files opened |
+| `WATCHDOG_CONTEXT_MAX_BYTES_PER_SOURCE_FILE` | `2097152` | Maximum bytes read from one contextual source file |
+| `WATCHDOG_CONTEXT_MAX_TOTAL_SOURCE_BYTES` | `52428800` | Maximum total contextual source bytes read |
+| `WATCHDOG_CONTEXT_MAX_TOKENS_PER_FILE` | `100000` | Maximum lexical tokens per file |
+| `WATCHDOG_CONTEXT_MAX_TOTAL_TOKENS` | `1000000` | Maximum lexical tokens across the bundle |
+| `WATCHDOG_CONTEXT_MAX_NESTING_DEPTH` | `256` | Maximum recognized delimiter depth |
+| `WATCHDOG_CONTEXT_MAX_OBSERVATIONS` | `50000` | Maximum canonical lexical observations |
+| `WATCHDOG_CONTEXT_MAX_GRAPH_NODES` | `50000` | Maximum lexical graph nodes |
+| `WATCHDOG_CONTEXT_MAX_GRAPH_EDGES` | `100000` | Maximum lexical graph edges |
+| `WATCHDOG_CONTEXT_MAX_EVIDENCE_ITEMS` | `10000` | Maximum redacted context evidence items |
+| `WATCHDOG_CONTEXT_MAX_LINE_SPAN` | `100` | Maximum source lines selected per item |
+| `WATCHDOG_CONTEXT_MAX_DISPLAY_BYTES_PER_ITEM` | `16384` | Maximum redacted display bytes per item |
+| `WATCHDOG_CONTEXT_MAX_BUNDLE_DISPLAY_BYTES` | `5242880` | Maximum redacted display bytes per context bundle |
+| `WATCHDOG_CONTEXT_MAX_REDACTIONS_PER_ITEM` | `100` | Maximum redactions per context item |
+| `WATCHDOG_CONTEXT_MAX_WARNINGS` | `1000` | Maximum retained context warnings |
 
 ## Run locally
 
@@ -327,9 +364,33 @@ failed content makes coverage partial and never supports a negative repository
 conclusion. The service has no route, persistence, subprocess, network client,
 model call, exposure classification, or patch behavior.
 
-A [proposed Phase 5 work order](docs/work-orders/phase-5-contextual-analysis.md)
-defines a possible bounded deterministic contextual-analysis boundary. It is for
-review only and does not authorize new source discovery or analysis code.
+## Internal deterministic contextual analysis
+
+`ContextService.collect(acquired, inventory, report, evidence)` must run inside
+the same active repository lease. Before discovery it requires exact snapshot
+agreement and canonical Phase 3 match-to-Phase 4 evidence linkage. Targets and
+all search semantics come only from those validated inputs and the checked-in,
+digest-bound catalog.
+
+Discovery is sorted, descriptor-relative, no-follow, extension-allowlisted, and
+bounded before sorting or reading. Data-only recognizers cover reviewed lexical
+Python, JavaScript/TypeScript, Go, JSON, and TOML forms. Selected spans are
+redacted before entering immutable models; failures and unsupported forms produce
+explicit partial coverage with no raw fallback.
+
+Configuration facts require supported literal values. JavaScript import facts
+require a supported import form, Go selector facts require an explicit import
+alias, and Phase 5 display content is omitted rather than truncated when an item
+or bundle display budget is exhausted. Bundle validation binds observations,
+graph relationships, signals, and file digests to the exact related evidence.
+
+The resulting `ContextBundle` distinguishes dependency imports, references,
+explicit calls, reviewed configuration, and reviewed endpoint declarations. Its
+graph is lexical only. A guarded usage-not-observed signal requires complete
+mapping and complete eligible coverage and always states that static
+non-observation does not establish runtime absence or non-exposure. The service
+does not classify reachability, exposure, exploitability, or repository affected
+status and has no public route.
 
 ## Evidence model
 
@@ -347,5 +408,9 @@ is the canonical status and roadmap. Supporting detail is organized under
 [evidence policy](docs/security/evidence-policy.md). The complete `docs/` tree is
 tracked with the implementation. The completed implementation contract is the
 [Phase 4 evidence engine work order](docs/work-orders/phase-4-evidence-engine.md).
-The [Phase 5 contextual-analysis proposal](docs/work-orders/phase-5-contextual-analysis.md)
-is the next review artifact, not an active implementation authority.
+The completed [Phase 5 contextual-analysis work order](docs/work-orders/phase-5-contextual-analysis.md)
+and [formal plan](docs/plans/phase-5-implementation-plan.md) define the current
+bounded internal contextual-analysis contract. The readiness-reviewed
+[Phase 6 evidence-bound model-investigation work order](docs/work-orders/phase-6-evidence-bound-model-investigation.md)
+is ready for an explicit authorization decision and does not itself authorize
+implementation.

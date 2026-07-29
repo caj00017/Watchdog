@@ -219,7 +219,68 @@ evidence, inferences, assumptions, and recommendations must remain visibly
 separate. Every repository claim and final finding must link to evidence; missing
 coverage must lower confidence rather than create a negative conclusion.
 
-The proposed `../work-orders/phase-5-contextual-analysis.md` defines how a later
-phase could add redacted import, explicit call, target-configuration, and
-endpoint-proximity observations without emitting an exposure classification.
-It is a review-only proposal and does not change the current evidence contract.
+## Phase 5 context evidence
+
+The completed `../work-orders/phase-5-contextual-analysis.md` and formal
+`../plans/phase-5-implementation-plan.md` define a separate context-evidence
+contract implemented by the internal lease-scoped `ContextService`.
+
+Context evidence identifies the exact snapshot, complete contextual
+source-file digest, normalized path, smallest supported syntactic span,
+recognizer/catalog/redaction versions, causing match ordinal, and supporting
+Phase 4 dependency evidence ID. Only redacted display content may enter a
+context model. Phase 4 evidence and identities remain immutable inputs rather
+than being rewritten as context evidence.
+
+The complete selected span is redacted before applying display budgets. If its
+redacted display exceeds the per-item or remaining bundle budget, the content is
+omitted rather than truncated. Strict bundle validation also requires each
+observation, graph relationship, signal, and file outcome to cite evidence for
+the same target, match, kind, source anchor, and digest as applicable.
+
+Context observations distinguish imports, explicit references/calls, reviewed
+target configuration, and reviewed endpoint proximity. They are lexical facts,
+not evidence of execution, data flow, runtime reachability, exploitability,
+deployment exposure, or repository affected status. Guarded static non-
+observation requires complete eligible coverage, a complete target mapping, no
+relevant limit/ambiguity, and a mandatory limitation explaining that static
+non-observation does not establish runtime absence or non-exposure.
+
+Discovery, recognizer, ambiguity, mapping, deadline, cancellation, redaction, or
+capacity failure must remain explicit partial coverage. Missing context evidence
+can never be converted into a negative conclusion.
+
+## Proposed Phase 6 model input and inference
+
+The readiness-reviewed
+`../work-orders/phase-6-evidence-bound-model-investigation.md` proposes a model-
+facing envelope and is ready for an explicit authorization decision, but does
+not authorize its implementation. There is currently no model input, gateway,
+request, response, investigation result, or model evidence category.
+
+If separately authorized, the envelope would be a deterministic bounded view of
+validated normalized advisory facts, relevant Phase 3 matches, safe Phase 4
+evidence, Phase 5 context evidence/signals, and their complete visible coverage
+state. It would exclude raw OSV records, unrelated inventory, omitted/raw
+content, repository access, temporary paths, environment data, credentials, and
+operational diagnostics. Reaching an input limit would produce explicit omitted
+counts and incomplete input rather than silent loss.
+
+Model output would never become evidence. A validated investigation result would
+remain an inference artifact that cites immutable evidence IDs. Every claim
+would require an included evidence link, while facts, model inference,
+assumptions, gaps, and controlled human-validation actions remain distinct.
+Unknown, omitted, cross-snapshot, or fabricated links would invalidate the whole
+response instead of being repaired.
+
+The exact validated output could receive a canonical content identity, but that
+identity would attest only to those validated bytes and producer/configuration
+versions. It would not claim that a nondeterministic model repeats the result.
+Raw provider responses, opaque provider IDs, prompts, headers, and evidence text
+would remain transient and absent from logs, exceptions, persistence, and the
+canonical result.
+
+The proposed initial dispositions cannot express affected/not-affected status,
+runtime/data-flow reachability, exploitability, or deployment exposure. Missing
+or partial evidence, gateway failure, invalid output, and policy failure remain
+explicit incomplete run states and never negative findings.

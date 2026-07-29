@@ -7,7 +7,7 @@
 
 This model covers the advisory API, internal public-GitHub intake, bounded Phase
 3 dependency parsing, exact-coordinate OSV-Scanner matching, and the implemented
-Phase 4 evidence boundary.
+Phase 4 evidence and Phase 5 deterministic contextual-analysis boundaries.
 The repository boundary assumes every byte, filename, link, and metadata value in
 an acquired project is hostile. The scanner boundary trusts only the pinned
 binary and Watchdog-generated controls; it does not trust repository manifests,
@@ -25,14 +25,17 @@ The current objectives are to:
 - prevent archive paths and links from escaping the disposable workspace;
 - delete temporary data verifiably on success, failure, timeout, and
   cancellation;
-- ensure missing data and tool failure never become negative security findings.
+- ensure missing data and tool failure never become negative security findings;
 - parse only allowlisted bounded dependency data without repository or package
   execution;
 - provide the scanner only generated exact coordinates, bound its process and
-  output, and preserve its failures as incomplete coverage.
+  output, and preserve its failures as incomplete coverage;
 - constrain Phase 4 evidence reads to Watchdog-generated source references,
   redact before content crosses the service boundary, and fail closed when safe
-  extraction cannot complete.
+  extraction cannot complete; and
+- constrain Phase 5 discovery to a trusted allowlist/catalog, use bounded data-
+  only recognizers, preserve lexical-only semantics, redact before model
+  construction, and make every limitation explicit.
 
 ## Assets
 
@@ -47,6 +50,8 @@ The current objectives are to:
   scanner evidence
 - Confidentiality of unredacted repository snippets and integrity of Phase 4
   evidence identities, match links, redactions, and coverage state
+- Integrity of Phase 5 targets, catalog identity, context evidence,
+  observations, graph relationships, signals, and coverage state
 
 ## Trust boundaries
 
@@ -144,6 +149,28 @@ The service is in-process and has no subprocess, network client, persistence, or
 public route. All work must finish inside the Phase 2 lease so existing cleanup
 verification remains the lifecycle boundary.
 
+### Phase 5 contextual-analysis boundary
+
+`ContextService` accepts only same-snapshot Phase 3 inventory/matches and the
+validated Phase 4 bundle while the repository lease remains active. It derives
+targets and all search semantics from those inputs plus a trusted checked-in
+catalog; callers and repository text cannot choose paths, globs, rules, symbols,
+keys, endpoints, or weights.
+
+Discovery is sorted, descriptor-relative, no-follow, bounded before sorting and
+reading, and limited to the documented source/configuration allowlist. Python,
+JavaScript/TypeScript, Go, JSON, and TOML recognizers are data-only and fail
+closed. Selected spans pass through the versioned redactor before entering
+immutable context evidence. Cancellation waits for the worker to terminate
+before lease cleanup proceeds.
+
+Context graph edges and signals represent lexical syntax only. They cannot encode
+execution, source-to-sink/data-flow reachability, exploitability, deployment
+exposure, or repository affected/not-affected status. Missing, ambiguous,
+unsafe, unsupported, over-limit, stale, deadline-stopped, or redaction-failed
+analysis produces explicit partial coverage and cannot support static non-
+observation.
+
 ### Export boundary
 
 Advisory text is untrusted. JSON uses the framework serializer. Markdown escapes
@@ -198,21 +225,75 @@ hostile-filesystem, cancellation, determinism, and lease-cleanup tests:
 | Nondeterministic evidence cannot be audited | Version producer/resolver/redaction policy; canonical JSON; stable sort; exclude time and temporary paths from identity | Implementation/library changes require a producer-version change |
 | Extraction failure becomes negative evidence | Omitted-content items, structured warnings, and partial bundle coverage; no exposure classification | Consumers must inspect evidence status and bundle coverage |
 
+## Phase 5 implemented controls
+
+These controls are implemented and covered by catalog/schema, hostile-filesystem,
+recognizer, redaction, determinism, cancellation, and lease-cleanup tests:
+
+| Threat | Implemented Phase 5 control | Failure behavior or residual risk |
+| --- | --- | --- |
+| Caller or repository selects arbitrary search targets | Derive targets only from validated Phase 3/4 inputs and a checked-in code-native catalog; service accepts no paths/rules/regexes/symbols/weights | Reject invalid linkage before discovery; repository text never creates search semantics |
+| Huge directory exhausts memory before sorting | Enumerate from an open descriptor into at most remaining candidate capacity plus one; discard oversized directory and stop discovery | `candidate_path_limit_exceeded`, partial coverage, and no enumeration-order subset |
+| Deep or ambiguous paths exhaust descriptors or escape root | Cap depth/path bytes; descriptor-relative no-follow opens; reject controls, surrogates, dot/parent/backslash, duplicate, and case-fold collisions | Omit unsafe subtree/file and preserve explicit coverage limitation |
+| Source changes during discovery/read | Pre/post descriptor identity and metadata checks plus complete permitted-file SHA-256 | Discard changed enumeration/content; never analyze mismatched bytes |
+| Malformed source causes false lexical facts | Bounded per-language token/state recognizers; balanced syntax subset; supported-form JavaScript imports; literal-only configuration facts; explicit-alias-only Go selector binding; no regex/substring fallback | Omit ambiguous observations and mark recognizer coverage partial |
+| Package/import mapping creates a false absence claim | Distinguish generic, catalog-exact, and unavailable mappings | Only complete mapping plus complete file coverage may support guarded non-observation |
+| Lexical graph is presented as runtime reachability | Schema vocabulary limited to observed imports/references/calls/config/endpoints and lexical edges | No field or signal can represent execution, data flow, exposure, exploitability, or affected status |
+| Source secret crosses the service boundary | Reuse versioned redaction before context model construction; bound replacements/display | Omit all display on redaction or display-budget failure; no truncation or raw fallback/log/error/model content |
+| A valid ID cites unrelated context evidence | Strict bundle validation checks target, match, kind, source anchor/digest, graph-node relationship, and signal vocabulary linkage | Reject the complete bundle before a later phase can consume it |
+| Cancellation races lease cleanup | One deadline/cancellation event; await worker termination before propagation | No descriptor or raw buffer remains active when lease cleanup begins |
+
+Adding a parser dependency, Tree-sitter/native grammar, subprocess, network,
+persistence, model, route, caller-defined rule, or Phase 3/4 semantic change is
+not covered by this authorization and requires a new threat-boundary review.
+
+## Proposed Phase 6 threat boundary
+
+The readiness-reviewed work order at
+`../work-orders/phase-6-evidence-bound-model-investigation.md` proposes, but does
+not authorize, a new model boundary. The proposed service would receive no
+repository lease or filesystem access. It would construct a deterministic
+bounded envelope from validated Phase 1 and Phase 3–5 artifacts after cleanup,
+mark every advisory/repository value as untrusted data, and keep model output
+separate from evidence.
+
+The principal new threats are prompt injection, fabricated evidence links,
+unsupported conclusions, response/resource exhaustion, model nondeterminism,
+local endpoint abuse, accidental proxy/redirect egress, response or evidence
+logging, and treating model inference as deterministic fact. Proposed controls
+are fixed versioned prompts, strict local byte/time/concurrency limits,
+disabled-by-default literal-loopback transport, no credentials/tools/streaming,
+strict JSON/schema validation, exact envelope-evidence linkage, deterministic
+disposition gates, generic diagnostics, and explicit incomplete run states.
+
+The operator would trust the chosen same-host model service with the bounded
+envelope. Literal loopback prevents external routing but does not authenticate
+the process listening on the selected port; multi-user-host authentication,
+Unix sockets, or TLS are not covered by the initial proposal.
+
+These controls are planned, not implemented. The proposal is ready for an
+explicit authorization decision, but no model call exists today. A
+remote provider, credential, new destination, persistence path, interface,
+affected/not-affected classification, reachability/exposure claim, remediation,
+or patch path requires a separate amendment.
+
 ## Explicitly absent capabilities
 
 There is currently no repository API endpoint, GitHub authentication, private
 repository support, Git clone, archive retention, SBOM tool,
-source/static/reachability analysis beyond dependency selectors, LLM call,
-exposure classification, or patch application. Phase 3 inventory and
-exact-coordinate matching are internal only and do not assert runtime exposure.
-Phase 4 evidence extraction remains internal and has no persistence or public
-export path.
+general source/static or source-to-sink/runtime reachability analysis beyond the
+completed allowlisted lexical context, LLM call, exposure classification, or
+patch application. Phase 3 inventory and exact-coordinate matching are internal
+only and do not assert runtime exposure. Phase 4 evidence extraction and Phase 5
+contextual analysis remain internal and have no persistence or public export
+path. Phase 5 recognizes only bounded lexical forms and does not implement
+source-to-sink or runtime reachability.
 
 Prompt injection in source and configuration becomes operationally relevant only
-when model analysis exists. That phase must quote repository data, redact
-secrets, bound evidence, require a strict output schema, and validate every model
-claim against evidence IDs. Generated patches remain previews until explicit
-human approval.
+when model analysis exists. The proposed Phase 6 work order requires quoted
+untrusted data, redacted bounded evidence, strict output schemas, and exact claim
+links, but it grants no implementation authority. Generated patches remain
+previews until explicit human approval in a separately authorized phase.
 
 ## Security change process
 
@@ -222,7 +303,8 @@ provider changes a trust boundary. It requires targeted abuse-case tests and
 synchronized updates to `AGENTS.md`, this threat model, and the architecture
 documentation.
 
-The proposed `../work-orders/phase-5-contextual-analysis.md` would add a new
-hostile-source discovery and parsing boundary. It is review material only. No
-Phase 5 control is active or authorized until this threat model, `AGENTS.md`, and
-the canonical record explicitly approve implementation.
+The completed `../work-orders/phase-5-contextual-analysis.md` and
+`../plans/phase-5-implementation-plan.md` define the active hostile-source
+discovery and lexical-recognition boundary. Any broader parser, source format,
+search semantics, egress, route, persistence, model, or classification requires
+a new reviewed boundary and synchronized documentation.

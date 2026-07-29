@@ -1,13 +1,22 @@
-# Phase 5 Proposed Work Order — Deterministic Contextual Analysis
+# Phase 5 Authorized Work Order — Deterministic Contextual Analysis
 
-**Status:** Proposed for security and scope review; implementation is not authorized
+**Status:** Completed within the authorized boundary
 
 **Prepared:** July 28, 2026
 
-**Authority:** The canonical project record and repository `AGENTS.md` take
-precedence if this proposal conflicts with either one. Merging this document does
-not authorize Phase 5 production code. Authorization requires an explicit status
-change in the canonical record and `AGENTS.md` after review.
+**Authorized:** July 28, 2026
+
+**Completed:** July 29, 2026, after final boundary audit and reverification
+
+**Formal plan:** [Phase 5 implementation plan](../plans/phase-5-implementation-plan.md)
+
+**Completion record:** [Phase 5 final verification recap](../archive/recaps/development-recap-2026-07-29-phase-5-verification.md)
+
+**Authority:** The user explicitly authorized Phase 5 commencement on July 28,
+2026. This work order, the canonical project record, and repository `AGENTS.md`
+jointly define the authorized boundary. Authorization does not waive any trust
+boundary below. A capability outside this document requires a separate explicit
+review and synchronized authority update before implementation.
 
 ## Objective
 
@@ -35,7 +44,7 @@ Phase 5 therefore introduces a separate service, producer version, configuration
 digest, coverage model, rule catalog, and evidence kind. Phase 4 dependency
 evidence remains immutable input and keeps its existing identity and semantics.
 
-## Proposed boundary
+## Authorized boundary
 
 The service may:
 
@@ -273,11 +282,12 @@ dependency evidence ID and canonical match ordinal that caused the file to be
 considered.
 
 Only content passed through the existing versioned redaction policy may enter an
-outward model. The selected complete syntactic span is redacted before UTF-8-safe
-display truncation. Redaction failure or limit exhaustion produces
-`content_omitted` with partial coverage. Raw spans, secret hashes, offsets of
-redacted values, parser exception text, temporary paths, and operational timing
-must not enter the bundle.
+outward model. The selected complete syntactic span is redacted before the
+display-budget decision. If the complete redacted display does not fit the item
+or remaining bundle budget, it is `content_omitted` with partial coverage rather
+than truncated. Redaction failure has the same fail-closed behavior. Raw spans,
+secret hashes, offsets of redacted values, parser exception text, temporary
+paths, and operational timing must not enter the bundle.
 
 Context IDs and bundle IDs use canonical JSON and SHA-256. The bundle excludes
 timestamps and temporary paths and sorts targets, file outcomes, evidence,
@@ -289,18 +299,21 @@ No Phase 4 model or evidence ID may be rewritten in place. Shared reader,
 redaction, or identity code may be extracted only when tests prove Phase 4 output
 is byte-for-byte unchanged.
 
-## Proposed initial limits
+## Authorized initial limits
 
 Add `WATCHDOG_CONTEXT_` settings and a strict `ContextLimits` model:
 
-| Limit | Proposed default | Meaning |
+| Limit | Authorized default | Meaning |
 | --- | ---: | --- |
 | Deadline | 120 seconds | Complete discovery, analysis, and bundle deadline |
 | Directories | 5,000 | Maximum real directories enumerated |
 | Candidate paths | 10,000 | Maximum entries considered before filtering |
+| Directory depth | 64 | Maximum descriptor-relative traversal depth |
+| Path length | 4,096 UTF-8 bytes | Maximum normalized repository-relative path |
 | Source files | 2,000 | Maximum allowlisted regular files opened |
 | Bytes per file | 2 MiB | Maximum bytes read from one source/config file |
 | Total source bytes | 50 MiB | Maximum unique contextual bytes read |
+| Lexical tokens per file | 100,000 | Maximum tokens emitted by one recognizer |
 | Lexical tokens | 1,000,000 | Maximum tokens across all files |
 | Nesting depth | 256 | Maximum recognized delimiter/syntax depth |
 | Observations | 50,000 | Maximum canonical parsed observations |
@@ -317,6 +330,14 @@ Capacity is reserved for terminal overflow summaries. Canonical input order
 determines every limit outcome. Item or observation overflow remains visible in
 bounded per-file and per-match outcomes; it is never silently dropped or
 converted into non-observation.
+
+Directory enumeration must also remain memory-bounded before sorting. An open
+directory is scanned into at most the remaining candidate-path capacity plus one
+entry. If that capacity is exceeded, the buffered names are discarded, discovery
+stops, and partial coverage records `candidate_path_limit_exceeded`; no
+filesystem enumeration order is allowed to choose a nondeterministic subset.
+Pre/post directory identity and metadata disagreement similarly discards the
+enumeration and limits coverage.
 
 ## Async lifecycle and cancellation
 
@@ -337,11 +358,13 @@ watchdog/domain/context.py
 watchdog/context/catalog.py
 watchdog/context/identifiers.py
 watchdog/context/limits.py
+watchdog/context/targets.py
 watchdog/context/discovery.py
 watchdog/context/python.py
 watchdog/context/javascript.py
 watchdog/context/go.py
 watchdog/context/configuration.py
+watchdog/context/evidence.py
 watchdog/context/graph.py
 watchdog/context/ranking.py
 watchdog/context/service.py
@@ -351,7 +374,7 @@ Shared Phase 4 primitives remain under `watchdog/evidence/` only when their
 contracts remain evidence-generic and unchanged. Phase 5 must not create a
 general-purpose filesystem or search API for other callers.
 
-## Implementation sequence after authorization
+## Staged implementation sequence
 
 1. Freeze target generation, rule-catalog schema, context domain models,
    canonical identities, limits, and negative-semantics tests.
@@ -425,8 +448,8 @@ stay unsupported rather than using a generic textual fallback.
 
 - synthetic credentials for every Phase 4 detector in imports, strings,
   configuration, endpoints, and malformed files;
-- redaction overlap, truncation after full-span redaction, detector failure, and
-  replacement limits;
+- redaction overlap, display omission after full-span redaction, detector
+  failure, and replacement limits;
 - raw synthetic secrets absent from models, canonical JSON, warnings,
   exceptions, captured logs, snapshots, and failed-parser diagnostics.
 
@@ -480,4 +503,4 @@ conditional compilation evaluation, container/deployment analysis, SBOMs,
 dependency installation, package resolution, source execution, exploitability,
 exposure classifications, LLM investigation, persistence, jobs, public evidence
 or repository routes, CLI/web workflows, remediation, and patch previews remain
-outside this proposed Phase 5 boundary.
+outside this authorized Phase 5 boundary.

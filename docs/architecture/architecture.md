@@ -5,7 +5,7 @@
 
 ## Current scope
 
-The current implementation contains four deliberately bounded capabilities:
+The current implementation contains five deliberately bounded capabilities:
 
 1. The public FastAPI advisory layer validates CVE, GHSA, or OSV identifiers,
    retrieves OSV records, normalizes them into source-neutral domain models, and
@@ -18,14 +18,24 @@ The current implementation contains four deliberately bounded capabilities:
    checks exact target-advisory candidates with pinned OSV-Scanner 2.4.0.
 4. An internal Phase 4 service converts only those match source references into
    deterministic, redacted evidence bundles before the lease is cleaned up.
+5. An internal Phase 5 service derives targets from validated Phase 3/4 links,
+   performs bounded allowlisted lexical recognition, and creates redacted
+   context evidence, an observation graph, and controlled non-classification
+   signals before lease cleanup.
 
-Repository intake, inventory, matching, and evidence have no HTTP routes. The
-implemented internal pipeline does not
-generate an SBOM, execute repository code or package tooling, infer source
-reachability/exposure, call an LLM, persist content, or generate patches.
+Repository intake, inventory, matching, evidence, and context have no HTTP
+routes. The implemented internal pipeline does not generate an SBOM, execute
+repository code or package tooling, infer source reachability/exposure, call an
+LLM, persist content, or generate patches.
 
-Phase 4 is complete under the reviewed work order. Evidence collection remains
-internal and lease-scoped, and every public route is unchanged.
+Phases 4 and 5 are complete under their reviewed work orders. Evidence and
+context collection remain internal and lease-scoped, and every public route is
+unchanged.
+
+Phase 6 is a readiness-reviewed proposal at
+`../work-orders/phase-6-evidence-bound-model-investigation.md`. It is not part of
+the current runtime architecture and grants no implementation authority. It is
+ready for an explicit authorization decision, which has not yet been granted.
 
 ## Runtime flows
 
@@ -47,7 +57,8 @@ flowchart LR
     Candidates --> Scanner[Generated coordinates to pinned OSV-Scanner]
     Scanner --> Match[Source-linked match report]
     Match --> Evidence[Bounded redacted evidence bundle]
-    Evidence --> Cleanup[Verified archive and workspace deletion]
+    Evidence --> Context[Bounded lexical context bundle]
+    Context --> Cleanup[Verified archive and workspace deletion]
 ```
 
 The public advisory flow remains separate from internal orchestration. A trusted
@@ -223,6 +234,74 @@ inputs.
 The complete schema, default limits, implementation boundary, and acceptance
 tests are retained in `docs/work-orders/phase-4-evidence-engine.md`.
 
+## Phase 5 contextual-analysis architecture
+
+Phase 5 is complete under `../work-orders/phase-5-contextual-analysis.md` and the
+gates in `../plans/phase-5-implementation-plan.md`.
+
+`ContextService` is a separate internal service invoked only while
+the Phase 2 repository lease is active. It accepts same-snapshot Phase 3
+inventory/matches and the Phase 4 evidence bundle, derives targets from those
+validated inputs plus a trusted code-native catalog, performs bounded descriptor-
+relative discovery, runs data-only language recognizers, redacts selected spans,
+and constructs a deterministic context observation bundle. It does not extend
+`EvidenceService` path eligibility or mutate Phase 4 evidence identities.
+
+The service validates all input linkage before opening the repository. Its
+checked-in catalog has canonical identity, fixed package/import mappings, and
+reviewed member, configuration, and endpoint rules. Discovery uses a private,
+sorted descriptor walker with no-follow opens, pre/post metadata checks, fixed
+directory exclusions, source/configuration allowlists, and explicit duration,
+path, directory, file, byte, token, observation, evidence, graph, redaction, and
+warning limits.
+
+Python uses the standard-library tokenizer; JavaScript/TypeScript and Go use
+bounded data-only lexical recognizers; JSON/TOML configuration recognition is
+limited to exact catalog-selected paths and keys. Unsupported or ambiguous
+syntax, mapping gaps, mutation, redaction failure, or exhaustion produces
+explicit partial coverage. Async cancellation waits for the worker to terminate
+before the lease can clean up.
+
+Recognizers accept configuration observations only for supported literal values.
+JavaScript imports must match a reviewed static/literal import form, and Go
+selector references or calls require an explicit import alias because an import
+path alone does not prove the package's declared identifier. A redacted context
+span that exceeds an item or remaining bundle display budget is omitted rather
+than truncated. Final schema validation binds each observation, graph
+relationship, signal, and file digest to related canonical evidence.
+
+The graph contains lexical observations only. Imports, explicit
+references/calls, reviewed configuration entries, and endpoint proximity do not
+assert execution, data flow, runtime reachability, deployment exposure,
+exploitability, or repository affected status. A guarded static non-observation
+signal is permitted only with complete eligible coverage and a complete target
+mapping.
+
+## Proposed Phase 6 model-investigation architecture
+
+The readiness-reviewed Phase 6 work order proposes a separate internal
+`InvestigationService` that would run after Phase 2–5 repository work and cleanup
+have completed. It would accept only validated normalized advisory data and
+canonical Phase 3–5 artifacts; it would not accept a repository lease, path,
+archive, raw source record, or filesystem capability.
+
+A deterministic envelope builder would select bounded allowlisted advisory
+facts, relevant exact matches, safe Phase 4 evidence, Phase 5 evidence/signals,
+and explicit coverage state. Fixed versioned prompt assets would submit that
+canonical JSON through a provider-neutral gateway. Untrusted response bytes
+would have to pass strict JSON, schema, bounds, evidence-link, and deterministic
+disposition-policy validation before becoming an immutable investigation result.
+Model output would remain an inference over evidence, never new evidence.
+
+The first proposed concrete transport is disabled by default, credential-free,
+and restricted to a literal loopback OpenAI-compatible endpoint with redirects
+and ambient proxies disabled. Remote providers, credentials, persistence,
+interfaces, tool calls, streaming, affected/not-affected classification,
+reachability/exposure, remediation, and patches are excluded. No Phase 6 module,
+setting, gateway, or call exists today. The proposal is ready for an explicit
+authorization decision; the readiness review does not itself authorize runtime
+implementation.
+
 ## Module responsibilities
 
 | Module | Responsibility |
@@ -233,6 +312,7 @@ tests are retained in `docs/work-orders/phase-4-evidence-engine.md`.
 | `watchdog/domain/inventory.py` | Immutable projects, components, edges, source references, warnings, and coverage |
 | `watchdog/domain/matching.py` | Exact scanner coordinates, run evidence, match states, and reports |
 | `watchdog/domain/evidence.py` | Strict immutable producer, source, redaction, item, link, warning, coverage, configuration, and bundle models |
+| `watchdog/domain/context.py` | Strict immutable target, catalog, observation, graph, signal, coverage, and bundle models |
 | `watchdog/domain/errors.py` | Base expected-failure vocabulary independent of HTTP |
 | `watchdog/vulnerability_sources/` | OSV boundary, normalization, and source-neutral contracts |
 | `watchdog/advisory_service.py` | Identifier-to-source orchestration |
@@ -246,6 +326,7 @@ tests are retained in `docs/work-orders/phase-4-evidence-engine.md`.
 | `watchdog/scanners/` | Source-neutral scanner protocol and pinned OSV-Scanner subprocess boundary |
 | `watchdog/advisory_match_service.py` | Candidate selection, alias matching, and source-linked match reporting |
 | `watchdog/evidence/` | Canonical IDs/configuration, descriptor-relative reads, positional selectors, redaction, and lease-scoped collection |
+| `watchdog/context/` | Trusted catalog, target derivation, descriptor discovery, data-only recognizers, context evidence, lexical graph/ranking, and lease-scoped collection |
 | `apps/api` | Advisory API lifespan, dependencies, error mapping, and routes |
 
 ## Deployment and deferred architecture
@@ -258,14 +339,17 @@ Intake workspaces are local process resources and are not a durable data model.
 
 The scanner increases image size and requires normal outbound OSV lookup access;
 `--no-resolve` prevents dependency-resolution egress. The bounded internal
-evidence engine adds no egress or public route. Still deferred are SBOM
-generation, general source analysis,
-reachability, exposure classifications, LLM providers, persistence, background
-jobs, evidence browsing, CLI workflows, web UI, and patch previews. Exposing
-internal Phase 2–4 services through an API or changing the scanner
-version/network behavior requires a new boundary review.
+evidence and context services add no egress or public route. Still deferred are
+SBOM generation, source-to-sink/runtime reachability, exposure classifications,
+model implementation, persistence, background jobs, evidence browsing, CLI
+workflows, web UI, and patch previews. The proposed Phase 6 loopback model
+boundary is not authorized. Exposing internal Phase 2–5 services through an API
+or changing the scanner version/network behavior requires a new boundary review.
 
-`../work-orders/phase-5-contextual-analysis.md` proposes a separate internal
-context service for that next review. It is not current runtime architecture and
-does not authorize source discovery or analysis code. In particular, Phase 5
-must not broaden Phase 4 source-reference eligibility in place.
+`../work-orders/phase-5-contextual-analysis.md` defines the implemented separate
+context service within its documented limits. Phase 5 does not broaden Phase 4
+source-reference eligibility or rewrite Phase 4 evidence identities.
+
+`../work-orders/phase-6-evidence-bound-model-investigation.md` defines only a
+candidate next boundary. It does not change the current five-capability runtime
+or authorize model behavior.
