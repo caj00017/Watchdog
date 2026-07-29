@@ -212,12 +212,17 @@ an unavailable scanner must reject workflows before body parsing, advisory
 lookup, network access, or lease acquisition. The readiness response contains
 only controlled scanner, AI, remediation, and preview states.
 
-Guided assets must preserve the existing exact-Host, same-origin, Fetch
-Metadata, local-request-header, no-store, no-CORS, no-cookie, bounded-body,
-fully-buffered, disconnect-cleanup, and literal-loopback controls. Hostile data
-may enter the DOM only as text. The page has no external asset, browser storage,
-clipboard, upload, download, arbitrary path, history/job, command, write, or
-apply behavior.
+Guided assets must preserve the existing exact-Host, origin, Fetch Metadata,
+local-request-header, no-store, no-CORS, no-cookie, bounded-body,
+fully-buffered, disconnect-cleanup, and literal-loopback controls. Guided mode
+alone may admit `Sec-Fetch-Site: none` only for exact-Host, absent-Origin,
+empty-query `GET /` with `navigate` mode and `document` destination; do not
+broaden that exception to legacy mode, assets, readiness, or workflow routes.
+Hostile data may enter the DOM only as text. Identical display text may be
+grouped only with explicit counts, and evidence IDs may be summarized only when
+the complete canonical identifiers and unchanged raw artifact remain
+available. The page has no external asset, browser storage, clipboard, upload,
+download, arbitrary path, history/job, command, write, or apply behavior.
 
 Do not add hosted/non-loopback operation, authentication, credentials, private
 repositories, remote providers, persistence, telemetry, installation or
@@ -227,3 +232,11 @@ commands, apply behavior, or any Phase 1–8 identity/default change without a
 separate explicit review. Release governance, locking, CI, release-candidate
 production, and publication remain in the subsequent release-hardening work
 order.
+
+Release-one model synthesis remains disabled by default and limited to the
+existing operator-managed literal-loopback adapter; Watchdog installs neither a
+model nor a model server. The user-stated version-two direction of AWS hosting
+and a candidate DeepSeek V3 API provider is planning context only. It grants no
+authority for remote egress, credentials, authentication, persistence, rate-
+limit state, or hosted operation; all require a separate work order and
+security/privacy/operations review.

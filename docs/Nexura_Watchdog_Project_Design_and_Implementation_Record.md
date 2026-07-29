@@ -2,7 +2,7 @@
 
 ## Project Design and Implementation Record
 
-**Document version:** 9.0
+**Document version:** 9.1
 
 **Last updated:** July 29, 2026
 
@@ -137,6 +137,16 @@ retains the optional credential-free literal-loopback model boundary. Legacy
 module commands, routes, assets, defaults, renderer bytes, scanner behavior,
 egress, and Phase 1–8 identities remain unchanged.
 
+The July 29 desktop Firefox operator review exercised readiness, cancellation,
+a live two-field investigation, exact snapshot display, visible incomplete
+coverage, and raw canonical access. It produced four separately committed
+guided-interface corrections through reviewed code state `a6f0f12`: narrowly
+admitted top-level browser navigation, final cancellation wording, counted
+duplicate grouping/wider result rows, and explained evidence-type summaries
+with a collapsed complete identifier list. The canonical Phase 7 report and
+Phase 8 plan bytes remain unchanged. Exact exercised and unreported manual
+checks are recorded in the Phase 9 recap.
+
 ## 2.2 Current health
 
 | Area | Status | Current reality |
@@ -160,8 +170,8 @@ egress, and Phase 1–8 identities remain unchanged.
 | Remediation assistant | Implemented locally, disabled by default | Evidence-linked candidates, controlled actions, optional single-token no-write previews, canonical plan, CLI, and doubly gated local route |
 | Persistence and jobs | Not implemented | No database, queue, or retained investigation state |
 | Container workflow | Verified | Multi-stage image builds; embedded scanner version and no-mount health pass |
-| Automated quality | Green | Phase 9 deterministic/static/security gates pass; bounded live scanner contract remains opt-in |
-| Version-control state | Phase 9 implementation committed at `5c8be6c` | Phase 8 baseline `87ea89a` and planning `81763ff` remain separate; Phase 1–8 identities are preserved |
+| Automated quality | Green | 362 deterministic tests pass after operator-review fixes; bounded live scanner contract remains opt-in |
+| Version-control state | Phase 9 reviewed code committed through `a6f0f12` | Initial implementation `5c8be6c`, Phase 8 baseline `87ea89a`, and planning `81763ff` remain separate; Phase 1–8 identities are preserved |
 
 ## 2.3 Immediate milestone
 
@@ -739,7 +749,7 @@ As of July 29, 2026:
 - `ruff format --check .` passes.
 - `ruff check .` passes.
 - strict `mypy` passes.
-- pytest passes 361 deterministic tests; the bounded live OSV scanner contract
+- pytest passes 362 deterministic tests; the bounded live OSV scanner contract
   is skipped unless explicitly enabled.
 - Application/test bytecode compilation passes.
 - OpenAPI contains exactly `/health` and
@@ -754,8 +764,12 @@ Phase 9 environment-dependent container acceptance also passes:
   dependency list.
 - All four installed `watchdog` commands invoke; direct invalid-command
   stdout/stderr/exit behavior is byte-identical to the legacy module commands.
-- All Phase 7/8/9 checked-in assets are installed; the three guided assets total
-  22,389 bytes.
+- The initial Phase 9 image contains every Phase 7/8/9 asset; its original three
+  guided assets totaled 22,389 bytes. The operator-reviewed checked-in guided
+  assets now total 26,159 bytes, remain inside the 256 KiB ceiling, and pass the
+  package-data/asset-selection tests. The environment image was not rebuilt
+  after those presentation-only revisions; release hardening must rebuild the
+  candidate from the reviewed commit rather than reuse the initial image tag.
 - `watchdog doctor` reports ready and the embedded scanner reports exactly
   OSV-Scanner 2.4.0.
 - Public and guided applications returned their expected health documents with
@@ -888,7 +902,9 @@ not a stable release identifier.
 
 - The completed Phase 0–8 implementation and documentation are committed at
   immutable baseline `87ea89a5313c3dcb9cdc349a27691f91d83e623d`; Phase 9
-  planning is separately committed at `81763ffd84aef418c49793e9059b3bb16492e93c`.
+  planning is separately committed at `81763ffd84aef418c49793e9059b3bb16492e93c`,
+  initial implementation at `5c8be6c`, and operator-reviewed code through
+  `a6f0f12`.
 - The complete `docs/` tree is tracked so boundary and status changes can be
   reviewed and committed with the implementation they describe.
 - No dependency lock, CI, license, changelog/release process, or vulnerability
@@ -1023,14 +1039,27 @@ remains inference rather than evidence and never rewrites existing canonical
 artifacts.
 
 The only concrete gateway is disabled by default, credential-free, and limited
-to a literal loopback OpenAI-compatible endpoint. It permits no DNS
-hostname, redirect, ambient proxy, tool call, streaming, persistence, or remote
-provider. Remote BYOK providers remain a later destination and credential-
-handling decision.
+to a literal-loopback OpenAI-compatible endpoint. It permits no DNS hostname,
+redirect, ambient proxy, tool call, streaming, persistence, or remote provider.
+Release one retains this operator-managed local-model boundary so evidence and
+synthesis can remain on the operator's machine. Remote BYOK providers remain a
+later destination and credential-handling decision.
 
 Nexura-hosted inference remains deferred because it requires authentication,
 billing, tenant/job isolation, retention policy, encryption, abuse controls, and
-cost management. No model workflow is exposed through the API, CLI, or web UI.
+cost management. Phase 9 may expose the existing local model workflow only
+through its explicitly launched literal-loopback UI; no public or remote model
+workflow exists.
+
+The user has recorded a version-two product direction of an AWS-hosted Watchdog
+service with a candidate DeepSeek V3 API synthesis provider and request rate
+limits. This is planning context only, not implementation authority or a vendor
+commitment. A separate work order must decide remote evidence transfer,
+credential storage/rotation, authentication and authorization, tenant/workspace
+isolation, provider privacy and retention terms, encryption, regional/data-
+residency requirements, persistence, logging/redaction, rate/abuse/cost limits,
+availability/fallback, monitoring, incident response, and deletion before any
+remote destination is added.
 
 ## 13.4 Controlled classifications
 
@@ -1325,6 +1354,20 @@ telemetry, jobs/history, installation, new egress or dependencies, repository
 writes/apply, commands, classification, reachability/exposure, compatibility or
 availability claims, and release publication remain separate work.
 
+## D-026 — Release one stays local; hosted model synthesis is a version-two boundary
+
+The user selected the existing operator-managed literal-loopback model path for
+release one so Watchdog inputs, evidence envelopes, validated synthesis, and
+transient results can remain local. This does not authorize Watchdog to install
+a model or model server and does not change the disabled-by-default setting.
+
+The user also recorded an AWS-hosted version-two direction with a candidate
+DeepSeek V3 API synthesis provider and rate limiting. The provider and hosting
+choice are not implemented, approved, or locked. Any version-two work must begin
+with a separate authority and threat/privacy/operations review covering the
+controls enumerated in section 13.3. Phase 9 adds no remote model egress,
+credentials, authentication, persistence, hosted listener, or rate-limit state.
+
 ---
 
 # 15. Risks and Mitigation Direction
@@ -1398,8 +1441,9 @@ docs/
 ├── plans/
 │   ├── phase-5-implementation-plan.md
 │   ├── phase-6-implementation-plan.md
-│   └── phase-7-implementation-plan.md
-│   └── phase-8-implementation-plan.md
+│   ├── phase-7-implementation-plan.md
+│   ├── phase-8-implementation-plan.md
+│   └── phase-9-implementation-plan.md
 ├── security/
 │   ├── evidence-policy.md
 │   └── threat-model.md
@@ -1408,7 +1452,8 @@ docs/
 │   ├── phase-5-contextual-analysis.md
 │   ├── phase-6-evidence-bound-model-investigation.md
 │   ├── phase-7-reporting-and-local-interfaces.md
-│   └── phase-8-remediation-assistant.md
+│   ├── phase-8-remediation-assistant.md
+│   └── phase-9-local-first-guided-experience.md
 └── archive/
     ├── planning/
     │   └── nexura_watchdog_formal_plan.md
@@ -1434,6 +1479,18 @@ and boundary changes.
 ---
 
 # 18. Change History
+
+## Version 9.1 — July 29, 2026
+
+- Recorded the desktop Firefox operator review, live guided investigation, and
+  the exact manual checks that were and were not explicitly exercised.
+- Recorded four separately committed review fixes through `a6f0f12`: fixed
+  top-level guided navigation, final cancellation wording, counted duplicate
+  grouping/wider result layout, and explained/collapsible evidence identities.
+- Updated deterministic verification to 362 passing tests and the guided asset
+  total to 26,159 bytes without changing canonical report/plan output.
+- Recorded release-one local model synthesis and the AWS/DeepSeek V3
+  version-two direction as a deferred boundary requiring separate authority.
 
 ## Version 9.0 — July 29, 2026
 
@@ -1719,6 +1776,9 @@ installed launcher, fixed scanner readiness guidance, and a progressive
 literal-loopback projection. The default guided form needs only the advisory ID
 and public GitHub URL; deterministic facts, model inference, coverage,
 limitations, and validation actions remain distinct, with raw canonical output
-available. The UI is synchronous, transient, non-writing, non-applying, and has
-no storage, upload, download, clipboard, command, job, history, or external
-asset capability. Release hardening and hosted operation remain separate work.
+available. Repeated projection text carries explicit counts, and opaque evidence
+identities are explained and summarized while remaining fully disclosable. The
+UI is synchronous, transient, non-writing, non-applying, and has no storage,
+upload, download, clipboard, command, job, history, or external asset
+capability. Release-one synthesis remains optional and literal-loopback local;
+release hardening and any AWS/remote-provider operation remain separate work.

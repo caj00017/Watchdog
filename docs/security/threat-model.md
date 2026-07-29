@@ -426,6 +426,15 @@ Remote/non-loopback listening, authentication, credentials, private inputs,
 telemetry, persistence, installation, model/scanner distribution, repository
 mutation, and hosted operation remain outside the boundary.
 
+Release one keeps model synthesis on the explicit operator-managed literal-
+loopback boundary. The user's AWS/DeepSeek V3 version-two direction is not an
+implemented or authorized data flow and is not treated as mitigated by this
+threat model. Before implementation, a new review must model remote evidence
+disclosure, credentials, provider retention/training/logging, authentication and
+authorization, tenant isolation, encryption, data residency, persistence,
+rate/abuse/cost control, availability/fallback, monitoring, deletion, and
+incident response.
+
 ## Security change process
 
 Any new outbound destination, input type, source adapter, persistence mechanism,

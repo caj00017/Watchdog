@@ -102,7 +102,10 @@ and opens it in the system browser. Use `--no-open` to leave browser opening to
 the operator. The initial page needs only an advisory ID and a public GitHub
 URL; optional ref, view, and artifact format are under Advanced. The page stores
 no investigation, uses no external assets, and offers remediation candidate
-review only after an investigation completes.
+review only after an investigation completes. Repeated result text is grouped
+with explicit counts. Evidence is explained and summarized by identity type,
+with every canonical identifier and the unchanged raw artifact retained under
+collapsed disclosures.
 
 AI is `Off` by default. `watchdog ui --model MODEL` enables the existing
 credential-free literal-loopback OpenAI-compatible adapter for that process;
@@ -112,6 +115,12 @@ report available with a controlled limitation. `watchdog ui --enable-previews`
 independently opts into the existing bounded one-token
 in-memory preview behavior. No option installs a scanner or model, persists a
 result, generates a command, or applies a change.
+
+Release one retains only this optional operator-managed local model path so the
+evidence envelope and synthesis can remain on the operator's machine. A future
+AWS-hosted service and remote model provider require a separate authorized
+security/privacy/operations boundary; no remote provider or hosted listener is
+implemented by this release.
 
 Configuration is read from environment variables prefixed with `WATCHDOG_`.
 Useful settings include:

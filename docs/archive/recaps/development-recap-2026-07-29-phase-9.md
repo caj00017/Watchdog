@@ -11,6 +11,17 @@
 **Phase 9 implementation commit:**
 `5c8be6cb732ef46bb43b62675b8d4276eba91723`
 
+**Operator-review fixes:**
+
+- `7dfc26f9b3a99219a7934d5481aa1a4b29fad781` — admit only the fixed guided
+  top-level Firefox navigation tuple;
+- `366503ecf549b807a487a3cd9e5e05b3006ecc32` — make cancellation status final
+  and honest about disconnected cleanup;
+- `dc6e4785648482af34d75a7fa9093fdcf50595a9` — group repeated text and improve
+  desktop result layout; and
+- `a6f0f12cacafe96bd248aa277515727ba36ffffc` — summarize opaque evidence
+  identities while retaining the complete canonical list.
+
 ## Completed boundary
 
 Implemented the separately authorized local-first guided experience without
@@ -36,8 +47,10 @@ The completed boundary adds:
   cleanup;
 - separately selected guided HTML/CSS/JavaScript with two-field first run,
   collapsed advanced controls, readiness guidance, non-streaming progress,
-  cancellation, structured text-only JSON projection, visually separate model
-  inference, raw canonical output, and separate no-apply remediation review; and
+  cancellation, counted duplicate grouping, wider independent result rows,
+  explained evidence-type summaries with a complete collapsed identifier list,
+  structured text-only JSON projection, visually separate model inference, raw
+  canonical output, and separate no-apply remediation review; and
 - guided scanner admission before body parsing or workflow activity while
   preserving all legacy scanner-failure semantics.
 
@@ -52,11 +65,12 @@ asset, command, write, apply, new dependency, or new outbound destination.
 - `ruff check .`: pass
 - strict `mypy`: pass across 177 source/test files
 - `python -m compileall`: pass
-- deterministic pytest: 361 passed, 1 opt-in live scanner test skipped
+- deterministic pytest after operator-review fixes: 362 passed, 1 opt-in live
+  scanner test skipped
 - Docker Compose parse: pass
 - public OpenAPI regression: exactly `/health` and
   `/api/v1/advisories/{identifier}`
-- guided checked-in asset total: 22,389 bytes, inside the 256 KiB limit
+- guided checked-in asset total: 26,159 bytes, inside the 256 KiB limit
 - standalone image build: pass
 - image: `sha256:1f9334892518e47df0611d1668e63c3e1d63a60b2803fbde5d7f3090f117d859`,
   79,631,529 bytes
@@ -76,6 +90,14 @@ asset, command, write, apply, new dependency, or new outbound destination.
   retained network mode `none` and mounts `[]`, and the disposable container was
   removed
 
+The image and installed-wheel checks above describe the initial implementation
+commit. The four operator-review fixes changed only guided security/projection
+code, tests, and documentation. Current checked-in guided assets total 26,159
+bytes and pass the full deterministic/package-selection gates, but the
+environment image was not rebuilt after those revisions. Release hardening must
+build its candidate from the reviewed closeout commit and must not reuse the
+initial Phase 9 image as a release artifact.
+
 The live OSV scanner contract remains opt-in because it requires outbound OSV
 network access. Its skipped state is an explicit coverage limitation and is not
 interpreted as a negative finding. Browser opener behavior was deterministically
@@ -85,13 +107,35 @@ it has no desktop session.
 Two bounded headless Firefox visual-check attempts used isolated profiles, a
 forced software-rendering attempt, and a 20-second timeout. The sandboxed browser
 failed during graphics initialization and produced no screenshot. Only the
-headless processes started by this verification were terminated; the existing
-user browser was left untouched, and temporary scanner/profile artifacts were
-removed. The five-minute first-time desktop visual/usability sign-off remains an
-explicit operator coverage limitation. This is not interpreted as a UI failure:
-the real guided server/readiness and disabled-scanner paths ran, HTTP controls
-passed, SIGINT cleanup completed without traceback after the discovered launcher
-fix, and responsive/accessibility/text-sink behavior has deterministic coverage.
+headless processes started by verification were terminated; the existing user
+browser was left untouched, and temporary scanner/profile artifacts were
+removed.
+
+The user subsequently performed the desktop Firefox review with the native
+launcher module and a temporary scanner copied from the already verified Phase
+9 image. The stale development `.venv` had neither pip nor the newly generated
+console script, so this session used `python -m watchdog.launcher`; installed-
+wheel `watchdog` invocation remains separately verified above. The operator
+confirmed the initial visual design and capability states, exercised Cancel,
+and completed a live summary/JSON investigation of `GO-2021-0053` against
+`https://github.com/google/osv-scanner`. The report resolved `main` to exact
+commit `b159db4b508431e4b3ca752887db97e47bda462e`, retained `incomplete`, showed
+scanner 2.4.0 completion, five controlled coordinate findings, evidence,
+coverage gaps, limitations, and raw canonical access.
+
+The review exposed the four issues listed with the review-fix commits above.
+After the navigation fix, the operator reached and used the page. After the
+layout/deduplication fix, the operator reported that the result presentation was
+great. The evidence wall then prompted the final controlled type/count summary
+and collapsed full-ID disclosure. The user accepted the resulting state as the
+Phase 9 stopping point and asked for complete closeout documentation.
+
+The final evidence-summary revision passed the full deterministic suite and
+static hostile-text/browser-boundary checks, but no new screenshot after that
+last revision was reported before close. The remediation-candidate action,
+keyboard-only traversal, and a narrow responsive viewport were also not
+explicitly reported as manually exercised. They retain automated/static
+coverage; this recap does not claim unreported manual observations.
 
 ## Permanent deferrals
 
@@ -102,3 +146,13 @@ reachability, exposure, compatibility/availability claims, new dependencies or
 destinations, release governance, locking, CI, release-candidate production,
 and publication remain outside Phase 9. Release hardening resumes at item 2 of
 `~/TODO.txt` under a separate work order.
+
+For release one, model synthesis remains optional and local through the existing
+operator-managed literal-loopback OpenAI-compatible adapter; Watchdog does not
+install a model or model server. The user recorded a version-two direction of an
+AWS-hosted service using a candidate DeepSeek V3 API provider with rate limits.
+That is deferred planning context, not implementation authority. It requires a
+new security/privacy/operations work order covering remote evidence transfer,
+credentials, authentication and authorization, tenant isolation, provider data
+handling and retention, encryption, rate/abuse/cost controls, persistence and
+logging, availability/fallback, monitoring, and incident response.

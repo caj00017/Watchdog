@@ -66,7 +66,8 @@ describe.
   usability boundary against immutable Phase 8 commit `87ea89a`.
 - [Phase 9 formal implementation plan](plans/phase-9-implementation-plan.md)
   records its completed sequential gates, fixed interface choices, regression
-  matrix, and mandatory escalation boundary.
+  matrix, operator desktop review, review-driven fixes, retained manual coverage,
+  and mandatory escalation boundary.
 
 Supporting documents should agree with the canonical record. If they do not,
 inspect the implementation and tests, correct the canonical record first, and
@@ -80,6 +81,9 @@ then reconcile the supporting document.
 
 The current archived verification snapshot is
 [`development-recap-2026-07-29-phase-9.md`](archive/recaps/development-recap-2026-07-29-phase-9.md).
+It includes the desktop Firefox review, live guided investigation, four
+post-implementation usability/security fixes through `a6f0f12`, final 362-test
+verification, and the separately deferred release-two hosting direction.
 
 Archived files preserve historical context. They are not current instructions or
 authoritative descriptions of the codebase.

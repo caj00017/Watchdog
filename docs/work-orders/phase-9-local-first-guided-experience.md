@@ -1,8 +1,8 @@
 # Phase 9 Work Order — Local-First Guided Experience
 
-**Status:** Implementation complete; deterministic and environment-capable gates
-passed July 29, 2026; desktop usability sign-off remains an explicit manual
-coverage limitation
+**Status:** Implementation and exercised desktop operator review complete July
+29, 2026; deterministic/environment-capable gates passed and unexercised manual
+checks remain explicitly recorded
 
 **Prepared:** July 29, 2026
 
@@ -19,11 +19,16 @@ baseline above.
 
 **Implementation commit:** `5c8be6cb732ef46bb43b62675b8d4276eba91723`
 
+**Operator-review fixes:** `7dfc26f9b3a99219a7934d5481aa1a4b29fad781`,
+`366503ecf549b807a487a3cd9e5e05b3006ecc32`,
+`dc6e4785648482af34d75a7fa9093fdcf50595a9`, and
+`a6f0f12cacafe96bd248aa277515727ba36ffffc`
+
 **Completion finding:** All staged implementation packages and automated or
 environment-capable acceptance gates passed. Exact deterministic,
 installed-wheel, container, scanner, route, asset, no-network/no-mount,
-signal-cleanup, retained manual/live coverage limitations, and permanent
-deferral results are recorded in
+signal-cleanup, operator-review findings, retained manual/live coverage
+limitations, and permanent deferral results are recorded in
 `../archive/recaps/development-recap-2026-07-29-phase-9.md`.
 
 ## Objective
@@ -97,8 +102,11 @@ JSON/Markdown artifact format.
 The default summary/JSON result is rendered as text-only sections for status,
 exact snapshot, dependency findings, evidence, model synthesis, coverage gaps,
 limitations, and validation actions. Deterministic facts and model inference
-must be visibly distinct. The unchanged raw canonical output remains available
-in a collapsed advanced result area.
+must be visibly distinct. Identical projection text may be grouped only with an
+explicit repeat count. Evidence identity types and counts may be summarized for
+readability only when every identifier remains available in a collapsed
+text-only disclosure. The unchanged raw canonical output remains available in a
+collapsed advanced result area.
 
 Remediation becomes available only after an investigation completes. Its
 separate action reuses transient in-page form values, starts an independent
@@ -137,9 +145,12 @@ partial coverage, conflicts, assumptions, limitations, or model uncertainty.
 
 - Binding, startup failure, signal handling, cancellation, and shutdown must
   leave no running server or workflow worker.
-- Existing exact-Host, same-origin, Fetch Metadata, local-request-header,
-  no-store, no-CORS, no-cookie, literal-loopback, bounded-body, and fully
-  buffered response controls apply to all guided routes.
+- Existing exact-Host, origin, Fetch Metadata, local-request-header, no-store,
+  no-CORS, no-cookie, literal-loopback, bounded-body, and fully buffered
+  response controls apply. The guided root document alone may additionally
+  accept an exact Host, absent Origin, empty-query `GET /` carrying the browser-
+  standard `Sec-Fetch-Site: none`, `navigate`, `document` tuple. Legacy mode,
+  assets, readiness, and workflow routes retain their existing admission.
 - Readiness probes are bounded and never touch a repository or network.
 - An explicitly configured but failed or invalid model run must not suppress a
   deterministic report; it produces only the existing controlled limitation.
@@ -176,6 +187,36 @@ partial coverage, conflicts, assumptions, limitations, or model uncertainty.
     readiness, submit the two required values, distinguish facts from AI, and
     locate limitations within five minutes without environment-variable docs.
 
+## Operator desktop review
+
+The user exercised the guided application in desktop Firefox on July 29, 2026.
+The reviewed path covered ready/off/enabled capability labels, the two-field
+form, request cancellation, a live summary/JSON investigation of
+`GO-2021-0053` against `https://github.com/google/osv-scanner`, the exact
+resolved snapshot, incomplete status, deterministic dependency results,
+coverage/limitations, raw canonical disclosure, and wide-result readability.
+
+That review found four defects or usability gaps, all fixed in the separately
+committed hashes above:
+
+1. direct Firefox navigation was rejected because `Sec-Fetch-Site: none` was
+   not narrowly admitted for the guided root;
+2. cancellation wording implied a later cleanup-status update that a
+   disconnected browser cannot receive;
+3. repeated projection text and two-column card alignment caused unnecessary
+   scrolling; and
+4. machine-facing evidence identities appeared as an unexplained wall of text.
+
+The final projection keeps raw canonical bytes unchanged, groups identical text
+with counts, keeps substantive result sections on independent rows, summarizes
+evidence identity types/counts, and retains every identifier behind a collapsed
+disclosure. The user accepted this as the Phase 9 stopping point. A post-change
+screenshot was not reported for the final evidence-summary revision, and the
+remediation-review action, keyboard-only traversal, and narrow responsive
+viewport were not explicitly reported as manually exercised. Automated/static
+coverage remains green for those controls; this record does not convert those
+unreported manual checks into claimed observations.
+
 ## Mandatory pause conditions
 
 Pause for a separate explicit boundary review before adding hosted or non-
@@ -191,5 +232,11 @@ new dependency, a new destination, or any Phase 1–8 identity/default change.
 
 Release governance, dependency locking, CI, release-candidate production, and
 v0.1.0 publication remain in the separate release-hardening work order tracked
-from item 2 of `~/TODO.txt`. Hosted Watchdog remains an independent later product
-decision.
+from item 2 of `~/TODO.txt`. Release one retains only the existing optional
+operator-managed literal-loopback model boundary so analyzed data can remain
+local. The user's version-two direction—an AWS-hosted service with a candidate
+DeepSeek V3 API synthesis provider and rate limiting—is planning context only.
+It grants no implementation authority and requires a separate work order for
+remote egress, credentials, authentication/authorization, tenant isolation,
+provider privacy/retention, encryption, abuse/rate/cost controls, persistence,
+logging, availability, and incident response.

@@ -1,7 +1,8 @@
 # Phase 9 Formal Implementation Plan — Local-First Guided Experience
 
-**Status:** Implementation complete; automated and environment-capable gates
-passed; desktop usability sign-off remains manual
+**Status:** Implementation and exercised desktop operator review complete;
+automated/environment-capable gates passed and unreported manual checks are
+retained explicitly
 
 **Authorized:** July 29, 2026
 
@@ -124,19 +125,27 @@ and all work-order pause conditions remain deferred even after completion.
 
 ## Completion result
 
-All nine gates completed on July 29, 2026. The full deterministic suite passes
-361 tests with the separately enabled live OSV scanner network contract skipped
-by default. Ruff format/lint, strict mypy, compileall, Compose, public routes,
-guided asset limits, installed-wheel command invocation, legacy command-byte
-compatibility, package assets, standalone image build, embedded scanner 2.4.0,
-public/guided no-network/no-mount health, controlled readiness, and SIGTERM
-cleanup all pass. Exact environment-dependent evidence is preserved in
+All nine gates completed on July 29, 2026. The initial implementation passed
+Ruff format/lint, strict mypy, compileall, Compose, public routes, installed-
+wheel command/asset checks, legacy command-byte compatibility, standalone image
+build, embedded scanner 2.4.0, public/guided no-network/no-mount health,
+controlled readiness, and signal cleanup. After operator-review fixes, the full
+deterministic suite passes 362 tests with the separately enabled live OSV
+scanner network contract skipped by default; current guided assets pass their
+size and package-selection gates. The environment image was not rebuilt after
+the presentation-only review revisions, so release hardening must build its
+candidate from the reviewed closeout commit. Exact environment-dependent
+evidence is preserved in
 `../archive/recaps/development-recap-2026-07-29-phase-9.md`.
 
-The local environment's sandboxed Firefox failed during graphics initialization
-before producing a screenshot, even with an isolated profile, software
-rendering, and a bounded timeout. The five-minute first-time desktop visual and
-usability sign-off therefore remains an explicit operator acceptance item. This
-is a coverage limitation, not evidence of a UI failure; live server/readiness,
-responsive markup, keyboard semantics, cancellation, and text-sink behavior are
-covered separately.
+The local environment's sandboxed headless Firefox failed during graphics
+initialization before producing a screenshot, but the user subsequently
+completed a real desktop Firefox review. It exercised startup/readiness,
+cancellation, a live two-field investigation, canonical disclosure, visible
+uncertainty, and result readability, and drove four separately committed fixes
+recorded in the completion recap. The final evidence-summary revision did not
+receive a separately reported post-change screenshot; remediation review,
+keyboard-only traversal, and a narrow responsive viewport were not explicitly
+reported as manual observations. Deterministic/static coverage for those
+controls remains green, and the omissions remain explicit rather than inferred
+as passed.

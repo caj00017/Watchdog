@@ -220,6 +220,13 @@ advanced region. Remediation is a later, independent synchronous POST with fixed
 no-apply wording. The page has no download, clipboard, upload, filesystem,
 storage, history, external asset, or apply capability.
 
+Release-one synthesis remains disabled by default and uses only the existing
+operator-managed literal-loopback adapter when explicitly enabled. The recorded
+version-two direction of AWS hosting and a candidate DeepSeek V3 API provider
+does not change this architecture and adds no current destination, credential,
+listener, persistence, or rate-limit state. It requires a separately authorized
+hosted architecture and security/privacy/operations work order.
+
 ## Advisory architecture
 
 The API application owns an `httpx.AsyncClient` for its lifespan. A
