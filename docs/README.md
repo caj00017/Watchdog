@@ -83,6 +83,13 @@ describe.
   records the completed local gates, the reproducibility correction, and the
   publication controls that remain external.
 
+## Proposed Release 1 terminal experience
+
+- [Terminal UI and anonymous SSH trial work order](work-orders/release-1-tui-and-ssh-trial.md)
+  records the draft local TUI, unchanged side-by-side web UI, replacement-RC,
+  and independently gated anonymous SSH trial boundary. It grants no
+  implementation or deployment authority until its staged approvals occur.
+
 Supporting documents should agree with the canonical record. If they do not,
 inspect the implementation and tests, correct the canonical record first, and
 then reconcile the supporting document.
@@ -97,7 +104,7 @@ The current archived verification snapshot is
 [`development-recap-2026-08-02-release-1-hardening.md`](archive/recaps/development-recap-2026-08-02-release-1-hardening.md).
 It includes the completed governance, locking, CI, package, reproducibility,
 and container gates and keeps publication and the proposed TUI separately
-authorized.
+scoped.
 
 Archived files preserve historical context. They are not current instructions or
 authoritative descriptions of the codebase.

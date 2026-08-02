@@ -71,6 +71,14 @@ Trusted Publishing workflow. It changes no Phase 1–9 runtime behavior,
 destination, default, canonical artifact, or analytical claim. `v0.1.0` remains
 unpublished until the final external release gate is approved.
 
+The proposed Release 1 direction is now terminal-first: bare `watchdog` would
+launch a local TUI, while the existing `watchdog ui` web experience would remain
+unchanged for side-by-side comparison. A separately gated anonymous trial is
+targeted at `ssh watchdog.nexura.fyi`. This is draft planning only: no TUI,
+dependency, launcher change, SSH listener, or hosted deployment exists yet, and
+publication of the validated pre-TUI candidate is paused pending review and a
+replacement candidate.
+
 ## Requirements
 
 - Python 3.12, 3.13, or 3.14
@@ -651,6 +659,11 @@ The completed
 and [release process](docs/release/release-process.md) define dependency, CI,
 artifact, container, governance, and publication controls without changing the
 product runtime boundary.
+The draft
+[Release 1 TUI and SSH trial work order](docs/work-orders/release-1-tui-and-ssh-trial.md)
+defines the proposed staged local terminal, unchanged-web, anonymous SSH, and
+replacement-candidate boundary. It is not implementation or deployment
+authority.
 
 ## License and security
 

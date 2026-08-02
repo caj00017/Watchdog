@@ -271,3 +271,23 @@ publication, changing remote repository settings, or yanking a release remains
 a final external human action. A TUI, hosted operation, new runtime dependency
 or destination, and every existing Phase 1–9 pause condition remain outside
 this boundary and require separate review.
+
+## Draft Release 1 terminal experience boundary — not authorized
+
+`docs/work-orders/release-1-tui-and-ssh-trial.md` records the user's proposed
+Release 1 direction: an interactive local TUI launched by bare `watchdog`, the
+existing web UI retained unchanged for side-by-side comparison, and a separately
+gated anonymous trial at `ssh watchdog.nexura.fyi`.
+
+The document is draft planning only. It does not authorize implementation,
+dependency or lock changes, launcher/default changes, public/non-loopback
+listening, SSH code, anonymous access, DNS/firewall changes, infrastructure,
+host keys, telemetry, deployment, tagging, or publication. Stage A local TUI,
+Stage B loopback SSH transport, and Stage C public deployment each require the
+explicit approvals specified by the work order.
+
+The validated `v0.1.0-rc1` remains an immutable pre-TUI baseline, but its
+publication is paused if this direction proceeds. Any implemented TUI requires
+a replacement candidate with regenerated locks, artifacts, checksums, image
+identity, tests, and release record. Until Stage A is explicitly authorized and
+implemented, current launcher and web behavior remain the executable truth.

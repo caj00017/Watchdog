@@ -4,6 +4,13 @@ This process implements the Release 1 hardening work order. It applies to the
 trusted Watchdog repository only and must never be used to build or install an
 analyzed repository.
 
+Publication pause: the validated `v0.1.0-rc1` is the pre-TUI baseline. The
+terminal-first direction in `../work-orders/release-1-tui-and-ssh-trial.md` is
+draft and unimplemented, but if Stage A is authorized it requires regenerated
+locks, artifacts, checksums, image identity, and a replacement validation
+record. Do not use the current candidate for final publication while that
+decision is active.
+
 ## 1. Prepare
 
 1. Start from a clean `main` that matches the intended reviewed commit.
