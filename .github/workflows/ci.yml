@@ -1,0 +1,133 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+jobs:
+  deterministic:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13", "3.14"]
+    steps:
+      - name: Check out reviewed source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: requirements/dev.lock
+      - name: Install hash-locked development environment
+        run: python -m pip install --require-hashes -r requirements/dev.lock
+      - name: Install Watchdog without dependency resolution
+        run: python -m pip install --no-deps --no-build-isolation -e .
+      - name: Check formatting
+        run: ruff format --check .
+      - name: Lint
+        run: ruff check .
+      - name: Type check
+        run: mypy
+      - name: Compile trusted project sources
+        run: python -m compileall -q apps watchdog tests scripts
+      - name: Run deterministic tests
+        run: pytest
+      - name: Verify release contract
+        run: python scripts/verify_release.py --expected-version 0.1.0
+
+  package:
+    name: Package contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out reviewed source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Set up Python 3.12
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements/release.lock
+      - name: Install hash-locked release environment
+        run: python -m pip install --require-hashes -r requirements/release.lock
+      - name: Build source and wheel artifacts once
+        run: |
+          SOURCE_DATE_EPOCH=1785628800 \
+            python -m build --no-isolation
+          python scripts/normalize_sdist.py \
+            --epoch 1785628800 \
+            dist/nexura_watchdog-0.1.0.tar.gz
+      - name: Check package metadata
+        run: python -m twine check --strict dist/*
+      - name: Inspect package contents and release metadata
+        run: python scripts/verify_release.py --expected-version 0.1.0 --dist-dir dist
+      - name: Install and smoke-test the wheel
+        run: |
+          python -m venv /tmp/watchdog-wheel
+          /tmp/watchdog-wheel/bin/python -m pip install --require-hashes -r requirements/runtime.lock
+          /tmp/watchdog-wheel/bin/python -m pip install --no-deps dist/nexura_watchdog-0.1.0-py3-none-any.whl
+          /tmp/watchdog-wheel/bin/watchdog --help
+      - name: Install and smoke-test the source distribution
+        run: |
+          python -m venv /tmp/watchdog-sdist
+          /tmp/watchdog-sdist/bin/python -m pip install --require-hashes -r requirements/release.lock
+          /tmp/watchdog-sdist/bin/python -m pip install --no-deps --no-build-isolation dist/nexura_watchdog-0.1.0.tar.gz
+          /tmp/watchdog-sdist/bin/watchdog --help
+
+  container:
+    name: Standalone container
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out reviewed source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Validate Compose
+        run: docker compose config --quiet
+      - name: Build pinned candidate image
+        run: |
+          docker build \
+            --build-arg WATCHDOG_BUILD_EPOCH=1785628800 \
+            --build-arg WATCHDOG_REVISION="${GITHUB_SHA}" \
+            --tag nexura-watchdog:ci .
+      - name: Verify embedded scanner
+        run: |
+          scanner_version="$(docker run --rm --entrypoint /usr/local/bin/osv-scanner nexura-watchdog:ci --version)"
+          printf '%s\n' "$scanner_version"
+          printf '%s\n' "$scanner_version" | grep --fixed-strings --line-regexp 'osv-scanner version: 2.4.0'
+      - name: Verify no-mount health
+        run: |
+          container_id="$(docker run --detach --publish 127.0.0.1:18000:8000 nexura-watchdog:ci)"
+          trap 'docker rm --force "$container_id" >/dev/null' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error http://127.0.0.1:18000/health > /tmp/watchdog-health.json; then
+              break
+            fi
+            sleep 1
+          done
+          grep --fixed-strings --line-regexp '{"status":"ok","version":"0.1.0"}' /tmp/watchdog-health.json
+          test "$(docker inspect --format '{{len .Mounts}}' "$container_id")" = "0"

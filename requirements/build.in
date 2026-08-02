@@ -1,0 +1,4 @@
+# Trusted build backend requirements mirrored from pyproject.toml.
+# Keep these exact pins synchronized with [build-system].requires.
+setuptools==80.9.0
+wheel==0.45.1

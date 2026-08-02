@@ -435,6 +435,29 @@ authorization, tenant isolation, encryption, data residency, persistence,
 rate/abuse/cost control, availability/fallback, monitoring, deletion, and
 incident response.
 
+## Release 1 supply-chain threat boundary
+
+Release tooling operates only on the trusted Watchdog checkout. It never
+receives or installs an analyzed repository, and its GitHub/PyPI destinations do
+not become application runtime destinations.
+
+| Threat | Release control | Failure behavior or residual risk |
+| --- | --- | --- |
+| Mutable or compromised CI action changes behavior | Every external action is pinned to a full reviewed commit SHA; updates require a code review and release-contract test | The pinned upstream action and GitHub runner remain trusted third-party code |
+| Pull-request code exfiltrates a secret or gains release authority | PR CI uses ephemeral hosted runners, read-only contents, no secrets/OIDC, no `pull_request_target`, and cannot enter the protected publication environment | Untrusted PR code still executes on GitHub's isolated runner and may consume runner resources |
+| Resolver drift or dependency substitution changes the candidate | Python 3.12-generated exact transitive pins, SHA-256 hashes, one public index, `--require-hashes`, reviewed lock diffs, and no project dependency resolution after lock install | A malicious artifact matching an already reviewed hash, index compromise during lock refresh, or a vulnerable pinned dependency still requires human review and refresh |
+| Build backend or base image drifts | Exact setuptools/wheel pins, disabled build isolation, a fixed source epoch, stdlib sdist metadata normalization, and manifest-digest pins for both Python and OSV-Scanner images | Build tools, Docker, kernel, architecture, and compression implementations remain trusted; reproducibility is measured for each candidate |
+| Archive traversal, links, missing policy/assets, or metadata mismatch reaches users | Bounded stdlib inspection rejects absolute/traversal member names, links/devices, member overages, unexpected filenames, missing assets/license/policies, and version/license metadata disagreement | The verifier is trusted project code and receives regression tests; it does not prove semantic correctness of every packaged byte |
+| A tag publishes different or rebuilt bytes | Stable tag must exactly equal package version; gate precedes one build; publish downloads the retained artifact and does not rebuild; checksums identify the candidate | GitHub artifact service and PyPI remain trusted; remote environment and tag protections must be configured and manually verified |
+| Long-lived publishing credential leaks | PyPI Trusted Publishing uses a job-scoped OIDC token in a protected `pypi` environment and stores no API token | Compromise of GitHub/PyPI identity or an incorrectly configured trusted publisher remains an external platform risk |
+| Repository policy claims remote controls that are not active | Governance and release records treat branch/tag protection, private reporting, environment approval, and PyPI publisher configuration as explicit manual go/no-go checks | Checked-in policy cannot enforce or observe remote settings by itself |
+
+Release artifacts and CI logs contain only trusted Watchdog source, dependency
+metadata, fixed test output, and candidate checksums. They must never contain
+credentials, analyzed repository content, or unredacted evidence. A lock,
+network, package, container, or publication failure blocks the corresponding
+gate and is not converted to a passing or negative security result.
+
 ## Security change process
 
 Any new outbound destination, input type, source adapter, persistence mechanism,
@@ -471,3 +494,10 @@ scanner-readiness, browser-open, guided-admission, text-rendering, cancellation,
 and legacy-regression controls. Hosted operation, authentication, installation,
 persistence, new destinations, and repository writes require a new reviewed
 boundary.
+
+`../work-orders/release-1-hardening.md`,
+`../plans/release-1-hardening-implementation-plan.md`, and
+`../release/release-process.md` define the trusted-source CI, lock, package,
+container, artifact-retention, and human-gated publication controls. They grant
+no authority to weaken product trust boundaries or publish without the final
+go/no-go.

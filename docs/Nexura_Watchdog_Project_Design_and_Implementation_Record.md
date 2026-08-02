@@ -2,9 +2,9 @@
 
 ## Project Design and Implementation Record
 
-**Document version:** 9.1
+**Document version:** 10.0
 
-**Last updated:** July 29, 2026
+**Last updated:** August 2, 2026
 
 **Owner:** Christopher Jones / Nexura
 
@@ -12,7 +12,7 @@
 
 **Code version:** 0.1.0
 
-**Current lifecycle state:** Phases 0–9 complete
+**Current lifecycle state:** Phases 0–9 and Release 1 candidate hardening complete; publication pending
 
 **Primary deployment direction:** Local-first, open source
 
@@ -169,16 +169,21 @@ checks are recorded in the Phase 9 recap.
 | Readiness | Implemented locally | Fixed safe configuration/scanner doctor and controlled guided capability projection |
 | Remediation assistant | Implemented locally, disabled by default | Evidence-linked candidates, controlled actions, optional single-token no-write previews, canonical plan, CLI, and doubly gated local route |
 | Persistence and jobs | Not implemented | No database, queue, or retained investigation state |
-| Container workflow | Verified | Multi-stage image builds; embedded scanner version and no-mount health pass |
-| Automated quality | Green | 362 deterministic tests pass after operator-review fixes; bounded live scanner contract remains opt-in |
-| Version-control state | Phase 9 reviewed code committed through `a6f0f12`; documentation closed at `d665a5b` | Initial implementation `5c8be6c`, Phase 8 baseline `87ea89a`, and planning `81763ff` remain separate; Phase 1–8 identities are preserved |
+| Release governance | Candidate complete | Apache-2.0, contribution/governance/security policy, changelog, CODEOWNERS, release process, and final human go/no-go are explicit |
+| Dependency and CI controls | Candidate complete | Python 3.12-generated hash locks, immutable action pins, read-only PR CI, package/container jobs, and isolated OIDC publication |
+| Package candidate | Verified locally | Strict sdist/wheel metadata and bounded-content checks plus clean wheel/sdist installs pass; exact candidate checksums are retained in the Release 1 validation record |
+| Container workflow | Verified locally | Digest-pinned multi-stage build; exact OSV-Scanner 2.4.0; 77,774,902-byte no-mount health image passed before final candidate recording |
+| Automated quality | Green | 374 deterministic tests pass on Python 3.12, 3.13, and 3.14; one bounded live scanner contract remains opt-in |
+| Version-control state | Release hardening authorized at `12511ae` against Phase 9 closeout `97f2a05` | The exact candidate commit, artifacts, checksums, and environment limitations are retained in `docs/release/v0.1.0-rc1-validation.md` |
 
 ## 2.3 Immediate milestone
 
-The enumerated Phase 0–9 product roadmap is complete. The immediate next
-milestone is release hardening beginning at item 2 of `~/TODO.txt`: a separate
-work order, governance, locking, CI, release-candidate validation, and local-first
-v0.1.0 publication. Do not infer authority for persistence,
+The enumerated Phase 0–9 product roadmap and Release 1 candidate hardening are
+complete. The immediate release milestone is the external human go/no-go:
+verify protected GitHub/PyPI settings, create and push the exact `v0.1.0` tag,
+approve PyPI Trusted Publishing, verify published checksums, and create the
+GitHub release. Those external actions have not been performed. Do not infer
+authority for persistence,
 authentication, new destinations or dependencies, private inputs, production or
 remote interfaces, classification, reachability/exposure, compatibility or
 availability analysis, registry queries, commands, multi-file/source patches,
@@ -257,7 +262,7 @@ or exposure conclusions.
 
 ## 4.1 Foundation
 
-- Python 3.12 or newer through a setuptools `pyproject.toml` package.
+- Python 3.12, 3.13, and 3.14 through a setuptools `pyproject.toml` package.
 - FastAPI, Pydantic v2, pydantic-settings, HTTPX, and Uvicorn.
 - pytest with asyncio support, Ruff formatting/linting, and strict mypy.
 - `WATCHDOG_`-prefixed validated settings.
@@ -268,9 +273,14 @@ or exposure conclusions.
   reporting, workflow, interface, and test package boundaries, with placeholders
   only for later unapproved phases.
 - Repository-wide security rules in `AGENTS.md`.
+- Apache-2.0 licensing, contribution/governance/security policies, exact
+  hash-checked dependency locks, least-privilege SHA-pinned CI, bounded release
+  artifact verification, and a human-gated PyPI Trusted Publishing workflow.
 
-There is no dependency lockfile, release automation, CI workflow, license,
-database migration layer, or published package workflow yet.
+There is no database migration layer, published package, or production-hosted
+deployment. Remote branch/tag protection, private vulnerability reporting,
+protected-environment review, and PyPI Trusted Publisher configuration remain
+manual final-release checks and are not inferred from checked-in policy.
 
 ## 4.2 Advisory intelligence
 
@@ -768,8 +778,8 @@ Phase 9 environment-dependent container acceptance also passes:
   guided assets totaled 22,389 bytes. The operator-reviewed checked-in guided
   assets now total 26,159 bytes, remain inside the 256 KiB ceiling, and pass the
   package-data/asset-selection tests. The environment image was not rebuilt
-  after those presentation-only revisions; release hardening must rebuild the
-  candidate from the reviewed commit rather than reuse the initial image tag.
+  after those presentation-only revisions. Release hardening later rebuilt from
+  the reviewed Phase 9 closeout rather than reusing that initial mutable tag.
 - `watchdog doctor` reports ready and the embedded scanner reports exactly
   OSV-Scanner 2.4.0.
 - Public and guided applications returned their expected health documents with
@@ -777,6 +787,23 @@ Phase 9 environment-dependent container acceptance also passes:
   scanner/AI/remediation/preview states with no-store.
 - SIGTERM produced complete Uvicorn application shutdown and exit 0 for both
   public and guided processes; the disposable containers were removed.
+
+Release 1 hardening verification on August 2, 2026 additionally established:
+
+- exact hash-checked development environments install and all 374 deterministic
+  tests, Ruff, and strict mypy pass on Python 3.12, 3.13, and 3.14;
+- one bounded live OSV scanner contract remains intentionally opt-in and was not
+  converted from skipped to passed;
+- the source distribution and wheel pass strict metadata, bounded member/path,
+  link/type, required asset/license/policy, version, and clean-install checks;
+- the release verifier enforces direct-lock coverage, complete hashes, exact
+  tag/version agreement, full action SHAs, CI/publish permission separation,
+  and immutable scanner/container inputs;
+- the digest-pinned multi-stage image rebuilt to 77,774,902 bytes, embedded
+  exact OSV-Scanner 2.4.0, started without mounts, and returned the exact
+  `0.1.0` health document; and
+- no application source, route, schema, canonical identity, prompt, setting
+  default, scanner behavior, or runtime destination changed.
 
 Phase 8 environment-dependent container acceptance also passes:
 
@@ -900,15 +927,15 @@ not a stable release identifier.
 
 ## 10.3 Project-operational gaps
 
-- The completed Phase 0–8 implementation and documentation are committed at
-  immutable baseline `87ea89a5313c3dcb9cdc349a27691f91d83e623d`; Phase 9
-  planning is separately committed at `81763ffd84aef418c49793e9059b3bb16492e93c`,
-  initial implementation at `5c8be6c`, and operator-reviewed code through
-  `a6f0f12`.
+- The completed Phase 9 closeout is immutable at
+  `97f2a057c23fc23fb4ef678703691e5aa54bee76`; Release 1 hardening authority is
+  separately committed at `12511ae` and preserves all Phase 1–9 identities.
 - The complete `docs/` tree is tracked so boundary and status changes can be
   reviewed and committed with the implementation they describe.
-- No dependency lock, CI, license, changelog/release process, or vulnerability
-  disclosure policy exists.
+- No stable tag, PyPI package, or GitHub release has been published. Remote
+  branch/tag protection, private vulnerability reporting, the protected `pypi`
+  environment, and PyPI Trusted Publisher configuration require final human
+  verification.
 - The development Compose service is not a hardened production deployment.
 
 ---
@@ -927,7 +954,7 @@ not a stable release identifier.
 | 7. Evidence-safe reports and local interfaces | Complete | Canonical reports, bounded workflow, direct local CLI, disabled loopback UI/API |
 | 8. Remediation assistant | Complete | Evidence-linked upgrade candidates, human validation, bounded no-write previews |
 | 9. Local-first guided experience | Complete | Installed launcher, scanner readiness, and progressive literal-loopback UI |
-| Release hardening | Next; separate work order required | Governance, locking, CI, release candidate, and v0.1.0 publication |
+| Release hardening | Candidate complete; publication pending | Governance, locking, CI, package/container candidate, and human-gated v0.1.0 publication |
 
 ---
 
@@ -1352,7 +1379,8 @@ credential-free literal-loopback adapter.
 Hosted operation, authentication, credentials, private inputs, persistence,
 telemetry, jobs/history, installation, new egress or dependencies, repository
 writes/apply, commands, classification, reachability/exposure, compatibility or
-availability claims, and release publication remain separate work.
+availability claims remain separate work. Release publication remains a
+separate final human gate over the validated candidate.
 
 ## D-026 — Release one stays local; hosted model synthesis is a version-two boundary
 
@@ -1367,6 +1395,23 @@ choice are not implemented, approved, or locked. Any version-two work must begin
 with a separate authority and threat/privacy/operations review covering the
 controls enumerated in section 13.3. Phase 9 adds no remote model egress,
 credentials, authentication, persistence, hosted listener, or rate-limit state.
+
+## D-027 — Release 1 separates candidate proof from publication authority
+
+On August 2, 2026, the user authorized the complete pre-release hardening list
+against immutable Phase 9 closeout `97f2a05`. Documentation-only planning was
+committed separately at `12511ae` before implementation. The authorized boundary
+adds Apache-2.0/package governance, exact hashed trusted-project locks,
+least-privilege SHA-pinned CI, bounded package/container verification, and an
+OIDC PyPI workflow without changing application runtime behavior.
+
+A candidate is complete only when deterministic, package, install, container,
+and scanner gates pass with explicit limitations. It is not a published release.
+Remote branch/tag protection, private reporting, the protected `pypi`
+environment, Trusted Publisher registration, stable tag creation/push,
+publication approval, checksum confirmation, and GitHub release creation remain
+the release manager's final external go/no-go. The proposed TUI is also a
+separate post-hardening design decision rather than an implicit release change.
 
 ---
 
@@ -1443,7 +1488,11 @@ docs/
 │   ├── phase-6-implementation-plan.md
 │   ├── phase-7-implementation-plan.md
 │   ├── phase-8-implementation-plan.md
-│   └── phase-9-implementation-plan.md
+│   ├── phase-9-implementation-plan.md
+│   └── release-1-hardening-implementation-plan.md
+├── release/
+│   ├── release-process.md
+│   └── v0.1.0-rc1-validation.md
 ├── security/
 │   ├── evidence-policy.md
 │   └── threat-model.md
@@ -1453,7 +1502,8 @@ docs/
 │   ├── phase-6-evidence-bound-model-investigation.md
 │   ├── phase-7-reporting-and-local-interfaces.md
 │   ├── phase-8-remediation-assistant.md
-│   └── phase-9-local-first-guided-experience.md
+│   ├── phase-9-local-first-guided-experience.md
+│   └── release-1-hardening.md
 └── archive/
     ├── planning/
     │   └── nexura_watchdog_formal_plan.md
@@ -1469,7 +1519,8 @@ docs/
         ├── development-recap-2026-07-29-phase-6.md
         ├── development-recap-2026-07-29-phase-7.md
         ├── development-recap-2026-07-29-phase-8.md
-        └── development-recap-2026-07-29-phase-9.md
+        ├── development-recap-2026-07-29-phase-9.md
+        └── development-recap-2026-08-02-release-1-hardening.md
 ```
 
 The archive preserves historical context but is not current instruction. The
@@ -1479,6 +1530,22 @@ and boundary changes.
 ---
 
 # 18. Change History
+
+## Version 10.0 — August 2, 2026
+
+- Recorded Release 1 hardening authority against Phase 9 closeout `97f2a05`
+  and separate planning commit `12511ae`.
+- Added Apache-2.0 licensing, governance, contribution/security policy,
+  changelog, CODEOWNERS, and a human-gated release process.
+- Added exact hash-checked runtime/development/release locks, Python 3.12–3.14
+  CI, immutable action pins, package/archive verification, and isolated OIDC
+  PyPI publication without changing runtime dependency intent.
+- Recorded 374 deterministic tests across all supported Python versions,
+  strict package/wheel/sdist checks and clean installs, and a digest-pinned
+  no-mount container with exact OSV-Scanner 2.4.0.
+- Kept stable tag creation, remote GitHub/PyPI settings, publication, checksum
+  confirmation, and GitHub release creation as explicit final human actions;
+  kept the proposed TUI and hosted version-two direction separately scoped.
 
 ## Version 9.1 — July 29, 2026
 
@@ -1769,8 +1836,9 @@ preview finishes inside the lease; Phase 6 and report/plan work wait for verifie
 cleanup. The service, CLI, route, and UI remain disabled/local/non-persistent,
 and no repository byte is written. Affected/reachability classification,
 compatibility/availability conclusions, automatic or multi-file remediation,
-commands, production/hosted operation, broader coverage, and release hardening
-remain separate work rather than implied capabilities.
+commands, production/hosted operation, and broader coverage remain separate work
+rather than implied capabilities. Release hardening adds no remediation
+authority.
 
 Phase 9 makes those unchanged artifacts easier to use locally through one
 installed launcher, fixed scanner readiness guidance, and a progressive
@@ -1782,4 +1850,5 @@ identities are explained and summarized while remaining fully disclosable. The
 UI is synchronous, transient, non-writing, non-applying, and has no storage,
 upload, download, clipboard, command, job, history, or external asset
 capability. Release-one synthesis remains optional and literal-loopback local;
-release hardening and any AWS/remote-provider operation remain separate work.
+Release 1 candidate hardening changes no product behavior, and any AWS/remote-
+provider operation remains separate work.

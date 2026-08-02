@@ -69,6 +69,20 @@ describe.
   matrix, operator desktop review, review-driven fixes, retained manual coverage,
   and mandatory escalation boundary.
 
+## Release 1 hardening
+
+- [Release 1 hardening work order](work-orders/release-1-hardening.md) records the
+  authorized governance, locking, CI, package, container, candidate, and
+  human-gated publication boundary against Phase 9 closeout commit `97f2a05`.
+- [Release 1 hardening implementation plan](plans/release-1-hardening-implementation-plan.md)
+  records its sequential gates and immutable product-behavior constraints.
+- [Release process](release/release-process.md) defines reproducible candidate
+  construction, artifact inspection, checksums, remote-control prerequisites,
+  and the final human go/no-go.
+- [Release 1 hardening recap](archive/recaps/development-recap-2026-08-02-release-1-hardening.md)
+  records the completed local gates, the reproducibility correction, and the
+  publication controls that remain external.
+
 Supporting documents should agree with the canonical record. If they do not,
 inspect the implementation and tests, correct the canonical record first, and
 then reconcile the supporting document.
@@ -80,10 +94,10 @@ then reconcile the supporting document.
 - `archive/recaps/` contains dated implementation-session snapshots.
 
 The current archived verification snapshot is
-[`development-recap-2026-07-29-phase-9.md`](archive/recaps/development-recap-2026-07-29-phase-9.md).
-It includes the desktop Firefox review, live guided investigation, four
-post-implementation usability/security fixes through `a6f0f12`, final 362-test
-verification, and the separately deferred release-two hosting direction.
+[`development-recap-2026-08-02-release-1-hardening.md`](archive/recaps/development-recap-2026-08-02-release-1-hardening.md).
+It includes the completed governance, locking, CI, package, reproducibility,
+and container gates and keeps publication and the proposed TUI separately
+authorized.
 
 Archived files preserve historical context. They are not current instructions or
 authoritative descriptions of the codebase.

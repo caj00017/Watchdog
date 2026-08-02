@@ -64,9 +64,16 @@ launcher enables the local UI and candidate planning only for its process;
 previews remain explicit opt-in, AI remains optional and literal-loopback, and
 no repository byte is written or retained.
 
+Release 1 hardening adds Apache-2.0 licensing, governance and security-reporting
+policy, exact hash-checked dependency locks, least-privilege CI, bounded package
+inspection, a digest-pinned multi-stage container build, and a human-gated PyPI
+Trusted Publishing workflow. It changes no Phase 1–9 runtime behavior,
+destination, default, canonical artifact, or analytical claim. `v0.1.0` remains
+unpublished until the final external release gate is approved.
+
 ## Requirements
 
-- Python 3.12 or newer
+- Python 3.12, 3.13, or 3.14
 - `pip` and `venv` for native development, or Docker Compose
 - Network access to `https://api.osv.dev` when resolving live advisories
 - Network access to `https://api.github.com` and GitHub's allowlisted codeload
@@ -75,14 +82,18 @@ no repository byte is written or retained.
   Docker image embeds the pinned multi-architecture scanner binary
 - Network access to OSV for exact-coordinate scanner lookups
 
-## Install
+## Development install
 
 ```bash
 python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e '.[dev]'
+.venv/bin/python -m pip install --require-hashes -r requirements/dev.lock
+.venv/bin/python -m pip install --no-deps --no-build-isolation -e .
 ```
+
+The lock is generated from trusted Watchdog metadata in a clean Python 3.12
+environment. It is never generated from, or used to install, an analyzed
+repository. For a release artifact, install `requirements/runtime.lock` first
+and then install the reviewed wheel with `--no-deps`.
 
 Check prerequisites and start the guided local experience:
 
@@ -346,7 +357,7 @@ the exact top-level document-navigation Fetch Metadata tuple for the fixed root
 URL; assets and API calls retain same-origin admission, and API calls still
 require the fixed local-request header.
 
-## Phase 3 operator verification
+## Standalone container verification
 
 The deterministic test suite does not require a live scanner or Docker daemon.
 The following operator checks reproduce the environment-dependent Phase 3
@@ -361,8 +372,8 @@ Validate Compose and build the standalone image:
 
 ```bash
 docker compose config --quiet
-docker build --pull --tag nexura-watchdog:phase3 .
-docker image inspect nexura-watchdog:phase3 --format '{{.Id}} {{.Size}}'
+docker build --pull --tag nexura-watchdog:0.1.0-rc1 .
+docker image inspect nexura-watchdog:0.1.0-rc1 --format '{{.Id}} {{.Size}}'
 ```
 
 The build fetches the scanner from the digest-pinned multi-architecture
@@ -375,7 +386,7 @@ Verify that the embedded binary's `osv-scanner version:` line reports exactly
 ```bash
 docker run --rm \
   --entrypoint /usr/local/bin/osv-scanner \
-  nexura-watchdog:phase3 \
+  nexura-watchdog:0.1.0-rc1 \
   --version
 ```
 
@@ -385,7 +396,7 @@ Start the image without a volume mount and check its standalone health endpoint:
 docker run --detach \
   --name nexura-watchdog-phase3-health \
   --publish 127.0.0.1:18000:8000 \
-  nexura-watchdog:phase3
+  nexura-watchdog:0.1.0-rc1
 
 curl --fail --silent --show-error http://127.0.0.1:18000/health
 docker logs nexura-watchdog-phase3-health
@@ -399,7 +410,7 @@ pipeline with the same binary embedded in the image, copy that binary to a
 temporary host path and run only the bounded contract test:
 
 ```bash
-docker create --name nexura-watchdog-scanner-copy nexura-watchdog:phase3
+docker create --name nexura-watchdog-scanner-copy nexura-watchdog:0.1.0-rc1
 docker cp \
   nexura-watchdog-scanner-copy:/usr/local/bin/osv-scanner \
   /tmp/nexura-watchdog-osv-scanner-2.4.0
@@ -427,6 +438,7 @@ ruff format --check .
 ruff check .
 mypy
 pytest
+python scripts/verify_release.py --expected-version 0.1.0
 ```
 
 Apply automatic formatting with `ruff format .`.
@@ -628,3 +640,21 @@ The completed
 and [formal plan](docs/plans/phase-8-implementation-plan.md) define the current
 candidate, comparator, no-write preview, plan, CLI, and opt-in local-interface
 boundary.
+The completed
+[Phase 9 guided-experience work order](docs/work-orders/phase-9-local-first-guided-experience.md)
+and [formal plan](docs/plans/phase-9-implementation-plan.md) define the installed
+launcher, readiness, browser-open, guided-projection, and legacy-regression
+boundary.
+The completed
+[Release 1 hardening work order](docs/work-orders/release-1-hardening.md),
+[implementation plan](docs/plans/release-1-hardening-implementation-plan.md),
+and [release process](docs/release/release-process.md) define dependency, CI,
+artifact, container, governance, and publication controls without changing the
+product runtime boundary.
+
+## License and security
+
+Nexura Watchdog is licensed under the [Apache License 2.0](LICENSE).
+Vulnerabilities should be reported through the private process in
+[SECURITY.md](SECURITY.md), never through a public issue containing sensitive
+details.

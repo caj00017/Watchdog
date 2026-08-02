@@ -1,6 +1,6 @@
 # Release 1 Work Order — Local-First v0.1.0 Hardening
 
-**Status:** Authorized August 2, 2026; implementation in progress
+**Status:** Completed August 2, 2026; final publication pending human approval
 
 **Authorized baseline:** `97f2a057c23fc23fb4ef678703691e5aa54bee76`
 
@@ -162,3 +162,12 @@ This work order is complete when gates 1–9 pass against one reviewed commit an
 the resulting local candidate can be reproduced by the checked-in process. It
 does not become a published release until the final external publication gate is
 separately approved and exercised.
+
+## Completion result
+
+All nine pre-release gates completed on August 2, 2026. The final candidate
+record identifies the reviewed implementation commit, byte-reproducible package
+artifacts, container identity, checksums, verification coverage, and explicit
+limitations. The stable tag, remote release controls, PyPI publication, and
+GitHub release remain unperformed human actions under the final publication
+gate.

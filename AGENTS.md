@@ -240,3 +240,34 @@ and a candidate DeepSeek V3 API provider is planning context only. It grants no
 authority for remote egress, credentials, authentication, persistence, rate-
 limit state, or hosted operation; all require a separate work order and
 security/privacy/operations review.
+
+## Completed Release 1 hardening boundary
+
+`docs/work-orders/release-1-hardening.md` and
+`docs/plans/release-1-hardening-implementation-plan.md` define the authorized
+Release 1 pre-publication boundary against immutable Phase 9 closeout commit
+`97f2a057c23fc23fb4ef678703691e5aa54bee76`. The user explicitly authorized
+implementation on August 2, 2026, and all local candidate gates completed the
+same day. Publication remains a separate human decision.
+
+Release hardening may add only governance and security-reporting policy,
+Apache-2.0/package metadata, exact hash-checked trusted-project dependency locks,
+least-privilege CI, release verification, digest-pinned package/container
+builds, candidate records, and a separately human-gated PyPI Trusted Publishing
+workflow. It changes no Phase 1–9 runtime dependency intent, analyzed-repository
+behavior, scanner/version/network boundary, canonical artifact, interface,
+default, or analytical claim.
+
+Release automation operates only on trusted Watchdog source and must never
+receive, execute, resolve, build, or install an analyzed repository. Pull-request
+jobs receive no secrets or OIDC authority, use no `pull_request_target`, and pin
+all actions to full reviewed commit SHAs. Publication must consume the already
+validated artifacts without rebuilding, require an exact version tag and a
+protected human-approved environment, and use no long-lived credential.
+
+Do not represent checked-in governance as proof that remote GitHub/PyPI controls
+are configured. Creating or pushing `v0.1.0`, approving or performing
+publication, changing remote repository settings, or yanking a release remains
+a final external human action. A TUI, hosted operation, new runtime dependency
+or destination, and every existing Phase 1–9 pause condition remain outside
+this boundary and require separate review.

@@ -1,6 +1,6 @@
 # Release 1 Hardening Implementation Plan
 
-**Status:** Authorized August 2, 2026; implementation in progress
+**Status:** Completed August 2, 2026; publication not performed
 
 **Immutable Phase 9 baseline:**
 `97f2a057c23fc23fb4ef678703691e5aa54bee76`
@@ -48,6 +48,13 @@ policy, or package-publication workflow.
     OSV-Scanner 2.4.0, and retain explicit environment/network limitations.
 11. Reconcile README, documentation index, architecture, threat model, AGENTS,
     canonical project record, TODO, and a dated release-hardening recap.
+
+All eleven steps completed. The package reproducibility gate initially exposed
+source-distribution timestamps and ownership metadata that varied between
+builds. A bounded fail-closed normalizer and regression tests now canonicalize
+those fields, and two independent clean Python 3.12 builds compare byte for
+byte for both the wheel and source distribution. The exact candidate evidence
+is retained in `../release/v0.1.0-rc1-validation.md`.
 
 ## Fixed implementation choices
 

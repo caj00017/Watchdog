@@ -227,6 +227,44 @@ does not change this architecture and adds no current destination, credential,
 listener, persistence, or rate-limit state. It requires a separately authorized
 hosted architecture and security/privacy/operations work order.
 
+## Release 1 build and publication architecture
+
+Release infrastructure is a separate control plane over the trusted Watchdog
+checkout; it is not part of an investigation workflow and never receives an
+analyzed repository. `pyproject.toml` remains the direct dependency policy.
+Python 3.12-generated runtime, development, and release locks pin complete
+transitive environments with SHA-256 hashes. Development and release locks also
+pin the exact setuptools/wheel backend mirrored in `requirements/build.in`.
+Installs enforce `--require-hashes`; Watchdog is installed with dependency
+resolution and build isolation disabled after the locked environment exists.
+
+Pull-request CI executes the trusted-project quality contract on ephemeral
+GitHub-hosted Python 3.12–3.14 runners. It receives read-only contents permission,
+no secrets, and no OIDC token. Every action reference is an immutable full
+commit SHA, and `pull_request_target` is absent. Package jobs build one source
+distribution and wheel with a version-fixed source epoch, inspect bounded
+member names/types and metadata, check required UI/license/policy assets, and
+install both artifacts in clean environments. Release `v0.1.0` uses the fixed
+UTC source epoch `1785628800`; the trusted stdlib normalizer canonicalizes sdist
+ordering, timestamps, ownership, modes, and gzip metadata before inspection.
+Changing the epoch or normalizer invalidates the candidate contract.
+
+The container is also a build-once path. Both Python stages and OSV-Scanner use
+manifest digests; the builder consumes the release lock and creates the exact
+wheel, while the final stage consumes only the runtime lock, installed wheel,
+and pinned scanner. `.dockerignore` excludes Git history, local environments,
+caches, `.env`, tests, docs, and generated artifacts from the build context.
+The resulting image retains the existing advisory-only command and runtime
+destinations; it is not a production-hosted-service architecture.
+
+The release workflow separates gate, build, and publish jobs. Candidate-only
+manual runs retain artifacts in GitHub without publication. A stable tag must
+equal `v` plus package metadata exactly. The publish job downloads the already
+validated artifacts, does not rebuild them, has only read-only contents and OIDC
+token permission, and targets PyPI Trusted Publishing through a protected
+`pypi` environment. Creating/pushing the tag, configuring remote controls, and
+approving publication remain explicit human actions.
+
 ## Advisory architecture
 
 The API application owns an `httpx.AsyncClient` for its lifespan. A
@@ -500,9 +538,10 @@ reachability/exposure, remediation, and patches are excluded.
 
 ## Deployment and deferred architecture
 
-Native development uses Python 3.12+ and an absolute scanner path. The Docker
-image is based on `python:3.12-slim` and copies `/osv-scanner` from the pinned
-v2.4.0 multi-architecture image digest. Docker Compose starts the standalone
+Native development uses Python 3.12–3.14 and an absolute scanner path. The
+Docker image pins the `python:3.12-slim` multi-architecture manifest digest and
+copies `/osv-scanner` from the pinned v2.4.0 multi-architecture image digest.
+Docker Compose starts the standalone
 image without a source bind mount and still exposes only the advisory API.
 Intake workspaces are local process resources and are not a durable data model.
 
@@ -542,5 +581,9 @@ architecture.
 `../plans/phase-9-implementation-plan.md` define the completed installed
 launcher, readiness, fixed browser target, guided admission, progressive UI,
 and legacy-regression boundary. Hosted or non-loopback service, authentication,
-installation, persistence, repository mutation, and release publication remain
-deferred.
+installation, persistence, and repository mutation remain deferred.
+
+`../work-orders/release-1-hardening.md`,
+`../plans/release-1-hardening-implementation-plan.md`, and
+`../release/release-process.md` define the separate trusted-source dependency,
+CI, package, container, candidate, and human-gated publication architecture.

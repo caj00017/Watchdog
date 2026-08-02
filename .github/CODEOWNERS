@@ -1,0 +1,10 @@
+# Release, security, and product-boundary changes require owner review.
+* @caj00017
+
+/.github/ @caj00017
+/AGENTS.md @caj00017
+/SECURITY.md @caj00017
+/docs/architecture/ @caj00017
+/docs/security/ @caj00017
+/docs/work-orders/ @caj00017
+/requirements/ @caj00017
