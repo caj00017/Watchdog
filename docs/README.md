@@ -98,6 +98,9 @@ describe.
 - [Textual 8.2.8 dependency review](release/textual-8.2.8-dependency-review.md)
   records exact distributions, license, graph, excluded features, point-in-time
   advisory evidence, and rollback.
+- [v0.1.0-rc2 validation record](release/v0.1.0-rc2-validation.md) records the
+  exact replacement-candidate source, locks, artifacts, image identity, test
+  matrix, measurements, platform observations, and remaining human gates.
 
 Supporting documents should agree with the canonical record. If they do not,
 inspect the implementation and tests, correct the canonical record first, and
@@ -109,11 +112,12 @@ then reconcile the supporting document.
 - `archive/prompts/` contains completed work orders and prompts.
 - `archive/recaps/` contains dated implementation-session snapshots.
 
-The current archived verification snapshot is
+The current archived development snapshot is
 [`development-recap-2026-08-02-release-1-hardening.md`](archive/recaps/development-recap-2026-08-02-release-1-hardening.md).
 It includes the completed governance, locking, CI, package, reproducibility,
-and container gates. The replacement TUI candidate record will supersede it for
-publication decisions without rewriting its historical evidence.
+and pre-TUI container gates. The completed rc2 validation record above
+supersedes it for publication decisions without rewriting its historical
+evidence.
 
 Archived files preserve historical context. They are not current instructions or
 authoritative descriptions of the codebase.

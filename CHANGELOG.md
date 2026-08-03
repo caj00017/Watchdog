@@ -7,6 +7,14 @@ still reviewed and called out explicitly.
 
 ## [Unreleased]
 
+### Changed
+
+- Synchronized newcomer, operator, architecture-status, and release references
+  after local rc2 validation. This documentation update changes no runtime
+  behavior or candidate artifact identity.
+
+## [0.1.0] - 2026-08-04 local release candidate (unpublished)
+
 ### Added
 
 - Keyboard-first local Textual TUI launched by bare `watchdog` or
@@ -26,10 +34,6 @@ still reviewed and called out explicitly.
   limitation.
 - The existing web UI, routes, direct command bytes, scanner behavior,
   analytical artifacts, and Phase 1–9 identities remain unchanged.
-
-## [0.1.0] - 2026-08-02 release candidate
-
-### Added
 
 - OSV advisory retrieval with source-neutral normalization, provenance,
   conflict reporting, and explicit partial-failure state.
@@ -61,5 +65,5 @@ still reviewed and called out explicitly.
   to literal loopback. There is no hosted service, authentication, persistence,
   telemetry, repository write, command generation, or patch application.
 
-[Unreleased]: https://github.com/caj00017/Watchdog/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/caj00017/Watchdog/releases/tag/v0.1.0
+[Unreleased]: https://github.com/caj00017/Watchdog/compare/2ab01a5ac8bf8f0d8a69d711a7d12cf1c35903b6...HEAD
+[0.1.0]: https://github.com/caj00017/Watchdog/tree/2ab01a5ac8bf8f0d8a69d711a7d12cf1c35903b6

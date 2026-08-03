@@ -295,4 +295,7 @@ order and explicit approval.
 The validated `v0.1.0-rc1` remains an immutable pre-TUI baseline and is
 superseded for publication decisions. Release 1 requires the replacement
 candidate's regenerated locks, artifacts, checksums, image identity, tests, and
-release record. Stable tagging and publication remain separate human actions.
+release record. Those local gates are complete for the untagged `v0.1.0-rc2`
+candidate at source commit `2ab01a5ac8bf8f0d8a69d711a7d12cf1c35903b6` and
+are recorded in `docs/release/v0.1.0-rc2-validation.md`. Stable tagging and
+publication remain separate human actions.

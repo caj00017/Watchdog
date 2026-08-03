@@ -2,7 +2,7 @@
 
 ## Project Design and Implementation Record
 
-**Document version:** 11.0
+**Document version:** 11.1
 
 **Last updated:** August 4, 2026
 
@@ -12,9 +12,9 @@
 
 **Code version:** 0.1.0
 
-**Current lifecycle state:** Phases 0–9, Release 1 hardening, and local-TUI Stage
-A implementation complete; replacement candidate verification in progress;
-hosted/SSH work deferred and publication human-gated
+**Current lifecycle state:** Phases 0–9, Release 1 hardening, local-TUI Stage A,
+and local `v0.1.0-rc2` candidate verification complete; hosted/SSH work deferred
+and publication human-gated
 
 **Primary deployment direction:** Local-first, open source
 
@@ -158,8 +158,10 @@ approved the amended work order and formal plan and authorized Stage A against
 the recorded baseline. The implemented local Textual TUI is a new bounded
 projection over unchanged Phase 7/8 models and renderers; the web interface,
 routes, scanner, analytical identities, and destinations remain unchanged. The
-existing candidate remains immutable pre-TUI evidence and publication requires
-the separately validated replacement candidate.
+existing candidate remains immutable pre-TUI evidence. The separately validated
+replacement candidate is complete at source commit
+`2ab01a5ac8bf8f0d8a69d711a7d12cf1c35903b6`; its exact evidence and remaining
+limitations are recorded in `docs/release/v0.1.0-rc2-validation.md`.
 
 ## 2.2 Current health
 
@@ -187,17 +189,18 @@ the separately validated replacement candidate.
 | Persistence and jobs | Not implemented | No database, queue, or retained investigation state |
 | Release governance | Candidate complete | Apache-2.0, contribution/governance/security policy, changelog, CODEOWNERS, release process, and final human go/no-go are explicit |
 | Dependency and CI controls | Candidate complete | Python 3.12-generated hash locks, immutable action pins, read-only PR CI, package/container jobs, and isolated OIDC publication |
-| Package candidate | Replacement validation in progress | rc1 remains immutable pre-TUI evidence; rc2 exact artifacts, installation tests, checksums, size changes, and limitations follow the frozen source commit |
-| Container workflow | Pre-TUI candidate verified; replacement pending | Digest-pinned multi-stage build and exact OSV-Scanner 2.4.0 controls remain; the rc2 image identity and no-mount health evidence require regeneration |
+| Package candidate | Replacement candidate validated locally | rc1 remains immutable pre-TUI evidence; rc2 artifacts were reproducibly built from source commit `2ab01a5`, installed on Python 3.12–3.14, and recorded with exact checksums, sizes, and limitations |
+| Container workflow | Replacement candidate verified locally | Digest-pinned multi-stage rc2 image contains exact OSV-Scanner 2.4.0; image identity, size, no-network/no-mount health, and Linux amd64 platform evidence are recorded |
 | Automated quality | Green on Python 3.12–3.14 | 407 tests pass with one bounded live scanner contract skipped; Ruff, strict mypy, compileall, release verification, Compose, frozen web-tree, headless TUI, and Linux PTY gates pass; macOS/Windows manual TUI checks remain unavailable candidate limitations |
-| Version-control state | Release hardening authorized at `12511ae` against Phase 9 closeout `97f2a05` | The exact candidate commit, artifacts, checksums, and environment limitations are retained in `docs/release/v0.1.0-rc1-validation.md` |
+| Version-control state | rc2 source frozen at `2ab01a5`; validation recorded at `2bfd28a` | Exact rc2 artifacts, checksums, image identity, measurements, skipped gates, and environment limitations are retained in `docs/release/v0.1.0-rc2-validation.md` |
 
 ## 2.3 Immediate milestone
 
 The enumerated Phase 0–9 roadmap, Release 1 hardening, and local-TUI Stage A are
-complete. The immediate milestone is a reproducible replacement rc2 candidate,
-artifact/container verification, supported-platform observations, and the final
-human publication go/no-go. Stable tag creation and publication remain paused.
+complete, and the reproducible local rc2 package/container candidate is
+validated. The immediate milestone is the final human review of remote controls,
+unperformed platform/live-network limitations, and the publication go/no-go.
+Stable tag creation and publication remain paused.
 Hosted operation, SSH/remote
 access, persistence, telemetry, DNS/infrastructure changes, public listeners,
 authentication, private inputs, new analytical destinations, classification,
@@ -953,9 +956,10 @@ not a stable release identifier.
   environment, and PyPI Trusted Publisher configuration require final human
   verification.
 - The validated first candidate predates the implemented local terminal-first
-  release direction. It remains immutable historical evidence but is superseded
-  for publication by the required replacement candidate. Hosted/SSH access
-  remains deferred to Version 2.
+  release direction. It remains immutable historical evidence and is superseded
+  for publication by the validated rc2 replacement candidate. The rc2 record
+  retains unavailable macOS/Windows manual checks and opt-in live-network checks
+  as limitations. Hosted/SSH access remains deferred to Version 2.
 - The development Compose service is not a hardened production deployment.
 
 ---
@@ -974,7 +978,7 @@ not a stable release identifier.
 | 7. Evidence-safe reports and local interfaces | Complete | Canonical reports, bounded workflow, direct local CLI, disabled loopback UI/API |
 | 8. Remediation assistant | Complete | Evidence-linked upgrade candidates, human validation, bounded no-write previews |
 | 9. Local-first guided experience | Complete | Installed launcher, scanner readiness, and progressive literal-loopback UI |
-| Release hardening | Baseline candidate complete; publication paused | Governance, locking, CI, package/container baseline candidate, and human-gated replacement v0.1.0 publication |
+| Release hardening | Replacement candidate complete; publication paused | Governance, locking, CI, reproducible rc2 package/container evidence, and human-gated v0.1.0 publication |
 | Release 1 terminal experience | Stage A complete | Bare-`watchdog` local TUI, unchanged side-by-side web UI, data-free progress observer, terminal display policy, and replacement candidate; hosted/SSH access deferred to Version 2 |
 
 ---
@@ -1563,10 +1567,15 @@ docs/
 │   ├── phase-7-implementation-plan.md
 │   ├── phase-8-implementation-plan.md
 │   ├── phase-9-implementation-plan.md
-│   └── release-1-hardening-implementation-plan.md
+│   ├── release-1-hardening-implementation-plan.md
+│   └── release-1-local-tui-implementation-plan.md
+├── reference/
+│   └── README-technical.md
 ├── release/
 │   ├── release-process.md
-│   └── v0.1.0-rc1-validation.md
+│   ├── textual-8.2.8-dependency-review.md
+│   ├── v0.1.0-rc1-validation.md
+│   └── v0.1.0-rc2-validation.md
 ├── security/
 │   ├── evidence-policy.md
 │   └── threat-model.md
@@ -1605,6 +1614,19 @@ and boundary changes.
 ---
 
 # 18. Change History
+
+## Version 11.1 — August 4, 2026
+
+- Recorded completion of the reproducible local `v0.1.0-rc2` package and
+  container candidate against source commit `2ab01a5`, with exact validation
+  evidence in `docs/release/v0.1.0-rc2-validation.md`.
+- Reconciled package, container, lifecycle, roadmap, documentation-index, and
+  release-process status after candidate completion.
+- Reworked the root README into a plain-English source installation, scanner
+  readiness, first TUI run, keyboard-operation, and direct-output guide.
+- Retained stable tagging, publication, remote-control verification, unavailable
+  macOS/Windows smoke tests, and opt-in live-network checks as explicit human or
+  coverage gates.
 
 ## Version 11.0 — August 4, 2026
 
@@ -1973,6 +1995,7 @@ workflow, expose only data-free progress, and present hostile values through a
 bounded display-safe policy. Cancellation waits for the existing cleanup path;
 the app retains no history and gains no repository/runtime-provider capability.
 Hosted operation and SSH access remain deferred to Version 2. The validated
-pre-TUI candidate remains unpublished historical baseline evidence; only a
-separately validated replacement candidate may proceed to the still-human stable
-tag and publication gates.
+pre-TUI candidate remains unpublished historical baseline evidence. The locally
+validated rc2 replacement candidate may proceed only to the still-human stable
+tag and publication gates after its recorded limitations and remote controls are
+reviewed.

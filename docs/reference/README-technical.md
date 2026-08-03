@@ -74,10 +74,10 @@ unpublished until the final external release gate is approved.
 Release 1 is local terminal-first: bare `watchdog` and explicit `watchdog tui`
 launch a keyboard-first Textual TUI, while the existing `watchdog ui` web
 experience remains unchanged for side-by-side comparison. Textual 8.2.8 and its
-pure-Python graph are exact hash-locked trusted-project dependencies. Publication
-of the validated pre-TUI candidate remains paused in favor of a replacement
-candidate. Hosted operation and SSH access are deferred to a separately reviewed
-Version 2 product.
+pure-Python graph are exact hash-locked trusted-project dependencies. The
+replacement `v0.1.0-rc2` candidate is locally validated; stable tagging and
+publication remain separate human decisions. Hosted operation and SSH access
+are deferred to a separately reviewed Version 2 product.
 
 ## Requirements
 
@@ -390,8 +390,11 @@ Validate Compose and build the standalone image:
 
 ```bash
 docker compose config --quiet
-docker build --pull --tag nexura-watchdog:0.1.0-rc1 .
-docker image inspect nexura-watchdog:0.1.0-rc1 --format '{{.Id}} {{.Size}}'
+docker build --pull \
+  --build-arg "WATCHDOG_REVISION=$(git rev-parse HEAD)" \
+  --tag nexura-watchdog:0.1.0-rc2 \
+  .
+docker image inspect nexura-watchdog:0.1.0-rc2 --format '{{.Id}} {{.Size}}'
 ```
 
 The build fetches the scanner from the digest-pinned multi-architecture
@@ -404,7 +407,7 @@ Verify that the embedded binary's `osv-scanner version:` line reports exactly
 ```bash
 docker run --rm \
   --entrypoint /usr/local/bin/osv-scanner \
-  nexura-watchdog:0.1.0-rc1 \
+  nexura-watchdog:0.1.0-rc2 \
   --version
 ```
 
@@ -412,13 +415,13 @@ Start the image without a volume mount and check its standalone health endpoint:
 
 ```bash
 docker run --detach \
-  --name nexura-watchdog-phase3-health \
+  --name nexura-watchdog-rc2-health \
   --publish 127.0.0.1:18000:8000 \
-  nexura-watchdog:0.1.0-rc1
+  nexura-watchdog:0.1.0-rc2
 
 curl --fail --silent --show-error http://127.0.0.1:18000/health
-docker logs nexura-watchdog-phase3-health
-docker rm --force nexura-watchdog-phase3-health
+docker logs nexura-watchdog-rc2-health
+docker rm --force nexura-watchdog-rc2-health
 ```
 
 The expected response is `{"status":"ok","version":"0.1.0"}` with HTTP 200.
@@ -428,7 +431,7 @@ pipeline with the same binary embedded in the image, copy that binary to a
 temporary host path and run only the bounded contract test:
 
 ```bash
-docker create --name nexura-watchdog-scanner-copy nexura-watchdog:0.1.0-rc1
+docker create --name nexura-watchdog-scanner-copy nexura-watchdog:0.1.0-rc2
 docker cp \
   nexura-watchdog-scanner-copy:/usr/local/bin/osv-scanner \
   /tmp/nexura-watchdog-osv-scanner-2.4.0
@@ -673,8 +676,9 @@ The completed
 [Release 1 local terminal UI work order](../work-orders/release-1-tui-and-ssh-trial.md)
 and [formal plan](../plans/release-1-local-tui-implementation-plan.md) define the
 local terminal, unchanged-web, workflow-observer, display, lifecycle, and
-replacement-candidate boundary. Hosted operation and SSH access are explicitly
-deferred to Version 2.
+replacement-candidate boundary. The exact locally validated candidate is
+recorded in the [v0.1.0-rc2 validation record](../release/v0.1.0-rc2-validation.md).
+Hosted operation and SSH access are explicitly deferred to Version 2.
 
 ## License and security
 

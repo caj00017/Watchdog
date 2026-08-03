@@ -10,6 +10,8 @@ evidence and is superseded for publication decisions. Stage A in
 separately validated `v0.1.0-rc2` artifacts, checksums, and image identity.
 Hosted operation and SSH are deferred to Version 2. Do not publish rc1 or infer
 that completing rc2 candidate gates authorizes the stable tag or publication.
+The completed local evidence is recorded in
+[`v0.1.0-rc2-validation.md`](v0.1.0-rc2-validation.md).
 
 ## 1. Prepare
 
