@@ -55,7 +55,7 @@ def test_canonical_bytes_remain_frozen_while_display_is_safe() -> None:
 
 def test_unauthorized_terminal_input_modes_are_filtered() -> None:
     rendered = filter_terminal_modes(
-        "before\x1b[?1004hmiddle\x1b[?2004hafter\x1b[?1004l\x1b[?2004l"
+        "before\x1b[?1004hmiddle\x1b[?2004h\x1b]22;default\x07after\x1b[?1004l\x1b[?2004l"
     )
 
     assert rendered == "beforemiddleafter\x1b[?1004l\x1b[?2004l"

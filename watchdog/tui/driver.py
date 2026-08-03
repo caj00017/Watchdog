@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import shutil
 import sys
 
@@ -10,6 +11,7 @@ from textual.message import Message
 
 _ENABLE_FOCUS_REPORTING = "\x1b[?1004h"
 _ENABLE_BRACKETED_PASTE = "\x1b[?2004h"
+_POINTER_SHAPE = re.compile("\\x1b\\]22;[a-z-]{1,32}\\x07")
 MAXIMUM_TERMINAL_WIDTH = 240
 MAXIMUM_TERMINAL_HEIGHT = 80
 
@@ -17,7 +19,8 @@ MAXIMUM_TERMINAL_HEIGHT = 80
 def filter_terminal_modes(data: str) -> str:
     """Remove terminal modes that the TUI does not require or authorize."""
 
-    return data.replace(_ENABLE_FOCUS_REPORTING, "").replace(_ENABLE_BRACKETED_PASTE, "")
+    filtered = data.replace(_ENABLE_FOCUS_REPORTING, "").replace(_ENABLE_BRACKETED_PASTE, "")
+    return _POINTER_SHAPE.sub("", filtered)
 
 
 def clamp_terminal_dimensions(width: int, height: int) -> tuple[int, int]:

@@ -275,10 +275,11 @@ filter; status is also conveyed by fixed text.
 The layout requires 60x20, clamps driver dimensions and retained layout
 allocation to 240x80, and coalesces resize processing. The pinned-driver adapter
 filters Textual's otherwise unconditional focus-reporting and bracketed-paste
-enable sequences; mouse support and the command palette are disabled. Ctrl+C
-cancels or exits, Ctrl+Q requests a clean exit, and catchable SIGINT/SIGTERM
-enter the same join/cleanup path. SIGKILL, OOM termination, host loss, and
-equivalent uncatchable failures cannot guarantee in-process cleanup.
+enable sequences plus its unnecessary mouse-pointer-shape OSC; mouse support
+and the command palette are disabled. Ctrl+C cancels or exits, Ctrl+Q requests a
+clean exit, and catchable SIGINT/SIGTERM enter the same join/cleanup path.
+SIGKILL, OOM termination, host loss, and equivalent uncatchable failures cannot
+guarantee in-process cleanup.
 
 ## Release 1 build and publication architecture
 
