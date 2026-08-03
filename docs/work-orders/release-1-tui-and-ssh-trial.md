@@ -1,7 +1,8 @@
-# Release 1 Work Order — Terminal UI and Anonymous SSH Trial
+# Release 1 Work Order — Local Terminal UI; Hosted SSH Deferred
 
-**Status:** Drafted August 2, 2026; implementation and deployment are not yet
-authorized
+**Status:** Drafted August 2, 2026; amended and explicitly authorized for
+Stage A implementation by the owner on August 4, 2026; hosted operation and SSH
+remain deferred to Version 2
 
 **Required baseline:** Validated Release 1 candidate record commit
 `01a0d2a` and candidate implementation commit
@@ -13,13 +14,14 @@ authorized
 release candidate, the user selected a terminal-first experience for Release 1.
 The existing web UI must remain available and unchanged so the two interfaces
 can be compared side by side. The desired local entry point is `$ watchdog`.
-The desired no-install trial is `$ ssh watchdog.nexura.fyi`.
+Version 2 may migrate Watchdog to a hosted product with a separately reviewed
+remote access experience.
 
-This document is a proposed implementation boundary. Writing and reviewing it
-does not authorize adding dependencies, changing launcher behavior, opening a
-public listener, changing DNS, provisioning infrastructure, generating or
-mounting host keys, or deploying the SSH trial. Local implementation and public
-deployment require the separate approvals defined below.
+This document is the authorized Stage A implementation boundary. The August 4,
+2026 owner instruction approved the amended local-TUI boundary against the
+required baseline and requested implementation of the formal plan. Hosted
+operation, SSH transport, public listeners, DNS, infrastructure, host keys, and
+deployment remain future Version 2 work and require a separate work order.
 
 ## Objective
 
@@ -34,10 +36,8 @@ Retain `watchdog ui` and every existing web route, asset, admission control, and
 browser behavior unchanged. The TUI is a second projection for direct
 comparison, not a rewrite of the web application.
 
-Separately, make the same restricted TUI available as an anonymous, ephemeral
-public trial at `watchdog.nexura.fyi` over SSH. The hosted trial is not a shell,
-an account, a tunnel, a file-transfer service, or a remote form of the complete
-local configuration surface.
+Release 1 is local-first: the operator installs Watchdog on their own machine
+and uses the TUI locally. No hosted or remote access surface is included.
 
 ## Effect on the validated candidate
 
@@ -62,27 +62,15 @@ TUI runtime dependency, launcher dispatch, package/lock changes, deterministic
 tests, and synchronized documentation. It may not add an SSH listener or hosted
 deployment.
 
-Stage A must be complete and independently verified before any SSH transport
-code is implemented. A Release 1 package candidate may proceed after Stage A
-even if the public SSH trial is delayed by its separate operational gate.
+Stage A is the complete Release 1 implementation boundary. A replacement
+Release 1 package candidate may proceed after Stage A and its verification gates.
 
-### Stage B — loopback SSH transport prototype
+### Future work — hosted product and SSH access
 
-After Stage A passes and the owner separately approves the SSH dependency and
-license/security review, Stage B may implement a disabled-by-default SSH
-application gateway that binds only to literal loopback in tests and manual
-staging. It may add a deployment-only dependency lock and a separate service
-entry point/image. It may not bind publicly, alter DNS, or deploy to a server.
-
-### Stage C — public SSH trial deployment
-
-Public binding, DNS changes, firewall changes, persistent host-key provisioning,
-and production process supervision require a final deployment-specific go/no-go
-after Stage B acceptance. That decision must record the exact image digest,
-configuration, host-key fingerprints, resource limits, egress policy, rollback
-procedure, monitoring destination, and responsible operator.
-
-Passing Stage A or B does not imply Stage C approval.
+Version 2 may define a hosted Watchdog product and a remote access mechanism,
+including SSH if still appropriate. That work is not authorized by this
+document, is not part of the Release 1 candidate, and requires a separate
+architecture, security, privacy, operations, dependency, and deployment review.
 
 ## Frozen analytical and repository boundaries
 
@@ -99,7 +87,7 @@ All Phase 1–9 security invariants remain binding:
   coordinates plus trusted configuration under the existing subprocess limits.
 - Phase 2–5 work completes inside the existing repository lease. Phase 6 and
   all presentation occur only after verified cleanup.
-- The TUI and SSH adapter consume only validated canonical reports and
+- The TUI consumes only validated canonical reports and
   remediation plans. They do not gain repository, scanner, evidence-reader,
   model-provider, arbitrary filesystem, or arbitrary network capabilities.
 - Every finding retains evidence/provenance links. Scanner failure, unsupported
@@ -110,8 +98,8 @@ All Phase 1–9 security invariants remain binding:
 - Remediation remains candidate planning and optional in-memory preview only.
   No repository byte is written, command generated, or patch applied.
 
-This work order changes presentation, launcher defaults, and the separately
-gated hosted transport. It does not authorize a new analysis phase.
+This work order changes presentation and launcher defaults only. It does not
+authorize a new analysis phase or any hosted/remote transport.
 
 ## Local command contract
 
@@ -119,7 +107,8 @@ After Stage A, the installed command surface is:
 
 - `watchdog` — launch the TUI only when standard input and standard output are
   interactive terminals;
-- `watchdog tui [--model MODEL] [--enable-previews]` — explicit local TUI;
+- `watchdog tui [--model MODEL] [--enable-previews]` — explicit local TUI with
+  the same interactive standard-input and standard-output requirement;
 - `watchdog ui [--model MODEL] [--enable-previews] [--no-open]` — unchanged
   guided literal-loopback web UI;
 - `watchdog doctor` — unchanged bounded scanner readiness;
@@ -208,12 +197,14 @@ Only one workflow may run per TUI session. Submission is rejected before
 advisory lookup or repository acquisition when scanner readiness is unavailable.
 All existing per-phase and 180-second workflow deadlines remain in force.
 
-Cancellation, terminal close, SSH disconnect, resize failure, render failure,
-`Ctrl+C`, and process termination must cancel through the existing workflow
-path, await repository workers, and verify lease cleanup before the session can
+Cancellation, terminal close, resize failure, render failure, `Ctrl+C`, and
+catchable `SIGINT` or `SIGTERM` must cancel through the existing workflow path,
+await repository workers, and verify lease cleanup before the session can
 finish. “Cancelled” may be shown only after cleanup succeeds. Cleanup failure is
 a controlled terminal error and non-zero session result, never successful
-cancellation.
+cancellation. `SIGKILL`, OOM termination, host loss, and equivalent uncatchable
+failures cannot guarantee in-process cleanup and must remain explicit, untested
+limitations rather than being represented as verified behavior.
 
 Unredacted repository content remains transient and bounded inside the existing
 lease services. TUI state receives only canonical redacted projections. When a
@@ -229,10 +220,13 @@ bidirectional controls, zero-width spoofing characters, terminal hyperlinks,
 and overlong grapheme sequences according to one checked-in versioned display
 policy. It must never emit OSC 52 clipboard operations.
 
-The display policy must preserve canonical raw bytes separately in the existing
-validated artifact while making terminal presentation inert. Sanitization
-warnings and truncation counts remain explicit; display sanitization must not be
-misrepresented as source redaction or evidence alteration.
+The display policy must preserve the original bounded canonical JSON bytes in
+memory as one frozen artifact while making its terminal presentation inert by
+visibly escaping unsafe code points. The displayed canonical view identifies
+itself as a display-safe representation and reports the original byte length and
+artifact identity. Sanitization warnings and truncation counts remain explicit;
+display sanitization must not be misrepresented as source redaction or evidence
+alteration.
 
 Input fields enforce the existing byte bounds before request construction. Paste
 is data, not a command. Bracketed-paste, mouse, focus, color, and terminal-title
@@ -256,149 +250,22 @@ The TUI may share only canonical presentation-neutral helpers extracted without
 changing web output. If sharing would alter web bytes or behavior, duplicate
 small trusted wording/layout adapters instead and record the maintenance cost.
 
-Side-by-side acceptance uses the same synthetic fixtures and at least one
-operator-approved live public advisory/repository pair. The web UI, local TUI,
-and staged SSH TUI must agree on canonical report/plan IDs, exact target commit,
-match states, inference labels, coverage, limitations, evidence IDs, candidate
-versions, and preview availability. Layout may differ; facts may not.
+Side-by-side acceptance uses the same frozen canonical fixture artifacts and at
+least one operator-approved live public advisory/repository pair. Exact identity
+comparisons use the same frozen canonical artifact. Separate live web and TUI
+runs compare semantic facts, exact target commit, match states, inference
+labels, coverage, limitations, evidence IDs, candidate versions, and preview
+availability because independently retrieved timestamps can legitimately change
+artifact identities. Layout may differ; facts may not.
 
-## Anonymous SSH trial contract
+## Deferred Version 2 direction — hosted product and remote access
 
-The exact UX target is:
-
-```text
-ssh watchdog.nexura.fyi
-```
-
-Standard SSH clients supply the local operating-system username when `user@` is
-omitted. To preserve the exact command, the dedicated application gateway may
-accept any syntactically bounded SSH username, immediately discard it, and map
-the connection to an anonymous session. It must not create or select an OS
-account, display or persist the username, or use it as an authorization,
-filesystem, process, cache, or log key.
-
-The service uses SSH encryption and a persistent server host key for server
-identity, but it performs no end-user authentication in the initial public
-trial. The welcome screen must state that the session is anonymous, limited to
-public GitHub inputs, transient, and subject to resource limits. It must not
-invite credentials or private data.
-
-Only one interactive shell request with one PTY is accepted per connection, and
-that request starts only the restricted remote TUI profile. The gateway rejects:
-
-- remote command execution and client-supplied command strings;
-- second or multiplexed channels;
-- SFTP, SCP, subsystem, and file-transfer requests;
-- local, remote, dynamic, UNIX-socket, TUN/TAP, and agent forwarding;
-- X11 forwarding;
-- environment-variable setting, agent use, user rc files, and login shells;
-- all client-supplied signal requests; disconnect and bounded window-size
-  changes are handled only as gateway lifecycle events; and
-- terminals outside the bounded type/size policy.
-
-The remote profile has AI off with no provider configuration or credentials.
-Remediation candidates may be displayed; token previews are always disabled.
-There is no remote option or environment value that can enable models, previews,
-the web UI, a shell, arbitrary output, or another destination.
-
-## SSH transport dependency gate
-
-Do not implement SSH framing, cryptography, key exchange, authentication, or
-channel parsing in Watchdog. The candidate prototype transport is AsyncSSH
-2.24.x because it supports a Python asyncio server and explicit session/channel
-handlers. It is deployment-only and must not become a dependency of the
-published local `nexura-watchdog` wheel unless a later review justifies that
-change.
-
-Before Stage B, the owner must approve a dependency record covering the exact
-AsyncSSH version/hashes, PyCA cryptography/native-wheel changes, EPL-2.0 or
-GPL-2.0-or-later license compatibility, supported algorithms, current security
-advisories, upstream maintenance, and all feature defaults. Any unresolved
-license or security concern blocks AsyncSSH and requires an alternative work
-order amendment; it does not authorize bespoke SSH code.
-
-Every permissive transport feature must be explicitly disabled even when the
-library currently defaults it off. A library upgrade is a new SSH-boundary
-review, not an automatic lock refresh.
-
-## Hosted isolation and egress boundary
-
-The public gateway runs as a dedicated unprivileged service in a separate
-digest-pinned image. It may expose only TCP port 22 through infrastructure port
-mapping. It exposes no public HTTP health, metrics, API, web UI, container
-socket, management port, or debug console.
-
-Each session receives a distinct process and ephemeral workspace under a
-read-only root filesystem with bounded tmpfs. The deployment must drop Linux
-capabilities, set no-new-privileges, use a reviewed seccomp/AppArmor equivalent,
-set CPU/memory/PID/file-descriptor/file-size limits, and mount neither the host
-filesystem nor Docker/container control sockets. Sessions share no Python
-object, temporary directory, report, repository lease, cache, credential, or
-model state.
-
-The gateway starts only one fixed absolute Watchdog executable with a fixed
-argument array and a minimal allowlisted environment. It uses no shell,
-client-selected command, interpolation, search path, working directory, startup
-file, or inherited credential. The TUI process starts in its own process group;
-disconnect, timeout, gateway shutdown, and cancellation terminate the complete
-group and verify repository cleanup before capacity is released.
-
-Outbound traffic is denied by default and allowlisted only for the existing OSV
-API, GitHub API, GitHub codeload host validated by repository intake, and the
-existing OSV-Scanner lookup destination. DNS resolution and redirects remain
-bounded by existing destination policy. Cloud metadata, RFC1918, loopback,
-link-local, cluster, and arbitrary Internet destinations are denied. The SSH
-gateway itself performs no advisory or repository request before TUI admission.
-
-The initial conservative operational limits are:
-
-- at most 10 active SSH sessions globally and 2 per source address;
-- at most 2 active investigation workflows globally and 1 per session;
-- at most 20 unauthenticated handshakes in progress;
-- 15 seconds for handshake/session setup;
-- 5 minutes of session inactivity;
-- 15 minutes maximum session lifetime; and
-- the unchanged 180-second Watchdog workflow deadline.
-
-Connection attempts above 10 per source address per minute are refused using
-bounded in-memory state. Source addresses may exist transiently only for active
-connection control and a maximum 10-minute rate-limit window. They are not
-written to application logs or retained across process restart.
-
-## Host keys, privacy, logs, and operations
-
-SSH host private keys are operator-managed secrets created outside the
-repository and image, mounted read-only only into the gateway, never printed or
-included in an exception, and readable only by the service identity. Public key
-fingerprints must be published over a separately trusted Nexura channel before
-launch. Rotation, compromise response, backup, and rollback are documented and
-tested before Stage C.
-
-Application logs contain only controlled event codes, coarse duration/resource
-buckets, release/configuration identity, and aggregate counters. They contain no
-source address, username, advisory identifier, repository URL/ref, commit,
-evidence/report/plan ID, repository content, terminal bytes, model data,
-credential, key material, or traceback. Access logging is disabled. No session
-recording, keystroke logging, analytics, crash-report upload, or third-party
-telemetry is permitted.
-
-Before Stage C, the deployment record must audit host, firewall, DNS, cloud,
-container, and network-provider logging separately from application logging.
-Any unavoidable source-address processing or retention at those layers requires
-an explicit purpose, access policy, minimum retention period, deletion path,
-privacy notice, and owner approval; an undocumented infrastructure default is a
-deployment blocker.
-
-The Stage C deployment record must define health monitoring that does not open a
-public endpoint, aggregate capacity/error alerts, patch cadence, dependency and
-base-image scanning, host-key expiry/rotation checks, disk/tmpfs exhaustion
-alerts, denial-of-service response, incident response, rollback to no listener,
-and an operator who can disable the service immediately.
-
-No uptime, confidentiality, anonymity, or security SLA is claimed for the
-trial. The privacy notice must explain that source network addresses are
-necessarily processed transiently by the network stack and in-memory abuse
-controls even though Watchdog does not persist them.
+The prior SSH-trial concept is intentionally deferred. Version 2 planning may
+consider hosted operation and SSH or another remote access mechanism, but this
+Release 1 work order grants no authority for transport code, hosted services,
+credentials, public listeners, DNS, infrastructure, host keys, remote egress,
+authentication, persistence, or deployment. Those concerns require a new
+work order and independent security, privacy, operations, and product review.
 
 ## Testing and verification
 
@@ -420,21 +287,6 @@ Stage A requires:
 - byte/regression tests proving the existing web UI, direct CLI renderers,
   routes, defaults, scanner behavior, and Phase 1–9 identities remain unchanged.
 
-Stage B additionally requires protocol-level tests for arbitrary usernames,
-none-auth disclosure, host-key verification, one-PTY admission, rejected exec,
-subsystems, forwarding, environment, extra channels, malformed packets,
-handshake/idle/lifetime limits, disconnect cancellation, process-group cleanup,
-global/per-address admission, and controlled logs. Tests must use synthetic
-inputs and a literal-loopback listener only.
-
-Stage C requires an isolated staging host review, external SSH-client checks
-from at least OpenSSH on Linux/macOS and Windows OpenSSH, public host-key
-fingerprint verification, DNS and firewall review, egress-denial proof,
-container escape/mount/capability inspection, load/admission testing, abrupt
-disconnect and service-restart cleanup, monitoring/alert exercise, and rollback
-exercise. Any unperformed environment or client check remains an explicit
-coverage limitation.
-
 No test may execute or install an analyzed repository or expose a real secret.
 
 ## Sequential acceptance gates
@@ -449,17 +301,9 @@ No test may execute or install an analyzed repository or expose a real secret.
    web implementation or analytical artifacts.
 5. **Local verification:** deterministic, hostile-terminal, installed-package,
    platform/manual, package, container, and Phase 1–9 regression gates pass.
-6. **SSH authorization:** owner separately approves Stage B and its exact
-   transport/license record.
-7. **Loopback prototype:** protocol, isolation adapter, remote profile, and
-   abuse controls pass literal-loopback tests with no public listener.
-8. **Operations review:** exact hosting, DNS, firewall, host-key, sandbox,
-   egress, privacy, monitoring, incident, capacity, and cost records are approved.
-9. **Public deployment approval:** owner explicitly authorizes Stage C against
-   one immutable image/configuration digest.
-10. **Replacement release candidate:** regenerate all locks and package/container
-    evidence, run the complete matrix, record exact checksums and limitations,
-    and obtain a new final `v0.1.0` publication go/no-go.
+6. **Replacement release candidate:** regenerate all locks and package/container
+   evidence, run the complete matrix, record exact checksums and limitations,
+   and obtain a new final `v0.1.0` publication go/no-go.
 
 No failed, skipped, unavailable, or unperformed gate is passing evidence.
 
@@ -471,35 +315,30 @@ The work order is complete only when:
    terminal workflow while non-TTY invocation fails safely;
 2. `watchdog ui` and existing web behavior remain unchanged and operable for
    side-by-side comparison;
-3. local TUI, web UI, and staged remote TUI agree on all canonical facts,
-   identities, coverage, limitations, and remediation candidates;
+3. local TUI and web UI agree on all canonical facts, identities, coverage,
+   limitations, and remediation candidates;
 4. hostile values cannot emit terminal controls, markup, links, clipboard
    operations, commands, or misleading hidden/reordered text;
 5. cancellation and disconnect always await verified repository cleanup;
-6. the remote service exposes only one anonymous PTY-bound TUI session and no
-   shell, command, transfer, subsystem, forwarding, model, preview, persistence,
-   or cross-session state;
-7. resource, egress, privacy, host-key, logging, monitoring, incident, and
-   rollback controls pass their explicit gates;
-8. dependencies and deployment inputs are exact, hash/digest pinned, reviewed,
-   and represented in release verification; and
-9. a replacement Release 1 candidate passes all prior and new gates with new
+6. dependencies and package inputs are exact, hash-pinned, reviewed, and
+   represented in release verification; and
+7. a replacement Release 1 candidate passes all prior and new gates with new
    checksums before any stable tag or publication.
 
 ## Explicitly out of scope
 
 - Removing, rewriting, or deprecating the web UI in this work order.
 - A public HTTP TUI, Textual web serving, or browser replacement.
-- User accounts, authenticated SSH, teams, tenant data, private repositories,
+- Hosted operation, SSH, user accounts, teams, tenant data, private repositories,
   uploads, local paths, arbitrary repositories, or credentials.
 - Session history, saved reports, databases, queues, jobs, shared caches,
   downloads, clipboard integration, shell access, commands, or patch apply.
-- Remote model providers, model credentials, server-side model installation,
-  or AI in the anonymous SSH profile.
+- Remote model providers, model credentials, server-side model installation, or
+  hosted AI operation.
 - More advisory sources, ecosystems, scanners, parser dependencies, source/data-
   flow analysis, classification, reachability, exposure, exploitability,
   compatibility, availability, registry resolution, or automatic remediation.
-- The broader AWS/DeepSeek hosted version-two direction.
+- Hosted Version 2 product design and deployment.
 
 ## Mandatory pause conditions
 
@@ -507,22 +346,17 @@ Pause and amend this work order before:
 
 - changing any canonical report/plan/artifact identity or analytical meaning;
 - changing the web UI or `watchdog ui` behavior;
-- adding a dependency other than the separately reviewed Textual or SSH
-  transport choices;
-- accepting private or non-GitHub repository inputs, credentials, files, paths,
-  commands, arbitrary environment values, or model configuration over SSH;
-- persisting session/user/input/result/network identifiers or adding telemetry;
-- widening SSH channels, auth, forwarding, filesystem, process, listener,
-  egress, resource, concurrency, timeout, or deployment privileges;
-- binding a listener beyond literal loopback before Stage C approval;
-- changing DNS, firewall, host keys, cloud/service infrastructure, or public
-  availability without the exact deployment record; or
+- adding a dependency other than the separately reviewed Textual choice;
+- adding hosted operation, SSH, public or non-loopback listeners, credentials,
+  remote inputs, remote egress, persistence, telemetry, DNS, firewall, host keys,
+  cloud/service infrastructure, or deployment; or
 - publishing, tagging, or representing `v0.1.0` as ready before a replacement
   candidate passes.
 
-## Required authorization statement
+## Authorization record
 
-Implementation must not begin from this draft alone. A future owner instruction
-must identify this work order, approve any amendments, explicitly authorize
-Stage A against the recorded baseline, and request a formal implementation plan.
-Stage B and Stage C each require their own later explicit approval.
+On August 4, 2026, the owner supplied and requested implementation of the formal
+Release 1 Local TUI Implementation Plan, explicitly authorizing Stage A against
+the recorded baseline and approving this amended boundary. This authorization
+does not include tagging, publication, hosted Version 2, or any SSH/remote access
+work; each remains subject to its separate gate.

@@ -272,22 +272,26 @@ a final external human action. A TUI, hosted operation, new runtime dependency
 or destination, and every existing Phase 1–9 pause condition remain outside
 this boundary and require separate review.
 
-## Draft Release 1 terminal experience boundary — not authorized
+## Authorized Release 1 local terminal experience boundary
 
 `docs/work-orders/release-1-tui-and-ssh-trial.md` records the user's proposed
-Release 1 direction: an interactive local TUI launched by bare `watchdog`, the
-existing web UI retained unchanged for side-by-side comparison, and a separately
-gated anonymous trial at `ssh watchdog.nexura.fyi`.
+Release 1 direction: an interactive local TUI launched by bare `watchdog`, with
+the existing web UI retained unchanged for side-by-side comparison. Release 1
+is local-first; the operator installs Watchdog and runs the TUI on their own
+machine.
 
-The document is draft planning only. It does not authorize implementation,
-dependency or lock changes, launcher/default changes, public/non-loopback
-listening, SSH code, anonymous access, DNS/firewall changes, infrastructure,
-host keys, telemetry, deployment, tagging, or publication. Stage A local TUI,
-Stage B loopback SSH transport, and Stage C public deployment each require the
-explicit approvals specified by the work order.
+The owner explicitly authorized Stage A implementation on August 4, 2026,
+against the recorded Release 1 candidate baseline. Stage A may add only the
+reviewed Textual dependency, local TUI package and tests, data-free workflow
+observer, launcher dispatch, regenerated locks, and synchronized documentation
+defined by the work order and formal implementation plan. It does not authorize
+hosted/non-loopback operation, SSH code, remote access, DNS/firewall changes,
+infrastructure, host keys, telemetry, deployment, tagging, or publication.
+Hosted Version 2 and any SSH/remote access work require a separate future work
+order and explicit approval.
 
 The validated `v0.1.0-rc1` remains an immutable pre-TUI baseline, but its
 publication is paused if this direction proceeds. Any implemented TUI requires
 a replacement candidate with regenerated locks, artifacts, checksums, image
-identity, tests, and release record. Until Stage A is explicitly authorized and
-implemented, current launcher and web behavior remain the executable truth.
+identity, tests, and release record. Until Stage A is implemented and verified,
+current launcher and web behavior remain the executable truth.
