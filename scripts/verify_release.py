@@ -40,6 +40,7 @@ _REQUIRED_WHEEL_TUI_MODULES = {
     "watchdog/tui/app.py",
     "watchdog/tui/backend.py",
     "watchdog/tui/display.py",
+    "watchdog/tui/driver.py",
     "watchdog/tui/projection.py",
     "watchdog/tui/runner.py",
     "watchdog/workflow/observer.py",
