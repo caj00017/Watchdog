@@ -2,7 +2,7 @@
 
 ## Project Design and Implementation Record
 
-**Document version:** 11.1
+**Document version:** 11.2
 
 **Last updated:** August 4, 2026
 
@@ -207,6 +207,22 @@ authentication, private inputs, new analytical destinations, classification,
 reachability/exposure, compatibility/availability analysis, registry queries,
 commands, repository writes, or patch application remain outside Release 1 and
 require separate future review.
+
+Operator-directed next focus is continued TUI testing and polish before the final
+Release 1 decision. The next exploration may include:
+
+- improving the first-run and results experience;
+- modernizing the visual presentation while retaining the terminal safety policy;
+- making navigation more natural with arrow keys in addition to the existing
+  keyboard focus controls; and
+- evaluating a precompiled binary or another installation path so operators can
+  get started without assembling a development environment.
+
+These are planning notes, not authorization to change the validated RC2 runtime,
+dependency locks, launcher defaults, artifact contract, or release boundary.
+Any binary distribution, new packaging dependency, or materially changed TUI
+interaction requires its own implementation review and replacement-candidate
+verification.
 
 ---
 
@@ -1491,6 +1507,20 @@ identity/claim, write, command, patch, hosted operation, SSH, or publication
 authority. Catchable cancellation and SIGINT/SIGTERM join the workflow cleanup
 path; uncatchable termination remains a documented limitation.
 
+## D-031 — Release 1 enters TUI testing and polish
+
+On August 4, 2026, after exercising the implemented TUI, the user reported that
+it was in a strong position and directed the next work toward continued testing,
+user-experience improvements, modernized terminal presentation, easier arrow-key
+navigation, and evaluating a precompiled binary or another smoother installation
+path. The user considers Release 1 approaching readiness.
+
+This direction does not alter the completed Stage A boundary or authorize a new
+dependency, binary distribution channel, launcher/default change, hosted service,
+or publication. Those options remain future implementation candidates requiring
+compatibility, supply-chain, platform, packaging, and replacement-candidate
+review before adoption.
+
 ---
 
 # 15. Risks and Mitigation Direction
@@ -1614,6 +1644,16 @@ and boundary changes.
 ---
 
 # 18. Change History
+
+## Version 11.2 — August 4, 2026
+
+- Recorded the user's next-focus note: continue TUI testing, improve the user
+  experience and terminal navigation, modernize the presentation, evaluate
+  arrow-key navigation, and investigate precompiled or smoother installation
+  options as Release 1 approaches readiness.
+- Kept all follow-up ideas explicitly non-authorizing; new packaging, binary,
+  dependency, launcher, or interaction changes require boundary and candidate
+  review.
 
 ## Version 11.1 — August 4, 2026
 
