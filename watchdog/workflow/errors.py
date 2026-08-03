@@ -14,5 +14,9 @@ class WorkflowCleanupError(WorkflowError):
     code = "workflow_cleanup_failed"
 
 
+class WorkflowObserverError(WorkflowError):
+    code = "workflow_observer_failed"
+
+
 class RemediationDisabledError(WorkflowError):
     code = "remediation_disabled"

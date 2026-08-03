@@ -43,9 +43,11 @@ from watchdog.workflow.errors import (
     RemediationDisabledError,
     WorkflowCancelledError,
     WorkflowCleanupError,
+    WorkflowObserverError,
     WorkflowTimeoutError,
 )
 from watchdog.workflow.limits import WorkflowConfiguration
+from watchdog.workflow.observer import WorkflowObserver, WorkflowStage
 
 
 class _WorkflowRequest(Protocol):
@@ -158,21 +160,29 @@ class _WorkflowExecutionCore:
         *,
         artifact_hook: ArtifactHook | None = None,
         lease_hook: LeaseHook | None = None,
+        observer: WorkflowObserver | None = None,
     ) -> _WorkflowArtifacts:
+        _notify(observer, WorkflowStage.ADVISORY_RESOLUTION)
         advisory = await self._advisory_service.resolve(request.advisory_identifier)
+        _notify(observer, WorkflowStage.SNAPSHOT_ACQUISITION)
         lease = self._repository_service.acquire(request.repository)
         repository_snapshot: RepositorySnapshot | None = None
         hook_result: object | None = None
         artifact_result: object | None = None
         async with lease as acquired:
             repository_snapshot = acquired.snapshot
+            _notify(observer, WorkflowStage.INVENTORY)
             inventory = await self._inventory_service.build(acquired)
+            _notify(observer, WorkflowStage.COORDINATE_MATCHING)
             match_report = await self._match_service.match(advisory, inventory)
+            _notify(observer, WorkflowStage.EVIDENCE)
             evidence = await self._evidence_service.collect(acquired, inventory, match_report)
+            _notify(observer, WorkflowStage.CONTEXT)
             context = await self._context_service.collect(
                 acquired, inventory, match_report, evidence
             )
             if artifact_hook is not None:
+                _notify(observer, WorkflowStage.CANDIDATE_DERIVATION)
                 artifact_result = await artifact_hook(
                     advisory,
                     inventory,
@@ -181,6 +191,7 @@ class _WorkflowExecutionCore:
                     context,
                 )
             if lease_hook is not None:
+                _notify(observer, WorkflowStage.PREVIEW_COLLECTION)
                 hook_result = await lease_hook(
                     acquired,
                     advisory,
@@ -190,9 +201,11 @@ class _WorkflowExecutionCore:
                     context,
                     artifact_result,
                 )
+        _notify(observer, WorkflowStage.CLEANUP_VERIFICATION)
         if repository_snapshot is None or not lease.cleanup_result.verified:
             raise WorkflowCleanupError("repository cleanup was not verified")
 
+        _notify(observer, WorkflowStage.INVESTIGATION)
         investigation = await self._investigation_service.investigate(
             advisory,
             inventory,
@@ -200,6 +213,7 @@ class _WorkflowExecutionCore:
             evidence,
             context,
         )
+        _notify(observer, WorkflowStage.OUTPUT_ASSEMBLY)
         report = self._report_assembler.assemble(
             advisory,
             repository_snapshot,
@@ -220,6 +234,17 @@ class _WorkflowExecutionCore:
             artifact_hook_result=artifact_result,
             lease_hook_result=hook_result,
         )
+
+
+def _notify(observer: WorkflowObserver | None, stage: WorkflowStage) -> None:
+    if observer is None:
+        return
+    try:
+        observer(stage)
+    except BaseException as exc:
+        if isinstance(exc, (KeyboardInterrupt, SystemExit)):
+            raise
+        raise WorkflowObserverError("workflow observer failed") from exc
 
 
 def _validate_request_limits(
@@ -273,9 +298,16 @@ class InvestigationWorkflowService:
             max_concurrent_requests=configuration.max_concurrent_requests,
         )
 
-    async def run(self, request: InvestigationWorkflowRequest) -> InvestigationReport:
+    async def run(
+        self,
+        request: InvestigationWorkflowRequest,
+        *,
+        observer: WorkflowObserver | None = None,
+    ) -> InvestigationReport:
         validated = self._validated_request(request)
-        artifacts = await self._admission.run(lambda: self._core.execute(validated))
+        artifacts = await self._admission.run(
+            lambda: self._core.execute(validated, observer=observer)
+        )
         return artifacts.report
 
     async def run_rendered(
@@ -345,10 +377,15 @@ class RemediationWorkflowService:
             max_concurrent_requests=configuration.limits.max_concurrent_requests,
         )
 
-    async def run(self, request: RemediationWorkflowRequest) -> RemediationPlan:
+    async def run(
+        self,
+        request: RemediationWorkflowRequest,
+        *,
+        observer: WorkflowObserver | None = None,
+    ) -> RemediationPlan:
         self._require_enabled()
         validated = self._validated_request(request)
-        return await self._admission.run(lambda: self._run_validated(validated))
+        return await self._admission.run(lambda: self._run_validated(validated, observer=observer))
 
     async def run_rendered(
         self,
@@ -378,7 +415,12 @@ class RemediationWorkflowService:
         parse_github_repository_url(validated.repository.repository_url)
         return validated
 
-    async def _run_validated(self, request: RemediationWorkflowRequest) -> RemediationPlan:
+    async def _run_validated(
+        self,
+        request: RemediationWorkflowRequest,
+        *,
+        observer: WorkflowObserver | None = None,
+    ) -> RemediationPlan:
         async def candidate_hook(
             advisory: AdvisoryRecord,
             inventory: DependencyInventory,
@@ -421,6 +463,7 @@ class RemediationWorkflowService:
             request,
             artifact_hook=candidate_hook,
             lease_hook=preview_hook if self._configuration.preview_enabled else None,
+            observer=observer,
         )
         derivation = artifacts.artifact_hook_result
         preview = artifacts.lease_hook_result

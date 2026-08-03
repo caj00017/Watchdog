@@ -25,8 +25,9 @@ from watchdog.reporting.assembler import ReportAssembler
 from watchdog.reporting.limits import ReportingConfiguration, ReportingLimits
 from watchdog.reporting.renderers import ReportRenderer
 from watchdog.repository.intake import RepositoryIntakeService
-from watchdog.workflow.errors import WorkflowTimeoutError
+from watchdog.workflow.errors import WorkflowObserverError, WorkflowTimeoutError
 from watchdog.workflow.limits import WorkflowConfiguration
+from watchdog.workflow.observer import WorkflowStage
 from watchdog.workflow.service import InvestigationWorkflowService
 
 
@@ -161,6 +162,80 @@ async def test_workflow_timeout_waits_for_repository_cleanup(tmp_path: Path) -> 
 
     with pytest.raises(WorkflowTimeoutError, match="after cleanup"):
         await workflow.run(request)
+
+    assert source.started.is_set()
+    assert await asyncio.to_thread(lambda: list(tmp_path.iterdir())) == []
+
+
+async def test_optional_observer_is_data_free_ordered_and_identity_neutral(tmp_path: Path) -> None:
+    archive = build_tar(
+        [
+            TarEntry("root/", kind="dir"),
+            TarEntry("root/requirements.txt", content=b"pyyaml==6.0.2\n"),
+        ]
+    )
+    source = FakeRepositorySource(archive)
+    investigation_config = investigation_configuration(enabled=False, model=None)
+    workflow = InvestigationWorkflowService(
+        workflow_configuration(),
+        advisory_service=FakeAdvisoryService(),  # type: ignore[arg-type]
+        repository_service=RepositoryIntakeService(source, repository_limits(tmp_path)),
+        inventory_service=DependencyInventoryService(inventory_limits()),
+        match_service=AdvisoryMatchService(FakeScanner()),
+        evidence_service=EvidenceService(evidence_configuration()),
+        context_service=ContextService(context_limits()),
+        investigation_service=InvestigationService(investigation_config),
+        report_assembler=ReportAssembler(reporting_configuration(), investigation_config),
+    )
+    request = InvestigationWorkflowRequest(
+        advisory_identifier="CVE-2026-12345",
+        repository=RepositoryRequest(repository_url="https://github.com/octocat/Hello-World"),
+    )
+    baseline = await workflow.run(request)
+    stages: list[WorkflowStage] = []
+
+    observed = await workflow.run(request, observer=stages.append)
+
+    assert observed.id == baseline.id
+    assert stages == [
+        WorkflowStage.ADVISORY_RESOLUTION,
+        WorkflowStage.SNAPSHOT_ACQUISITION,
+        WorkflowStage.INVENTORY,
+        WorkflowStage.COORDINATE_MATCHING,
+        WorkflowStage.EVIDENCE,
+        WorkflowStage.CONTEXT,
+        WorkflowStage.CLEANUP_VERIFICATION,
+        WorkflowStage.INVESTIGATION,
+        WorkflowStage.OUTPUT_ASSEMBLY,
+    ]
+    assert all(type(stage) is WorkflowStage for stage in stages)
+
+
+async def test_observer_failure_inside_lease_still_cleans_repository(tmp_path: Path) -> None:
+    source = FakeRepositorySource()
+    investigation_config = investigation_configuration(enabled=False, model=None)
+    workflow = InvestigationWorkflowService(
+        workflow_configuration(),
+        advisory_service=FakeAdvisoryService(),  # type: ignore[arg-type]
+        repository_service=RepositoryIntakeService(source, repository_limits(tmp_path)),
+        inventory_service=DependencyInventoryService(inventory_limits()),
+        match_service=AdvisoryMatchService(FakeScanner()),
+        evidence_service=EvidenceService(evidence_configuration()),
+        context_service=ContextService(context_limits()),
+        investigation_service=InvestigationService(investigation_config),
+        report_assembler=ReportAssembler(reporting_configuration(), investigation_config),
+    )
+    request = InvestigationWorkflowRequest(
+        advisory_identifier="CVE-2026-12345",
+        repository=RepositoryRequest(repository_url="https://github.com/octocat/Hello-World"),
+    )
+
+    def fail(stage: WorkflowStage) -> None:
+        if stage is WorkflowStage.INVENTORY:
+            raise RuntimeError("untrusted observer detail")
+
+    with pytest.raises(WorkflowObserverError, match="observer failed"):
+        await workflow.run(request, observer=fail)
 
     assert source.started.is_set()
     assert await asyncio.to_thread(lambda: list(tmp_path.iterdir())) == []

@@ -28,6 +28,7 @@ from watchdog.remediation.renderers import RemediationRenderer
 from watchdog.reporting.assembler import ReportAssembler
 from watchdog.repository.intake import RepositoryIntakeService
 from watchdog.workflow.errors import RemediationDisabledError
+from watchdog.workflow.observer import WorkflowStage
 from watchdog.workflow.service import RemediationWorkflowService
 
 
@@ -164,3 +165,24 @@ async def test_narrow_validation_action_limit_is_explicitly_partial(tmp_path: Pa
     assert len(plan.validation_actions) == 1
     assert "validation_action_limit_exceeded" in {item.value for item in plan.coverage.limitations}
     assert "validation_action_limit_exceeded" in {item.value for item in plan.warnings}
+
+
+async def test_remediation_observer_includes_candidate_and_preview_stages(tmp_path: Path) -> None:
+    service, _renderer, _source, _advisory = _service(tmp_path, enabled=True, preview_enabled=True)
+    stages: list[WorkflowStage] = []
+
+    await service.run(_request(), observer=stages.append)
+
+    assert stages == [
+        WorkflowStage.ADVISORY_RESOLUTION,
+        WorkflowStage.SNAPSHOT_ACQUISITION,
+        WorkflowStage.INVENTORY,
+        WorkflowStage.COORDINATE_MATCHING,
+        WorkflowStage.EVIDENCE,
+        WorkflowStage.CONTEXT,
+        WorkflowStage.CANDIDATE_DERIVATION,
+        WorkflowStage.PREVIEW_COLLECTION,
+        WorkflowStage.CLEANUP_VERIFICATION,
+        WorkflowStage.INVESTIGATION,
+        WorkflowStage.OUTPUT_ASSEMBLY,
+    ]
