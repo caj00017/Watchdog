@@ -37,7 +37,7 @@ async def test_phase7_report_identity_and_rendered_bytes_remain_frozen(
         assert hashlib.sha256(rendered.body).hexdigest() == expected
 
 
-def test_phase9_did_not_change_dependencies_or_scanner_pin() -> None:
+def test_release_one_tui_adds_only_reviewed_runtime_dependency_and_keeps_scanner_pin() -> None:
     project = tomllib.loads(Path("pyproject.toml").read_text())
     dockerfile = Path("Dockerfile").read_text()
     scanner = Path("watchdog/scanners/osv_scanner.py").read_text()
@@ -48,6 +48,7 @@ def test_phase9_did_not_change_dependencies_or_scanner_pin() -> None:
         "packaging>=24.2,<26",
         "pydantic>=2.10,<3",
         "pydantic-settings>=2.7,<3",
+        "textual>=8.2.8,<9",
         "uvicorn[standard]>=0.34,<1",
     ]
     assert "ghcr.io/google/osv-scanner:v2.4.0@sha256:" in dockerfile

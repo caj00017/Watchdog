@@ -35,6 +35,15 @@ _REQUIRED_WHEEL_ASSETS = {
     "apps/web/static/watchdog.css",
     "apps/web/static/watchdog.js",
 }
+_REQUIRED_WHEEL_TUI_MODULES = {
+    "watchdog/tui/__init__.py",
+    "watchdog/tui/app.py",
+    "watchdog/tui/backend.py",
+    "watchdog/tui/display.py",
+    "watchdog/tui/projection.py",
+    "watchdog/tui/runner.py",
+    "watchdog/workflow/observer.py",
+}
 _REQUIRED_SDIST_FILES = {
     "AGENTS.md",
     "CHANGELOG.md",
@@ -45,7 +54,10 @@ _REQUIRED_SDIST_FILES = {
     "SECURITY.md",
     "pyproject.toml",
     "docs/release/release-process.md",
+    "docs/release/textual-8.2.8-dependency-review.md",
+    "docs/plans/release-1-local-tui-implementation-plan.md",
     "docs/work-orders/release-1-hardening.md",
+    "docs/work-orders/release-1-tui-and-ssh-trial.md",
     "requirements/runtime.lock",
     "requirements/dev.lock",
     "requirements/release.lock",
@@ -164,6 +176,12 @@ def _verify_locks(root: Path, project: dict[str, Any]) -> None:
     for tool in ("build", "twine"):
         if tool not in locks["release.lock"]:
             raise ReleaseVerificationError(f"release.lock omits {tool}")
+    for name, entries in locks.items():
+        if entries.get("textual") != "8.2.8":
+            raise ReleaseVerificationError(f"{name} does not select reviewed Textual 8.2.8")
+        forbidden = sorted(package for package in entries if package.startswith("tree-sitter"))
+        if forbidden or "textual-dev" in entries:
+            raise ReleaseVerificationError(f"{name} contains an unreviewed Textual feature")
 
 
 def _verify_workflow_action_pins(path: Path) -> None:
@@ -297,6 +315,8 @@ def _verify_wheel(path: Path, expected_version: str, expected_dependencies: set[
                 license_present = True
         if not _REQUIRED_WHEEL_ASSETS.issubset(names):
             raise ReleaseVerificationError("wheel omits guided or legacy interface assets")
+        if not _REQUIRED_WHEEL_TUI_MODULES.issubset(names):
+            raise ReleaseVerificationError("wheel omits local TUI boundary modules")
         if metadata_name is None or not license_present:
             raise ReleaseVerificationError("wheel omits metadata or Apache license")
         _verify_metadata(archive.read(metadata_name), expected_version, expected_dependencies)

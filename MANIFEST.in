@@ -8,6 +8,7 @@ include SECURITY.md
 include pyproject.toml
 recursive-include docs *.md *.txt
 exclude docs/release/v0.1.0-rc1-validation.md
+exclude docs/release/v0.1.0-rc2-validation.md
 recursive-include requirements *.in *.lock
 recursive-include scripts *.py
 recursive-include tests *.py
