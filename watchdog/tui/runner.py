@@ -9,9 +9,9 @@ def run_tui(settings: Settings, readiness: GuidedReadiness) -> int:
 
     from watchdog.tui.app import WatchdogTuiApp
     from watchdog.tui.backend import ProductionTuiBackend
-    from watchdog.tui.driver import terminal_driver_class
+    from watchdog.tui.driver import detected_terminal_dimensions, terminal_driver_class
 
     backend = ProductionTuiBackend(settings, readiness)
     app = WatchdogTuiApp(backend, driver_class=terminal_driver_class())
-    result = app.run(mouse=False)
+    result = app.run(mouse=False, size=detected_terminal_dimensions())
     return 0 if result is None else int(result)

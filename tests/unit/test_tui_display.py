@@ -4,7 +4,7 @@ import pytest
 
 from watchdog.tui.backend import investigation_request
 from watchdog.tui.display import contains_forbidden_input, display_bytes, display_text
-from watchdog.tui.driver import filter_terminal_modes
+from watchdog.tui.driver import clamp_terminal_dimensions, filter_terminal_modes
 
 
 @pytest.mark.parametrize(
@@ -59,6 +59,12 @@ def test_unauthorized_terminal_input_modes_are_filtered() -> None:
     )
 
     assert rendered == "beforemiddleafter\x1b[?1004l\x1b[?2004l"
+
+
+def test_terminal_allocations_are_clamped_and_small_sizes_remain_visible() -> None:
+    assert clamp_terminal_dimensions(500, 200) == (240, 80)
+    assert clamp_terminal_dimensions(59, 19) == (59, 19)
+    assert clamp_terminal_dimensions(-1, -1) == (0, 0)
 
 
 @pytest.mark.parametrize("value", ["CVE-2026-12345\x1b", "CVE-2026-12345\u202e", "x\u200b"])

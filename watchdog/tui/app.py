@@ -26,6 +26,7 @@ from watchdog.tui.backend import (
     remediation_request,
 )
 from watchdog.tui.display import MAX_CANONICAL_DISPLAY_CODEPOINTS, display_bytes, display_text
+from watchdog.tui.driver import MAXIMUM_TERMINAL_HEIGHT, MAXIMUM_TERMINAL_WIDTH
 from watchdog.tui.projection import (
     evidence_detail,
     evidence_index,
@@ -37,8 +38,6 @@ from watchdog.workflow.observer import WorkflowStage
 
 MINIMUM_WIDTH = 60
 MINIMUM_HEIGHT = 20
-MAXIMUM_LAYOUT_WIDTH = 240
-MAXIMUM_LAYOUT_HEIGHT = 80
 
 
 class TuiState(StrEnum):
@@ -266,8 +265,8 @@ class WatchdogTuiApp(App[int]):
         self._apply_viewport()
 
     def _apply_viewport(self) -> None:
-        width = min(max(self.size.width, 0), MAXIMUM_LAYOUT_WIDTH)
-        height = min(max(self.size.height, 0), MAXIMUM_LAYOUT_HEIGHT)
+        width = min(max(self.size.width, 0), MAXIMUM_TERMINAL_WIDTH)
+        height = min(max(self.size.height, 0), MAXIMUM_TERMINAL_HEIGHT)
         self._viewport_supported = width >= MINIMUM_WIDTH and height >= MINIMUM_HEIGHT
         warning = self.query_one("#viewport-warning", Static)
         warning.set_class(self._viewport_supported, "hidden")
