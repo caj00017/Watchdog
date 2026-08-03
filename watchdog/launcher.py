@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import os
 import socket
 import sys
 import webbrowser
@@ -23,7 +24,11 @@ from watchdog.readiness import (
     validate_runtime_configuration,
 )
 
-_USAGE = "Usage: watchdog {ui|doctor|investigate|remediate} ...\n"
+_USAGE = "Usage: watchdog {tui|ui|doctor|investigate|remediate} ...\n"
+_TUI_PREFLIGHT_DIAGNOSTIC = (
+    "tui_unavailable: Watchdog TUI requires an interactive supported terminal "
+    "on stdin and stdout.\n"
+)
 
 
 class LauncherArgumentError(ValueError):
@@ -40,6 +45,13 @@ def _ui_parser() -> _SafeParser:
     parser.add_argument("--model")
     parser.add_argument("--enable-previews", action="store_true")
     parser.add_argument("--no-open", action="store_true")
+    return parser
+
+
+def _tui_parser() -> _SafeParser:
+    parser = _SafeParser(prog="watchdog tui")
+    parser.add_argument("--model")
+    parser.add_argument("--enable-previews", action="store_true")
     return parser
 
 
@@ -68,6 +80,39 @@ def _configured_settings(*, model: str | None, enable_previews: bool) -> Setting
     validate_runtime_configuration(configured)
     validate_loopback_configuration(configured)
     return configured
+
+
+def _tui_configured_settings(*, model: str | None, enable_previews: bool) -> Settings:
+    current = Settings()
+    values = current.model_dump(mode="python")
+    values.update(
+        {
+            "local_interfaces_enabled": False,
+            "remediation_enabled": True,
+            "remediation_preview_enabled": enable_previews,
+        }
+    )
+    if model is not None:
+        values.update(
+            {
+                "investigation_enabled": True,
+                "investigation_model": model,
+            }
+        )
+    configured = Settings.model_validate(values)
+    validate_runtime_configuration(configured)
+    return configured
+
+
+def _interactive_terminal() -> bool:
+    try:
+        interactive = sys.stdin.isatty() and sys.stdout.isatty()
+    except (AttributeError, OSError):
+        return False
+    if not interactive:
+        return False
+    terminal = os.environ.get("TERM", "")
+    return sys.platform == "win32" or terminal.lower() not in {"", "dumb", "unknown"}
 
 
 def _listener(settings: Settings) -> socket.socket:
@@ -195,11 +240,38 @@ def _run_ui(arguments: Sequence[str]) -> int:
     return _run_server(settings, readiness, open_browser=not namespace.no_open)
 
 
+def _run_tui(arguments: Sequence[str]) -> int:
+    try:
+        namespace = _tui_parser().parse_args(list(arguments))
+    except LauncherArgumentError:
+        _diagnostic("invalid_arguments", "The TUI options are invalid.")
+        return 2
+    if not _interactive_terminal():
+        sys.stderr.write(_TUI_PREFLIGHT_DIAGNOSTIC)
+        return 2
+    try:
+        settings = _tui_configured_settings(
+            model=namespace.model,
+            enable_previews=namespace.enable_previews,
+        )
+    except (ValidationError, ValueError):
+        _diagnostic("invalid_arguments", "The TUI options or configuration are invalid.")
+        return 2
+    scanner = asyncio.run(check_scanner_readiness(settings))
+    readiness = guided_readiness(settings, scanner)
+    try:
+        from watchdog.tui.runner import run_tui
+
+        return run_tui(settings, readiness)
+    except Exception:
+        _diagnostic("tui_stopped", "The local TUI stopped safely.")
+        return 1
+
+
 def main(arguments: Sequence[str] | None = None) -> int:
     values = list(sys.argv[1:] if arguments is None else arguments)
     if not values:
-        sys.stderr.write(_USAGE)
-        return 2
+        return _run_tui(())
     command, remainder = values[0], values[1:]
     if command in {"investigate", "remediate"}:
         return asyncio.run(legacy_cli._async_main(values))
@@ -207,6 +279,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
         return _run_doctor()
     if command == "ui":
         return _run_ui(remainder)
+    if command == "tui":
+        return _run_tui(remainder)
     if command in {"-h", "--help"}:
         sys.stdout.write(_USAGE)
         return 0

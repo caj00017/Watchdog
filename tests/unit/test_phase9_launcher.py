@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import builtins
 import io
 import socket
 import sys
+from collections.abc import Mapping, Sequence
 from pathlib import Path
+from types import ModuleType
 from typing import cast
 
 import pytest
@@ -11,6 +14,11 @@ import pytest
 from watchdog import launcher
 from watchdog.config import Settings
 from watchdog.readiness import GuidedReadiness, ScannerReadiness, ScannerReadinessCode
+
+
+class _TtyBuffer(io.StringIO):
+    def isatty(self) -> bool:
+        return True
 
 
 def _readiness() -> GuidedReadiness:
@@ -230,3 +238,111 @@ def test_ui_no_open_reaches_server_without_browser_authorization(
     assert not settings.remediation_preview_enabled
     assert readiness.scanner == "ready"
     assert not open_browser
+
+
+def test_bare_and_explicit_tui_are_lazy_and_use_separate_local_settings(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def scanner_ready(_settings: Settings) -> ScannerReadiness:
+        return ScannerReadiness(ready=True, code=ScannerReadinessCode.READY)
+
+    captured: list[tuple[Settings, GuidedReadiness]] = []
+
+    def run_tui(settings: Settings, readiness: GuidedReadiness) -> int:
+        captured.append((settings, readiness))
+        return 0
+
+    monkeypatch.setenv("TERM", "xterm-256color")
+    monkeypatch.setattr(sys, "stdin", _TtyBuffer())
+    monkeypatch.setattr(sys, "stdout", _TtyBuffer())
+    monkeypatch.setattr(launcher, "check_scanner_readiness", scanner_ready)
+    monkeypatch.setattr("watchdog.tui.runner.run_tui", run_tui)
+
+    assert launcher.main([]) == 0
+    assert launcher.main(["tui", "--enable-previews"]) == 0
+
+    assert len(captured) == 2
+    assert all(not settings.local_interfaces_enabled for settings, _readiness in captured)
+    assert all(settings.remediation_enabled for settings, _readiness in captured)
+    assert not captured[0][0].remediation_preview_enabled
+    assert captured[1][0].remediation_preview_enabled
+    assert all(readiness.scanner == "ready" for _settings, readiness in captured)
+
+
+def test_tui_preflight_failure_is_plain_and_imports_no_tui_or_textual(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    imported: list[str] = []
+    real_import = builtins.__import__
+
+    def recording_import(
+        name: str,
+        globals: Mapping[str, object] | None = None,
+        locals: Mapping[str, object] | None = None,
+        fromlist: Sequence[str] = (),
+        level: int = 0,
+    ) -> ModuleType:
+        if name == "textual" or name.startswith("textual.") or name.startswith("watchdog.tui"):
+            imported.append(name)
+        return real_import(name, globals, locals, fromlist, level)
+
+    stdout = io.StringIO()
+    stderr = io.StringIO()
+    monkeypatch.setattr(builtins, "__import__", recording_import)
+    monkeypatch.setattr(sys, "stdin", io.StringIO())
+    monkeypatch.setattr(sys, "stdout", stdout)
+    monkeypatch.setattr(sys, "stderr", stderr)
+
+    assert launcher.main([]) == 2
+    assert stdout.getvalue() == ""
+    assert stderr.getvalue() == launcher._TUI_PREFLIGHT_DIAGNOSTIC
+    assert "\x1b" not in stderr.getvalue()
+    assert imported == []
+
+
+def test_launcher_help_mentions_tui_without_importing_textual(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    imported: list[str] = []
+    real_import = builtins.__import__
+
+    def recording_import(
+        name: str,
+        globals: Mapping[str, object] | None = None,
+        locals: Mapping[str, object] | None = None,
+        fromlist: Sequence[str] = (),
+        level: int = 0,
+    ) -> ModuleType:
+        if name == "textual" or name.startswith("textual."):
+            imported.append(name)
+        return real_import(name, globals, locals, fromlist, level)
+
+    stdout = io.StringIO()
+    monkeypatch.setattr(builtins, "__import__", recording_import)
+    monkeypatch.setattr(sys, "stdout", stdout)
+
+    assert launcher.main(["--help"]) == 0
+    assert stdout.getvalue() == "Usage: watchdog {tui|ui|doctor|investigate|remediate} ...\n"
+    assert imported == []
+
+
+def test_tui_runtime_failure_is_fixed_and_does_not_expose_exception(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def scanner_ready(_settings: Settings) -> ScannerReadiness:
+        return ScannerReadiness(ready=True, code=ScannerReadinessCode.READY)
+
+    def fail_tui(_settings: Settings, _readiness: GuidedReadiness) -> int:
+        raise LookupError("SENSITIVE RENDER FAILURE")
+
+    monkeypatch.setenv("TERM", "xterm-256color")
+    monkeypatch.setattr(sys, "stdin", _TtyBuffer())
+    monkeypatch.setattr(sys, "stdout", _TtyBuffer())
+    stderr = io.StringIO()
+    monkeypatch.setattr(sys, "stderr", stderr)
+    monkeypatch.setattr(launcher, "check_scanner_readiness", scanner_ready)
+    monkeypatch.setattr("watchdog.tui.runner.run_tui", fail_tui)
+
+    assert launcher.main(["tui"]) == 1
+    assert stderr.getvalue() == "tui_stopped: The local TUI stopped safely.\n"
+    assert "SENSITIVE" not in stderr.getvalue()
