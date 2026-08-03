@@ -258,6 +258,10 @@ evidence selection, and rendered widget content; there is no session history.
 Remediation reruns the existing workflow explicitly and does not claim identity
 equality with the prior independently produced report.
 
+The start form is a keyboard-scrollable region, so the submit action remains
+focusable at the exact 60x20 minimum even when not all fields fit on screen at
+once. Smaller viewports show fixed resize guidance and keep submission disabled.
+
 Dynamic artifact values enter plain-text widgets with markup disabled. Display
 policy version 1 visibly encodes terminal controls, C0/C1, bidi and zero-width
 format characters, and unsafe Unicode categories; it bounds combining/format

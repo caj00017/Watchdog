@@ -158,7 +158,7 @@ class WatchdogTuiApp(App[int]):
         readiness = self._backend.readiness
         yield Static("NEXURA WATCHDOG — LOCAL EVIDENCE-BOUND TUI", id="title", markup=False)
         yield Static("", id="viewport-warning", classes="hidden", markup=False)
-        with Container(id="start"):
+        with VerticalScroll(id="start"):
             yield Static(
                 " | ".join(
                     (
@@ -335,7 +335,7 @@ class WatchdogTuiApp(App[int]):
     def _show_running(self, state: TuiState, stage: str) -> None:
         self.state = state
         self._started_at = time.monotonic()
-        self.query_one("#start", Container).add_class("hidden")
+        self.query_one("#start", VerticalScroll).add_class("hidden")
         self.query_one("#result", Container).add_class("hidden")
         self.query_one("#fatal", Container).add_class("hidden")
         self.query_one("#running", Container).remove_class("hidden")
@@ -422,7 +422,7 @@ class WatchdogTuiApp(App[int]):
     def _show_result(self) -> None:
         self._started_at = None
         self.query_one("#running", Container).add_class("hidden")
-        self.query_one("#start", Container).add_class("hidden")
+        self.query_one("#start", VerticalScroll).add_class("hidden")
         self.query_one("#fatal", Container).add_class("hidden")
         self.query_one("#result", Container).remove_class("hidden")
         self._update_submission()
@@ -443,7 +443,7 @@ class WatchdogTuiApp(App[int]):
             return
         self.query_one("#running", Container).add_class("hidden")
         self.query_one("#result", Container).add_class("hidden")
-        self.query_one("#start", Container).remove_class("hidden")
+        self.query_one("#start", VerticalScroll).remove_class("hidden")
         self.query_one("#status", Static).update("Cancelled after cleanup verification.")
         self._update_submission()
 
@@ -455,7 +455,7 @@ class WatchdogTuiApp(App[int]):
             return
         self.query_one("#running", Container).add_class("hidden")
         self.query_one("#result", Container).add_class("hidden")
-        self.query_one("#start", Container).add_class("hidden")
+        self.query_one("#start", VerticalScroll).add_class("hidden")
         self.query_one("#fatal", Container).remove_class("hidden")
         self.query_one("#fatal-message", Static).update(message)
 
@@ -466,7 +466,7 @@ class WatchdogTuiApp(App[int]):
         self._request = None
         self.state = TuiState.READY
         self.query_one("#result", Container).add_class("hidden")
-        self.query_one("#start", Container).remove_class("hidden")
+        self.query_one("#start", VerticalScroll).remove_class("hidden")
         self.query_one("#status", Static).update("")
         self._update_submission()
         self.query_one("#advisory", Input).focus()

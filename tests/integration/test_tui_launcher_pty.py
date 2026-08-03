@@ -44,9 +44,11 @@ def _spawn(
     tmp_path: Path,
     *,
     terminal: str = "xterm-256color",
+    size: tuple[int, int] = (100, 30),
 ) -> tuple[int, subprocess.Popen[bytes]]:
     master, slave = pty.openpty()
-    fcntl.ioctl(slave, termios.TIOCSWINSZ, struct.pack("HHHH", 30, 100, 0, 0))
+    width, height = size
+    fcntl.ioctl(slave, termios.TIOCSWINSZ, struct.pack("HHHH", height, width, 0, 0))
     process = subprocess.Popen(
         _LAUNCH,
         stdin=slave,
@@ -92,6 +94,20 @@ def test_unsupported_terminal_preflight_is_plain_text(tmp_path: Path) -> None:
         b"on stdin and stdout.\n"
     )
     assert b"\x1b" not in output
+
+
+def test_small_terminal_shows_guidance_without_starting_work(tmp_path: Path) -> None:
+    master, process = _spawn(tmp_path, size=(59, 19))
+    try:
+        output = _read_until(master, b"60 columns by 20 rows")
+        assert b"60 columns by 20 rows" in output
+        os.write(master, b"\x11")
+        assert process.wait(timeout=10) == 0
+    finally:
+        if process.poll() is None:
+            process.kill()
+            process.wait(timeout=5)
+        os.close(master)
 
 
 @pytest.mark.parametrize("stop", ["ctrl-q", "sigterm"])

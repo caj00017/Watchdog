@@ -159,6 +159,24 @@ async def test_small_viewport_and_scanner_unavailable_block_submission(tmp_path:
         assert backend.investigation_calls == 0
 
 
+async def test_exact_minimum_viewport_remains_keyboard_operable(tmp_path: Path) -> None:
+    investigation, remediation = await _artifacts(tmp_path)
+    backend = FixtureBackend(investigation, remediation)
+    app = WatchdogTuiApp(backend)
+
+    async with app.run_test(size=(60, 20)) as pilot:
+        app.query_one("#advisory").value = "CVE-2026-12345"  # type: ignore[attr-defined]
+        app.query_one("#repository").value = (  # type: ignore[attr-defined]
+            "https://github.com/octocat/Hello-World"
+        )
+        await pilot.press("tab", "tab", "tab")
+        assert app.focused is not None and app.focused.id == "submit"
+        await pilot.press("enter")
+        await _wait_for_state(app, TuiState.SHOWING_REPORT)
+
+        assert backend.investigation_calls == 1
+
+
 async def test_focus_order_form_rejection_and_plain_global_bindings(tmp_path: Path) -> None:
     investigation, remediation = await _artifacts(tmp_path)
     backend = FixtureBackend(investigation, remediation)

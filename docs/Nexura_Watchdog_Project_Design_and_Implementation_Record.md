@@ -189,7 +189,7 @@ the separately validated replacement candidate.
 | Dependency and CI controls | Candidate complete | Python 3.12-generated hash locks, immutable action pins, read-only PR CI, package/container jobs, and isolated OIDC publication |
 | Package candidate | Replacement validation in progress | rc1 remains immutable pre-TUI evidence; rc2 exact artifacts, installation tests, checksums, size changes, and limitations follow the frozen source commit |
 | Container workflow | Pre-TUI candidate verified; replacement pending | Digest-pinned multi-stage build and exact OSV-Scanner 2.4.0 controls remain; the rc2 image identity and no-mount health evidence require regeneration |
-| Automated quality | Green on Python 3.12–3.14 | 405 tests pass with one bounded live scanner contract skipped; Ruff, strict mypy, compileall, release verification, Compose, frozen web-tree, headless TUI, and Linux PTY gates pass; macOS/Windows manual TUI checks remain unavailable candidate limitations |
+| Automated quality | Green on Python 3.12–3.14 | 407 tests pass with one bounded live scanner contract skipped; Ruff, strict mypy, compileall, release verification, Compose, frozen web-tree, headless TUI, and Linux PTY gates pass; macOS/Windows manual TUI checks remain unavailable candidate limitations |
 | Version-control state | Release hardening authorized at `12511ae` against Phase 9 closeout `97f2a05` | The exact candidate commit, artifacts, checksums, and environment limitations are retained in `docs/release/v0.1.0-rc1-validation.md` |
 
 ## 2.3 Immediate milestone
