@@ -1,6 +1,8 @@
 # Release 1 Local TUI Implementation Plan
 
-**Status:** Authorized August 4, 2026
+**Status:** Implemented August 4, 2026; deterministic source gates complete;
+replacement-candidate artifact evidence recorded separately after the exact
+source commit is frozen
 
 **Baseline:** Release 1 candidate implementation commit
 `7041e26570ae3555066aa221b31f80a49c298d35`, with the amended work order and

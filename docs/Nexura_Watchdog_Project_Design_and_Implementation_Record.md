@@ -2,9 +2,9 @@
 
 ## Project Design and Implementation Record
 
-**Document version:** 10.1
+**Document version:** 11.0
 
-**Last updated:** August 2, 2026
+**Last updated:** August 4, 2026
 
 **Owner:** Christopher Jones / Nexura
 
@@ -12,8 +12,9 @@
 
 **Code version:** 0.1.0
 
-**Current lifecycle state:** Phases 0–9 and pre-TUI Release 1 candidate complete;
-TUI/SSH work order drafted, implementation unapproved, publication paused
+**Current lifecycle state:** Phases 0–9, Release 1 hardening, and local-TUI Stage
+A implementation complete; replacement candidate verification in progress;
+hosted/SSH work deferred and publication human-gated
 
 **Primary deployment direction:** Local-first, open source
 
@@ -149,15 +150,16 @@ Phase 8 plan bytes remain unchanged. Exact exercised and unreported manual
 checks are recorded in the Phase 9 recap.
 
 On August 2, after the first release candidate was validated, the user selected
-a terminal-first experience for Release 1 while retaining the existing web UI
-unchanged for side-by-side comparison. The desired local invocation is bare
-`watchdog`; the desired no-install public trial is
-`ssh watchdog.nexura.fyi`. The staged work order is drafted at
-`docs/work-orders/release-1-tui-and-ssh-trial.md`. No TUI dependency, launcher
-change, SSH listener, hosted service, DNS/infrastructure change, or deployment
-has been authorized or implemented. The existing candidate remains evidence for
-the pre-TUI baseline, but publication is paused and a replacement candidate is
-required if Stage A proceeds.
+a local terminal-first experience for Release 1 while retaining the existing web
+UI unchanged for side-by-side comparison. The desired local invocation is bare
+`watchdog`. On August 4, hosted operation and SSH access were explicitly
+deferred to a separately reviewed Version 2 product. On August 4 the owner
+approved the amended work order and formal plan and authorized Stage A against
+the recorded baseline. The implemented local Textual TUI is a new bounded
+projection over unchanged Phase 7/8 models and renderers; the web interface,
+routes, scanner, analytical identities, and destinations remain unchanged. The
+existing candidate remains immutable pre-TUI evidence and publication requires
+the separately validated replacement candidate.
 
 ## 2.2 Current health
 
@@ -178,30 +180,30 @@ required if Stage A proceeds.
 | Exposure classification | Not implemented | No affected/not-affected conclusions are produced |
 | LLM integration | Implemented internally | Evidence-bound, disabled by default, literal-loopback only, credential-free, strict output validation |
 | CLI and web UI | Implemented locally | Installed guided launcher plus unchanged direct stdout-only CLI and disabled legacy literal-loopback UI/API |
-| Terminal UI | Draft only | Proposed bare-`watchdog` local TUI over unchanged canonical artifacts; no dependency or implementation yet |
-| Anonymous SSH trial | Draft only | Proposed `ssh watchdog.nexura.fyi` application-only trial with separately gated transport, isolation, abuse, privacy, and deployment review; no listener or infrastructure yet |
+| Terminal UI | Implemented locally | Bare `watchdog` and `watchdog tui` launch the one-workflow Textual 8.2.8 projection with readiness, bounded progress, evidence, remediation, and display-safe canonical JSON |
+| Hosted/SSH access | Deferred to Version 2 | No Release 1 hosted service, SSH listener, remote access, or deployment is authorized or implemented |
 | Readiness | Implemented locally | Fixed safe configuration/scanner doctor and controlled guided capability projection |
 | Remediation assistant | Implemented locally, disabled by default | Evidence-linked candidates, controlled actions, optional single-token no-write previews, canonical plan, CLI, and doubly gated local route |
 | Persistence and jobs | Not implemented | No database, queue, or retained investigation state |
 | Release governance | Candidate complete | Apache-2.0, contribution/governance/security policy, changelog, CODEOWNERS, release process, and final human go/no-go are explicit |
 | Dependency and CI controls | Candidate complete | Python 3.12-generated hash locks, immutable action pins, read-only PR CI, package/container jobs, and isolated OIDC publication |
-| Package candidate | Verified pre-TUI baseline; publication paused | Strict sdist/wheel metadata and bounded-content checks plus clean wheel/sdist installs pass; any TUI implementation requires replacement artifacts and checksums |
-| Container workflow | Verified locally | Digest-pinned multi-stage build; exact OSV-Scanner 2.4.0; 77,774,902-byte no-mount health image passed before final candidate recording |
-| Automated quality | Green | 374 deterministic tests pass on Python 3.12, 3.13, and 3.14; one bounded live scanner contract remains opt-in |
+| Package candidate | Replacement validation in progress | rc1 remains immutable pre-TUI evidence; rc2 exact artifacts, installation tests, checksums, size changes, and limitations follow the frozen source commit |
+| Container workflow | Pre-TUI candidate verified; replacement pending | Digest-pinned multi-stage build and exact OSV-Scanner 2.4.0 controls remain; the rc2 image identity and no-mount health evidence require regeneration |
+| Automated quality | Green on Python 3.12–3.14 | 405 tests pass with one bounded live scanner contract skipped; Ruff, strict mypy, compileall, release verification, Compose, frozen web-tree, headless TUI, and Linux PTY gates pass; macOS/Windows manual TUI checks remain unavailable candidate limitations |
 | Version-control state | Release hardening authorized at `12511ae` against Phase 9 closeout `97f2a05` | The exact candidate commit, artifacts, checksums, and environment limitations are retained in `docs/release/v0.1.0-rc1-validation.md` |
 
 ## 2.3 Immediate milestone
 
-The enumerated Phase 0–9 roadmap and pre-TUI Release 1 hardening are complete.
-The immediate milestone is review of the draft terminal work order, explicit
-Stage A authorization, and a formal local-TUI implementation plan. Stable tag
-creation and publication remain paused. Stage B loopback SSH work and Stage C
-public deployment each require later independent approvals. Do not infer
-authority for TUI implementation, dependencies, launcher/default changes,
-anonymous access, persistence, telemetry, DNS/infrastructure changes, public
-listeners, authentication, private inputs, new analytical destinations,
-classification, reachability/exposure, compatibility/availability analysis,
-registry queries, commands, repository writes, or patch application.
+The enumerated Phase 0–9 roadmap, Release 1 hardening, and local-TUI Stage A are
+complete. The immediate milestone is a reproducible replacement rc2 candidate,
+artifact/container verification, supported-platform observations, and the final
+human publication go/no-go. Stable tag creation and publication remain paused.
+Hosted operation, SSH/remote
+access, persistence, telemetry, DNS/infrastructure changes, public listeners,
+authentication, private inputs, new analytical destinations, classification,
+reachability/exposure, compatibility/availability analysis, registry queries,
+commands, repository writes, or patch application remain outside Release 1 and
+require separate future review.
 
 ---
 
@@ -950,9 +952,10 @@ not a stable release identifier.
   branch/tag protection, private vulnerability reporting, the protected `pypi`
   environment, and PyPI Trusted Publisher configuration require final human
   verification.
-- The validated first candidate predates the proposed terminal-first release
-  direction. No TUI or SSH trial exists, and publication is paused pending
-  staged authorization and a replacement candidate.
+- The validated first candidate predates the implemented local terminal-first
+  release direction. It remains immutable historical evidence but is superseded
+  for publication by the required replacement candidate. Hosted/SSH access
+  remains deferred to Version 2.
 - The development Compose service is not a hardened production deployment.
 
 ---
@@ -972,7 +975,7 @@ not a stable release identifier.
 | 8. Remediation assistant | Complete | Evidence-linked upgrade candidates, human validation, bounded no-write previews |
 | 9. Local-first guided experience | Complete | Installed launcher, scanner readiness, and progressive literal-loopback UI |
 | Release hardening | Baseline candidate complete; publication paused | Governance, locking, CI, package/container baseline candidate, and human-gated replacement v0.1.0 publication |
-| Release 1 terminal experience | Draft; not authorized | Bare-`watchdog` local TUI, unchanged side-by-side web UI, and independently gated anonymous SSH trial followed by a replacement candidate |
+| Release 1 terminal experience | Stage A complete | Bare-`watchdog` local TUI, unchanged side-by-side web UI, data-free progress observer, terminal display policy, and replacement candidate; hosted/SSH access deferred to Version 2 |
 
 ---
 
@@ -1431,21 +1434,58 @@ publication approval, checksum confirmation, and GitHub release creation remain
 the release manager's final external go/no-go. The proposed TUI is also a
 separate post-hardening design decision rather than an implicit release change.
 
-## D-028 — Release 1 becomes terminal-first while retaining the web UI
+## D-028 — Original Release 1 terminal-first proposal (hosted portion superseded)
 
 On August 2, 2026, after the first candidate was validated, the user selected a
 TUI as the preferred Release 1 interactive experience and directed that the
-existing web UI remain unchanged for side-by-side comparison. The local target
-is bare `watchdog`; the no-install trial target is
-`ssh watchdog.nexura.fyi`.
+existing web UI remain unchanged for side-by-side comparison. The original
+proposal's local target was bare `watchdog`; it also recorded a no-install SSH
+trial target.
 
-This decision pauses publication of the pre-TUI candidate but does not itself
-authorize implementation. `docs/work-orders/release-1-tui-and-ssh-trial.md`
-separates local TUI implementation, literal-loopback SSH prototyping, and public
-SSH deployment into three explicit gates. The SSH target is treated as an
-anonymous hosted application boundary with no shell, forwarding, files,
-history, private inputs, previews, model provider, or cross-session state. A new
-candidate is mandatory after any TUI implementation.
+This historical proposal paused publication of the pre-TUI candidate but did not
+authorize implementation. Its original work order separated local TUI
+implementation, literal-loopback SSH prototyping, and public SSH deployment
+into three explicit gates. D-029 supersedes the hosted portion; a new candidate
+remains mandatory after any TUI implementation.
+
+The hosted SSH portion of this August 2 direction was superseded on August 4 by
+D-029 below. The historical decision remains recorded, but Release 1 now covers
+only the local TUI; hosted operation and remote access are deferred to Version 2.
+
+## D-029 — Release 1 remains local; hosted operation and SSH move to Version 2
+
+On August 4, 2026, the user clarified that Release 1 is local-first: operators
+will install Watchdog on their own machines and use the local TUI. The existing
+web UI remains available and unchanged for side-by-side comparison.
+
+The Release 1 terminal work order is amended to remove its SSH transport,
+hosted-trial, infrastructure, and deployment stages. Hosted Watchdog operation
+and SSH or other remote access are future Version 2 work and require a separate
+product, architecture, security, privacy, operations, dependency, and deployment
+review. No hosted or remote access authority is granted by Release 1.
+
+## D-030 — Stage A uses a capability-narrow Textual projection
+
+On August 4, 2026, the owner approved the amended Release 1 local-TUI work order
+and requested implementation of the formal plan against the recorded candidate
+baseline. Textual 8.2.8 was accepted after exact distribution, MIT license,
+pure-Python base graph, platform metadata, excluded syntax/web/dev features, and
+point-in-time advisory review. The exact selection and every transitive package
+are hash locked in runtime, development, and release environments.
+
+Bare `watchdog` and explicit `watchdog tui` now require interactive stdin/stdout
+and a supported terminal before Textual import or runtime construction. The app
+receives only controlled readiness, canonical reports/plans, and renderer bytes
+through a narrow backend. A synchronous enum-only observer provides truthful
+progress without repository data. Dynamic values use markup-disabled widgets
+and display policy version 1; frozen canonical bytes remain distinct from their
+escaped terminal representation.
+
+The TUI changes presentation and launcher default only. It grants no new route,
+destination, persistence, repository access, scanner behavior, analytical
+identity/claim, write, command, patch, hosted operation, SSH, or publication
+authority. Catchable cancellation and SIGINT/SIGTERM join the workflow cleanup
+path; uncatchable termination remains a documented limitation.
 
 ---
 
@@ -1565,6 +1605,32 @@ and boundary changes.
 ---
 
 # 18. Change History
+
+## Version 11.0 — August 4, 2026
+
+- Recorded explicit Stage A authorization and implemented the keyboard-first
+  local Textual 8.2.8 TUI behind bare `watchdog` and `watchdog tui`.
+- Added a fixed enum-only workflow observer, narrow canonical-artifact backend,
+  seven-state one-worker lifecycle, cleanup-waiting cancellation, TTY/terminal
+  preflight, viewport bounds, and display policy version 1.
+- Preserved the unchanged side-by-side web UI, direct commands, scanner 2.4.0,
+  routes, Phase 1–9 identities, analytical meaning, defaults, and destinations.
+- Regenerated all locks in the governed Python 3.12 resolver environment,
+  extended release verification, and moved publication evidence to a required
+  replacement candidate while retaining rc1 unchanged as historical baseline.
+- Kept hosted operation, SSH/remote access, authentication, persistence,
+  telemetry, credentials, new egress, writes, commands, apply, tagging, and
+  publication outside the boundary.
+
+## Version 10.2 — August 4, 2026
+
+- Amended the draft Release 1 terminal work order to cover only the local TUI
+  and unchanged side-by-side web UI.
+- Deferred hosted Watchdog operation and SSH or other remote access to a
+  separately reviewed Version 2 product; removed hosted/SSH implementation and
+  deployment gates from the Release 1 boundary.
+- Updated the current lifecycle, health, roadmap, and release-direction records
+  while retaining the August 2 terminal-first decision as historical context.
 
 ## Version 10.1 — August 2, 2026
 
@@ -1900,11 +1966,13 @@ capability. Release-one synthesis remains optional and literal-loopback local;
 Release 1 candidate hardening changes no product behavior, and any AWS/remote-
 provider operation remains separate work.
 
-The proposed Release 1 terminal experience is not implemented. Its draft work
-order would add a local TUI over unchanged canonical artifacts, keep the current
-web UI intact, and gate an anonymous SSH application trial behind separate
-transport, sandbox, abuse, privacy, host-key, monitoring, and deployment
-reviews. Until those stages are explicitly authorized and pass, bare `watchdog`
-continues to show usage, no SSH service exists, and the validated pre-TUI
-candidate remains unpublished baseline evidence rather than the intended final
-Release 1 artifact.
+Release 1 now adds a local keyboard-first Textual TUI over unchanged canonical
+artifacts while retaining the web UI intact. Bare `watchdog` and `watchdog tui`
+perform terminal and scanner readiness before admitting work, permit one
+workflow, expose only data-free progress, and present hostile values through a
+bounded display-safe policy. Cancellation waits for the existing cleanup path;
+the app retains no history and gains no repository/runtime-provider capability.
+Hosted operation and SSH access remain deferred to Version 2. The validated
+pre-TUI candidate remains unpublished historical baseline evidence; only a
+separately validated replacement candidate may proceed to the still-human stable
+tag and publication gates.

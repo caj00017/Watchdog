@@ -435,6 +435,30 @@ authorization, tenant isolation, encryption, data residency, persistence,
 rate/abuse/cost control, availability/fallback, monitoring, deletion, and
 incident response.
 
+## Release 1 local-TUI threat boundary
+
+The local TUI is a presentation adapter over validated Phase 7/8 artifacts. It
+adds the terminal process and Textual renderer to the local operator trust
+boundary but adds no listener, outbound destination, persistence, repository
+capability, analytical claim, write, command, or apply path.
+
+| Threat | Current control | Residual risk or follow-up |
+| --- | --- | --- |
+| Redirected/unsupported invocation emits controls or starts work | Bare and explicit TUI require interactive stdin/stdout plus a supported terminal; fixed plain-text exit 2 occurs before Textual import, scanner readiness, or workflow runtime | TTY and terminal type are local OS hints, not authentication or a complete emulator-safety proof |
+| Hostile repository/advisory/model text executes terminal behavior | Dynamic values use markup-disabled plain-text widgets; versioned policy visibly encodes C0/C1, ESC, bidi, zero-width/format and unsafe Unicode; combining/format floods and display length are bounded | Safe text can remain socially misleading; terminal emulator defects remain outside Watchdog |
+| Canonical JSON safety changes artifact identity | Original bounded renderer bytes remain frozen in memory; only the labeled terminal representation is escaped and bounded; byte length and canonical artifact ID remain visible | The terminal representation may omit code points and is not a byte-for-byte export |
+| Pasted input becomes a command or silently changes semantics | No single-character global commands; fixed Ctrl bindings; the pinned driver does not enable bracketed-paste mode; forbidden control/format characters are rejected before request construction; existing strict request validation follows | The terminal and OS input stack remain trusted to deliver pasted characters faithfully |
+| Concurrent work or history retains repository-derived data | Seven-state machine permits one worker; starting over and exit release report, plan, canonical, selection and widget buffers; no jobs/history/storage | Python allocator or terminal scrollback may retain process/display bytes outside application control |
+| Progress text leaks or invents work | Observer payload is exactly one fixed enum; it carries no path, identifier, content, exception, count, provider value, or repository text | Stage labels are coarse and do not estimate remaining work |
+| Cancel/exit abandons a lease | Active task cancellation traverses the existing shielded join path; “Cancelled” follows the cleanup barrier; repeated exit stays pending; catchable SIGINT/SIGTERM use the same lifecycle | SIGKILL, OOM, host loss, kernel/terminal failure, or other uncatchable termination cannot guarantee in-process cleanup |
+| Rendering/resizing failure leaks exception or leaves capabilities open | Fixed diagnostics omit exception/path/environment/upstream content; application teardown cancels/joins the worker and context-managed runtime closes clients; retained presentation objects are released | A catastrophic interpreter/runtime failure has the same residual risk as other uncatchable termination |
+| Toolkit feature broadens the boundary | Textual 8.2.8 is exact in every hash lock; syntax extra, Tree-sitter, textual-dev/web, command palette, mouse, focus reporting, bracketed paste, links, Markdown, syntax, clipboard and external themes are absent/disabled | Textual and its pure-Python transitive graph remain trusted third-party code and require ongoing advisory review |
+| TUI facts drift from web/direct output | Backend consumes unchanged canonical models/renderers; frozen Phase 7 identity/byte tests, web asset hash freeze, direct CLI regressions and fixture comparisons remain green | Separate live runs can have different retrieval timestamps and therefore different artifact IDs; compare semantic facts unless sharing one frozen artifact |
+
+Textual's `NO_COLOR` behavior is retained and every status has redundant text;
+manual monochrome/high-contrast and non-Linux terminal observations remain
+separate release-record evidence rather than inferred from headless tests.
+
 ## Release 1 supply-chain threat boundary
 
 Release tooling operates only on the trusted Watchdog checkout. It never
@@ -494,6 +518,13 @@ scanner-readiness, browser-open, guided-admission, text-rendering, cancellation,
 and legacy-regression controls. Hosted operation, authentication, installation,
 persistence, new destinations, and repository writes require a new reviewed
 boundary.
+
+The completed `../work-orders/release-1-tui-and-ssh-trial.md` and
+`../plans/release-1-local-tui-implementation-plan.md` define the local terminal,
+Textual dependency, observer, display, cancellation, launcher-default, and
+unchanged-web boundary. Hosted operation, SSH/remote access, persistence,
+telemetry, authentication, credentials, new destinations, commands, and writes
+remain outside it.
 
 `../work-orders/release-1-hardening.md`,
 `../plans/release-1-hardening-implementation-plan.md`, and

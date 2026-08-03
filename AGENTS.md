@@ -272,26 +272,27 @@ a final external human action. A TUI, hosted operation, new runtime dependency
 or destination, and every existing Phase 1–9 pause condition remain outside
 this boundary and require separate review.
 
-## Authorized Release 1 local terminal experience boundary
+## Completed Release 1 local terminal experience boundary
 
-`docs/work-orders/release-1-tui-and-ssh-trial.md` records the user's proposed
-Release 1 direction: an interactive local TUI launched by bare `watchdog`, with
+`docs/work-orders/release-1-tui-and-ssh-trial.md` and
+`docs/plans/release-1-local-tui-implementation-plan.md` define the implemented
+Release 1 boundary: an interactive local TUI launched by bare `watchdog`, with
 the existing web UI retained unchanged for side-by-side comparison. Release 1
 is local-first; the operator installs Watchdog and runs the TUI on their own
 machine.
 
 The owner explicitly authorized Stage A implementation on August 4, 2026,
-against the recorded Release 1 candidate baseline. Stage A may add only the
-reviewed Textual dependency, local TUI package and tests, data-free workflow
-observer, launcher dispatch, regenerated locks, and synchronized documentation
-defined by the work order and formal implementation plan. It does not authorize
+against the recorded Release 1 candidate baseline, and the local implementation
+and Python verification gates completed the same day. Stage A adds only the
+reviewed Textual 8.2.8 dependency, local TUI package and tests, data-free
+workflow observer, launcher dispatch, regenerated locks, and synchronized
+documentation defined by the work order and formal plan. It does not authorize
 hosted/non-loopback operation, SSH code, remote access, DNS/firewall changes,
 infrastructure, host keys, telemetry, deployment, tagging, or publication.
 Hosted Version 2 and any SSH/remote access work require a separate future work
 order and explicit approval.
 
-The validated `v0.1.0-rc1` remains an immutable pre-TUI baseline, but its
-publication is paused if this direction proceeds. Any implemented TUI requires
-a replacement candidate with regenerated locks, artifacts, checksums, image
-identity, tests, and release record. Until Stage A is implemented and verified,
-current launcher and web behavior remain the executable truth.
+The validated `v0.1.0-rc1` remains an immutable pre-TUI baseline and is
+superseded for publication decisions. Release 1 requires the replacement
+candidate's regenerated locks, artifacts, checksums, image identity, tests, and
+release record. Stable tagging and publication remain separate human actions.

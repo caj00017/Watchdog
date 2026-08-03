@@ -4,12 +4,12 @@ This process implements the Release 1 hardening work order. It applies to the
 trusted Watchdog repository only and must never be used to build or install an
 analyzed repository.
 
-Publication pause: the validated `v0.1.0-rc1` is the pre-TUI baseline. The
-terminal-first direction in `../work-orders/release-1-tui-and-ssh-trial.md` is
-draft and unimplemented, but if Stage A is authorized it requires regenerated
-locks, artifacts, checksums, image identity, and a replacement validation
-record. Do not use the current candidate for final publication while that
-decision is active.
+Publication pause: the validated `v0.1.0-rc1` remains immutable pre-TUI baseline
+evidence and is superseded for publication decisions. Stage A in
+`../work-orders/release-1-tui-and-ssh-trial.md` is implemented and requires the
+separately validated `v0.1.0-rc2` artifacts, checksums, and image identity.
+Hosted operation and SSH are deferred to Version 2. Do not publish rc1 or infer
+that completing rc2 candidate gates authorizes the stable tag or publication.
 
 ## 1. Prepare
 
@@ -56,8 +56,9 @@ the artifact contract and requires a new candidate record.
   security policy, package assets, or release metadata.
 - Install the wheel and source distribution independently in clean Python
   environments using `requirements/runtime.lock` and `--no-deps`.
-- Exercise `watchdog --help` and controlled `watchdog doctor` behavior without
-  contacting advisory, repository, registry, or model services.
+- Exercise `watchdog --help`, non-TTY bare/explicit TUI failure, installed-wheel
+  PTY startup/exit, and controlled `watchdog doctor` behavior without contacting
+  advisory, repository, registry, or model services.
 - Build the standalone container from the exact candidate commit, confirm its
   embedded OSV-Scanner reports exactly 2.4.0, and run the no-mount health check.
 - Retain explicit limitations for the opt-in live scanner/network contract and

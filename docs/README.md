@@ -12,6 +12,9 @@ describe.
 
 ## Supporting detail
 
+- [Technical README reference](reference/README-technical.md) preserves the
+  complete configuration, API, container, internal-service, security, and
+  verification documentation that supports the newcomer-focused root README.
 - [Architecture](architecture/architecture.md) describes current runtime flows
   and module boundaries.
 - [Threat model](security/threat-model.md) describes active trust boundaries,
@@ -83,12 +86,18 @@ describe.
   records the completed local gates, the reproducibility correction, and the
   publication controls that remain external.
 
-## Proposed Release 1 terminal experience
+## Completed Release 1 local terminal experience
 
-- [Terminal UI and anonymous SSH trial work order](work-orders/release-1-tui-and-ssh-trial.md)
-  records the draft local TUI, unchanged side-by-side web UI, replacement-RC,
-  and independently gated anonymous SSH trial boundary. It grants no
-  implementation or deployment authority until its staged approvals occur.
+- [Release 1 local terminal UI work order](work-orders/release-1-tui-and-ssh-trial.md)
+  records the authorized and completed local TUI, unchanged side-by-side web UI,
+  and replacement-candidate boundary. Hosted operation and SSH remain deferred
+  to Version 2.
+- [Release 1 local TUI implementation plan](plans/release-1-local-tui-implementation-plan.md)
+  records module ownership, lifecycle, display policy, dependency gate, and
+  verification sequence.
+- [Textual 8.2.8 dependency review](release/textual-8.2.8-dependency-review.md)
+  records exact distributions, license, graph, excluded features, point-in-time
+  advisory evidence, and rollback.
 
 Supporting documents should agree with the canonical record. If they do not,
 inspect the implementation and tests, correct the canonical record first, and
@@ -103,8 +112,8 @@ then reconcile the supporting document.
 The current archived verification snapshot is
 [`development-recap-2026-08-02-release-1-hardening.md`](archive/recaps/development-recap-2026-08-02-release-1-hardening.md).
 It includes the completed governance, locking, CI, package, reproducibility,
-and container gates and keeps publication and the proposed TUI separately
-scoped.
+and container gates. The replacement TUI candidate record will supersede it for
+publication decisions without rewriting its historical evidence.
 
 Archived files preserve historical context. They are not current instructions or
 authoritative descriptions of the codebase.

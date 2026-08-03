@@ -7,7 +7,25 @@ still reviewed and called out explicitly.
 
 ## [Unreleased]
 
-No changes yet.
+### Added
+
+- Keyboard-first local Textual TUI launched by bare `watchdog` or
+  `watchdog tui`, with readiness, bounded progress, Summary, Evidence,
+  Remediation, and display-safe Canonical JSON views.
+- Optional data-free workflow-stage observer with cancellation-safe repository
+  cleanup behavior.
+- Reviewed Textual 8.2.8 dependency and exact hash-locked pure-Python graph.
+
+### Security
+
+- Non-TTY and unsupported terminals fail before Textual/runtime construction;
+  dynamic terminal data is visibly escaped under a bounded versioned display
+  policy.
+- TUI cancellation and catchable termination wait for the existing workflow
+  cleanup path. Uncatchable process/host termination remains an explicit
+  limitation.
+- The existing web UI, routes, direct command bytes, scanner behavior,
+  analytical artifacts, and Phase 1–9 identities remain unchanged.
 
 ## [0.1.0] - 2026-08-02 release candidate
 

@@ -227,6 +227,55 @@ does not change this architecture and adds no current destination, credential,
 listener, persistence, or rate-limit state. It requires a separately authorized
 hosted architecture and security/privacy/operations work order.
 
+## Release 1 local-TUI architecture
+
+Bare `watchdog` and `watchdog tui` dispatch to a separately owned
+`watchdog/tui/` package only after argument, interactive stdin/stdout, supported
+terminal, configuration, and bounded scanner-readiness preflight. The launcher
+imports neither Textual nor a TUI workflow adapter on a rejected invocation.
+TUI process settings keep HTTP interfaces disabled, enable candidate planning
+only for the process, leave previews off without the explicit flag, and retain
+the existing disabled-by-default literal-loopback model boundary.
+
+`ProductionTuiBackend` is the only runtime adapter. The Textual application sees
+only a protocol returning `GuidedReadiness`, validated `InvestigationReport` or
+`RemediationPlan`, and the renderer's bounded canonical JSON bytes. It never
+receives a repository lease, scanner, path, filesystem client, HTTP client,
+evidence reader, or model gateway. Each operation owns a context-managed
+`workflow_runtime`; cancellation remains shielded through repository cleanup and
+runtime-client closure.
+
+The workflow services accept an optional synchronous observer carrying only one
+fixed `WorkflowStage` enum value. Stage emission occurs at truthful orchestration
+boundaries, including cleanup verification. Observer errors are controlled and,
+when raised inside the lease, unwind through the same cleanup context. Omitting
+the observer leaves report/plan construction and canonical identity unchanged.
+
+The application permits one task and one of seven states: ready, running an
+investigation, showing a report, running remediation, showing a plan,
+cancelling, or fatal. Starting over releases report, plan, canonical bytes,
+evidence selection, and rendered widget content; there is no session history.
+Remediation reruns the existing workflow explicitly and does not claim identity
+equality with the prior independently produced report.
+
+Dynamic artifact values enter plain-text widgets with markup disabled. Display
+policy version 1 visibly encodes terminal controls, C0/C1, bidi and zero-width
+format characters, and unsafe Unicode categories; it bounds combining/format
+runs and display length with explicit omission counts. Canonical bytes remain a
+separate frozen bounded object in memory while their view is labeled a
+display-safe representation. No Markdown, syntax highlighter, auto-link,
+hyperlink, clipboard, command palette, shell, arbitrary path, download, apply,
+or command-generation widget exists. `NO_COLOR` uses Textual's monochrome
+filter; status is also conveyed by fixed text.
+
+The layout requires 60x20, clamps driver dimensions and retained layout
+allocation to 240x80, and coalesces resize processing. The pinned-driver adapter
+filters Textual's otherwise unconditional focus-reporting and bracketed-paste
+enable sequences; mouse support and the command palette are disabled. Ctrl+C
+cancels or exits, Ctrl+Q requests a clean exit, and catchable SIGINT/SIGTERM
+enter the same join/cleanup path. SIGKILL, OOM termination, host loss, and
+equivalent uncatchable failures cannot guarantee in-process cleanup.
+
 ## Release 1 build and publication architecture
 
 Release infrastructure is a separate control plane over the trusted Watchdog
@@ -531,7 +580,8 @@ reachability/exposure, remediation, and patches are excluded.
 | `watchdog/remediation/` | Phase 8 identities, limits, version comparators, candidate derivation, no-write preview collection, assembly, and bounded renderers |
 | `watchdog/readiness.py` | Phase 9 bounded scanner preflight, cross-field configuration validation, and controlled guided capability projection |
 | `watchdog/launcher.py` | Installed command dispatch, per-process guided settings, fixed browser target, and pre-bound Uvicorn lifecycle |
-| `watchdog/workflow/` | Fixed-order lease-safe orchestration, runtime composition, admission, deadline, and cancellation |
+| `watchdog/tui/` | Release 1 local Textual state machine, narrow runtime adapter, canonical projections, and versioned terminal display policy |
+| `watchdog/workflow/` | Fixed-order lease-safe orchestration, optional data-free observer, runtime composition, admission, deadline, and cancellation |
 | `apps/api` | Advisory API lifespan, dependencies, error mapping, and routes |
 | `apps/cli` | Direct stdout-only investigation and opt-in remediation adapters |
 | `apps/web` | Disabled legacy literal-loopback launcher, exact gated routes/security, and separately selected Phase 7/8/9 checked-in UI variants |

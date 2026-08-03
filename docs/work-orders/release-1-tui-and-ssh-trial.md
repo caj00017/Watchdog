@@ -1,8 +1,9 @@
 # Release 1 Work Order — Local Terminal UI; Hosted SSH Deferred
 
-**Status:** Drafted August 2, 2026; amended and explicitly authorized for
-Stage A implementation by the owner on August 4, 2026; hosted operation and SSH
-remain deferred to Version 2
+**Status:** Drafted August 2, 2026; amended, explicitly authorized, implemented,
+and deterministically source-verified for Stage A on August 4, 2026; replacement
+candidate artifact evidence follows the exact source commit; hosted operation
+and SSH remain deferred to Version 2
 
 **Required baseline:** Validated Release 1 candidate record commit
 `01a0d2a` and candidate implementation commit
@@ -360,3 +361,17 @@ Release 1 Local TUI Implementation Plan, explicitly authorizing Stage A against
 the recorded baseline and approving this amended boundary. This authorization
 does not include tagging, publication, hosted Version 2, or any SSH/remote access
 work; each remains subject to its separate gate.
+
+## Stage A implementation result
+
+Stage A completed on August 4, 2026 with Textual 8.2.8 exact in every generated
+lock, the capability-narrow `watchdog/tui/` package, fixed data-free workflow
+observer, separate TUI process settings, lazy TTY-gated launcher dispatch,
+versioned display policy, and bounded terminal driver. The deterministic source
+matrix, frozen web tree, direct-command regressions, packaging contract, and
+Linux PTY lifecycle passed. Exact artifacts, installation tests, measurements,
+container identity, unavailable manual platforms, and skipped opt-in live
+network coverage belong to the separately generated rc2 validation record.
+
+No stable tag, publication, hosted operation, SSH, or remote access was
+performed or authorized by completing Stage A.
